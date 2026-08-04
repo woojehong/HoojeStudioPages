@@ -463,6 +463,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-check.js";
     import { getDatabase, ref, set as firebaseSet, onValue, update as firebaseUpdate, push as firebasePush, remove as firebaseRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
@@ -474,6 +475,13 @@
     };
 
     const app = initializeApp(firebaseConfig);
+    const appCheckHosts = new Set(["hooje.pro", "www.hooje.pro", "woojehong.github.io"]);
+    if (appCheckHosts.has(location.hostname.toLowerCase())) {
+      initializeAppCheck(app, {
+        provider: new ReCaptchaEnterpriseProvider("6Le7onQtAAAAAGnrEqkqXuMU-w1IrcjFYyqbhpCm"),
+        isTokenAutoRefreshEnabled: true
+      });
+    }
     const db = getDatabase(app);
     const previewGuard = window.HoojePreviewGuard;
     const set = (...args) => previewGuard.runWrite('관리자 Firebase set', () => firebaseSet(...args));

@@ -955,10 +955,18 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-check.js";
     import { getDatabase, ref, onValue, push as firebasePush, serverTimestamp, runTransaction as firebaseRunTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = { apiKey: "AIzaSyDXH0-y0vUQ9K29XbtRXDEuIokTqDLmo_I", authDomain: "rougetsblendingroom.firebaseapp.com", databaseURL: "https://rougetsblendingroom-default-rtdb.firebaseio.com/", projectId: "rougetsblendingroom" };
     const app = initializeApp(firebaseConfig);
+    const appCheckHosts = new Set(["hooje.pro", "www.hooje.pro", "woojehong.github.io"]);
+    if (appCheckHosts.has(location.hostname.toLowerCase())) {
+      initializeAppCheck(app, {
+        provider: new ReCaptchaEnterpriseProvider("6Le7onQtAAAAAGnrEqkqXuMU-w1IrcjFYyqbhpCm"),
+        isTokenAutoRefreshEnabled: true
+      });
+    }
     const db = getDatabase(app);
     const previewGuard = window.HoojePreviewGuard;
     const push = (...args) => previewGuard.runWrite('Firebase push', () => firebasePush(...args));
