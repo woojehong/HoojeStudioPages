@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script src="preview-safety.js"></script>
   <title>후제공방 | 아즈샤라 제작 서비스</title>
   
   <meta property="og:type" content="website">
@@ -954,11 +955,14 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue, push, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, push as firebasePush, serverTimestamp, runTransaction as firebaseRunTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = { apiKey: "AIzaSyDXH0-y0vUQ9K29XbtRXDEuIokTqDLmo_I", authDomain: "rougetsblendingroom.firebaseapp.com", databaseURL: "https://rougetsblendingroom-default-rtdb.firebaseio.com/", projectId: "rougetsblendingroom" };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    const previewGuard = window.HoojePreviewGuard;
+    const push = (...args) => previewGuard.runWrite('Firebase push', () => firebasePush(...args));
+    const runTransaction = (...args) => previewGuard.runWrite('Firebase transaction', () => firebaseRunTransaction(...args));
     // ── 방문 카운트(세션당 1회) + 표시 ──
     (function(){
       const vref = ref(db, 'stats/visits');
@@ -2286,6 +2290,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
     }
 
     window.sendOrder = function(crafter, itemName) {
+      if (!previewGuard.allowWrite('주문 생성 및 알림 전송')) return;
       const now = Date.now();
       const cdKey = 'cd_' + itemName;
       const lastSent = parseInt(localStorage.getItem(cdKey) || '0');
