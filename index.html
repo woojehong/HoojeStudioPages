@@ -271,8 +271,14 @@
   @keyframes hjAttnRing{ 0%{box-shadow:0 0 0 3px #ffd84d, 0 0 0 0 rgba(255,216,77,.6);} 100%{box-shadow:0 0 0 3px #ffd84d, 0 0 0 26px rgba(255,216,77,0);} }
   #coffee-fx.hj-attn [onclick="showDonationPopup()"]{ animation:hjAttnPop .95s cubic-bezier(.34,1.56,.64,1) 2, hjAttnRing 1.3s ease-out 2 !important; }
   @media (prefers-reduced-motion: reduce){ .hj-steam path, #coffee-fx.hj-attn [onclick="showDonationPopup()"]{ animation:none !important; } }
-  #coffee-fx{ animation:hjCoffeeBob 3.2s ease-in-out infinite; will-change:transform; }
-  @keyframes hjCoffeeBob{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-3px);} }
+  #coffee-fx{ animation:hjCoffeeBob 14s ease-in-out infinite; will-change:transform; }
+  @keyframes hjCoffeeBob{
+    0%,72%,100%{transform:translateY(0);}
+    75%{transform:translateY(-3px);}
+    78%{transform:translateY(0);}
+    81%{transform:translateY(-2px);}
+    84%{transform:translateY(0);}
+  }
   @media (prefers-reduced-motion: reduce){ #coffee-fx{ animation:none !important; } }
   /* ===== 일류 보완: 모션·타이포·색토큰·접근성 ===== */
   /* #1 모션 */
@@ -371,7 +377,7 @@
       #sidebar.m-collapsed #category-list{ display: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="design-refresh.css?v=260804a">
+  <link rel="stylesheet" href="design-refresh.css?v=260804c">
 </head>
 <body>
 <div id="app-container" class="text-gray-200 relative">
@@ -662,20 +668,20 @@
       </div>
       
       <div id="content-state" class="w-full max-w-4xl mx-auto hidden space-y-6 md:space-y-8 pb-20 pt-4 md:pt-6">
-        <div class="flex flex-col md:flex-row items-center gap-4 md:gap-6 border-b border-gray-800 pb-5 md:pb-6 relative">
-          <div id="detail-icon-wrapper" class="relative shrink-0 w-12 h-12 md:w-16 md:h-16">
+        <div class="flex flex-col md:flex-row items-center gap-3 md:gap-5 border-b border-gray-800 pb-4 md:pb-5 relative">
+          <div id="detail-icon-wrapper" class="relative shrink-0 w-11 h-11 md:w-14 md:h-14">
              <a id="detail-wh-link" href="#" data-wowhead="domain=ko" onclick="return false;" class="cursor-default block">
-               <img id="detail-icon" src="" class="w-full h-full rounded-2xl md:rounded-3xl relative z-0 shadow-lg">
-               <div id="detail-5star-border" class="hidden gold-border-shine absolute inset-0 rounded-2xl md:rounded-3xl pointer-events-none"></div>
+               <img id="detail-icon" src="" class="w-full h-full rounded-xl relative z-0 shadow-lg">
+               <div id="detail-5star-border" class="hidden gold-border-shine absolute inset-0 rounded-xl pointer-events-none"></div>
              </a>
              <div id="detail-5star-badge" class="hidden wow-rank-5" style="top: -8px; right: -8px; width: 28px; height: 28px;">
                <div class="wow-rank-5-bg"></div><div class="wow-rank-5-inner"></div>
                <span class="wow-rank-5-text" style="font-size: 14px;">5</span>
              </div>
           </div>
-          <div class="space-y-2 md:space-y-3 flex-1 w-full min-w-0 relative">
+          <div class="space-y-1.5 md:space-y-2 flex-1 w-full min-w-0 relative">
             <a id="detail-name-link" href="#" data-wowhead="domain=ko" onclick="return false;" class="cursor-default hover:text-[#8788EE] transition-colors block">
-              <h2 id="detail-name" class="text-xl md:text-3xl leading-tight font-black text-white tracking-tight font-kr-title truncate"></h2>
+              <h2 id="detail-name" class="text-xl md:text-[1.65rem] leading-tight font-black text-white tracking-tight font-kr-title truncate"></h2>
             </a>
             <div class="flex items-center justify-between w-full gap-2 mt-2">
               <div class="px-3 py-1.5 md:px-4 md:py-2 bg-[#8788EE]/20 border border-[#8788EE]/70 rounded-lg md:rounded-xl shadow-md">
@@ -693,7 +699,7 @@
             <span id="detail-indicator" class="w-1.5 h-5 md:w-2 md:h-6 rounded-full"></span> 필수 재료
             <span class="text-[10px] md:text-xs text-[#8788EE] font-bold ml-2 tracking-tight opacity-90">[5성 제작 기준]</span>
           </h4>
-          <div id="req-mats-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 text-sm md:text-base"></div>
+          <div id="req-mats-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm"></div>
           
           <div id="copy-all-section" class="w-full mt-4 mb-2"></div>
         </div>
@@ -703,7 +709,7 @@
             <span class="w-1.5 h-4 bg-gray-700 rounded-full"></span> 선택 재료 - 서신
             <span class="text-[9px] md:text-[11px] text-white font-bold ml-2 tracking-tight">[5성 제작 기준]</span>
           </h4>
-          <div id="opt-mats-container" class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2 font-bold"></div>
+          <div id="opt-mats-container" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2 font-bold"></div>
         </div>
         
         <div id="embellish-mats-section" class="mt-6 md:mt-8">
@@ -711,10 +717,10 @@
             <span class="w-1.5 h-4 bg-gray-700 rounded-full"></span> 선택 재료 - 장식
             <span class="text-[9px] md:text-[11px] text-white font-bold ml-2 tracking-tight">[5성 제작 기준]</span>
           </h4>
-          <div id="embellish-mats-container" class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2 font-bold"></div>
+          <div id="embellish-mats-container" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2 font-bold"></div>
         </div>
         
-        <div id="fee-crafter-section" class="flex flex-col gap-4 border-t border-gray-800 pt-6 md:pt-8"></div>
+        <div id="fee-crafter-section" class="flex flex-col gap-3 border-t border-gray-800 pt-5 md:pt-6"></div>
         <div id="bottom-order-section" class="w-full mt-1 md:mt-2"></div>
       </div>
     </section>
@@ -1319,6 +1325,28 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     let DB = {};
     const allItemsFlat = [];
 
+    const ENGINEERING_ICON_FALLBACKS = {
+      '판금 머리': 'inv_plate_questbloodelf_b_01_helm',
+      '판금 손목': 'inv_plate_questbloodelf_b_01_bracer',
+      '판금 발': 'inv_plate_questbloodelf_b_01_boot',
+      '사슬 머리': 'inv_helm_mail_questbloodelf_b_01',
+      '사슬 손목': 'inv_bracer_mail_questbloodelf_b_01',
+      '사슬 발': 'inv_boot_mail_questbloodelf_b_01',
+      '가죽 머리': 'inv_helm_leather_questbloodelf_b_01',
+      '가죽 손목': 'inv_bracer_leather_questbloodelf_b_01',
+      '가죽 발': 'inv_boot_leather_questbloodelf_b_01',
+      '천 머리': 'inv_helm_cloth_questbloodelf_b_01',
+      '천 손목': 'inv_bracer_cloth_questbloodelf_b_01',
+      '천 발': 'inv_boot_cloth_questbloodelf_b_01'
+    };
+
+    function withEngineeringIconFallback(item, catKey) {
+      if (catKey !== 'engineering' || item.icon) return item;
+      const match = item.name && item.name.match(/^\[기계공학\s+(판금|사슬|가죽|천)\s+(머리|손목|발)\]/);
+      if (!match) return item;
+      return { ...item, icon: ENGINEERING_ICON_FALLBACKS[`${match[1]} ${match[2]}`] || '' };
+    }
+
     // ── 자동 정렬 로직 ────────────────────────────────────────────────
     // 방어구 슬롯 순서: 머리→어깨→가슴→손목→손→허리→다리→발
     const ARMOR_SLOT_ORDER = { '머리':1,'어깨':2,'가슴':3,'손목':4,'손':5,'허리':6,'다리':7,'발':8 };
@@ -1394,10 +1422,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         const catName = CAT_KEY_TO_NAME[catKey];
         const catItems = itemsData[catKey];
         if (!catItems) return;
-        const raw = Object.values(catItems).map(item => ({
+        const raw = Object.values(catItems).map(item => withEngineeringIconFallback({
           ...item,
           reqMats: item.reqMats ? Object.values(item.reqMats) : []
-        }));
+        }, catKey));
         DB[catName] = sortItems(raw, catKey);
         DB[catName].forEach(item => allItemsFlat.push({ ...item, cat: catName }));
       });
@@ -1582,7 +1610,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     window.showNotice = function() {
       document.getElementById('notice-state').classList.remove('hidden');
       document.getElementById('content-state').classList.add('hidden');
-      if(window.innerWidth < 768) document.getElementById('detail-panel').scrollTop = 0;
+      const detailPanel = document.getElementById('detail-panel');
+      if (detailPanel) {
+        detailPanel.scrollTop = 0;
+        requestAnimationFrame(() => { detailPanel.scrollTop = 0; });
+      }
     };
 
     // sendOrder는 아래 플로팅 시스템 초기화 이후에 정의됩니다
@@ -1737,7 +1769,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     function generateOrderButtonHTML(crafter, itemName, showNotice=false) {
       if (itemCooldowns[itemName]) {
         return `
-          <button class="order-action-btn w-full p-4 bg-gradient-to-r from-green-600/20 to-green-900/20 border-2 border-green-500/50 rounded-xl md:rounded-2xl font-black text-white cursor-not-allowed opacity-80 flex flex-col items-center justify-center gap-1">
+          <button class="order-action-btn hj-primary-action w-full px-4 py-3 bg-gradient-to-r from-green-600/20 to-green-900/20 border border-green-500/50 rounded-xl font-black text-white cursor-not-allowed opacity-80 flex flex-col items-center justify-center gap-1">
             <span class="text-sm md:text-base z-10">✅ 주문 접수 완료!</span>
             <span class="text-xs md:text-sm text-green-400 relative z-10">잠시만 기다려주세요</span>
           </button>
@@ -1747,7 +1779,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const _sc = statusRGB();
       return `
         <button onclick="sendOrder('${crafter}', '${itemName}')"
-          class="order-action-btn order-pulse w-full p-4 border-2 rounded-xl md:rounded-2xl font-black text-white active:scale-95 flex items-center justify-between gap-2 relative overflow-hidden group" style="--sc-rgb:${_sc}; background:linear-gradient(to right, rgba(${_sc},0.2), rgba(${_sc},0.1)); border-color:rgba(${_sc},0.6);">
+          class="order-action-btn hj-primary-action order-pulse w-full px-4 py-3 border rounded-xl font-black text-white active:scale-95 flex items-center justify-between gap-2 relative overflow-hidden group" style="--sc-rgb:${_sc}; background:linear-gradient(to right, rgba(${_sc},0.2), rgba(${_sc},0.1)); border-color:rgba(${_sc},0.6);">
           <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></span>
           <span class="finger-left text-lg md:text-xl select-none shrink-0 relative z-10">👉</span>
           <div class="flex flex-col items-center flex-1 gap-1 relative z-10">
@@ -1783,11 +1815,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       detailIcon.src = `https://wow.zamimg.com/images/wow/icons/large/${item.icon}.jpg`;
       
       if(item.is5Star) {
-        detailIcon.className = "w-full h-full rounded-2xl md:rounded-3xl relative z-0 shadow-lg";
+        detailIcon.className = "w-full h-full rounded-xl relative z-0 shadow-lg";
         borderShine.classList.remove('hidden');
         badge.classList.remove('hidden');
       } else {
-        detailIcon.className = "w-full h-full rounded-2xl md:rounded-3xl border-2 border-gray-800 shadow-xl relative z-0";
+        detailIcon.className = "w-full h-full rounded-xl border border-gray-800 shadow-lg relative z-0";
         borderShine.classList.add('hidden');
         badge.classList.add('hidden');
       }
@@ -1814,10 +1846,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       reqCont.innerHTML = '';
       item.reqMats.forEach(m => {
         const b = document.createElement('button');
-        b.className = "flex items-center justify-between p-3 md:p-4 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group";
+        b.className = "hj-compact-tile flex items-center justify-between p-2.5 md:p-3 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group";
         b.onclick = () => copyText(m.n, b, color);
         let matNameHtml = applyGoldStar(m.n);
-        b.innerHTML = `<div class="flex items-center gap-3 flex-1 min-w-0"><img src="https://wow.zamimg.com/images/wow/icons/small/${m.i}.jpg" class="w-6 h-6 md:w-8 md:h-8 rounded-lg shrink-0"><span class="group-hover:text-white font-bold text-left">${matNameHtml}</span></div><span class="mat-status text-white font-black text-sm md:text-base drop-shadow-md shrink-0 ml-2">x ${m.c}</span>`;
+        b.innerHTML = `<div class="flex items-center gap-2.5 flex-1 min-w-0"><img src="https://wow.zamimg.com/images/wow/icons/medium/${m.i}.jpg" class="w-6 h-6 md:w-7 md:h-7 rounded-md shrink-0 object-cover"><span class="group-hover:text-white font-bold text-left leading-tight">${matNameHtml}</span></div><span class="mat-status text-white font-black text-xs md:text-sm shrink-0 ml-2 tabular-nums">×${m.c}</span>`;
         reqCont.appendChild(b);
       });
 
@@ -1872,9 +1904,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         optCont.innerHTML = '';
         missiveList.forEach(opt => {
           const b = document.createElement('button');
-          b.className = "flex flex-col items-center justify-center p-2 md:p-3 bg-gray-900 rounded-lg md:rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group h-16 md:h-20 relative";
+          b.className = "hj-choice-tile flex items-center gap-2 p-2.5 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group min-h-14 md:min-h-16 relative text-left";
           b.onclick = () => copyText(opt.copy, b, color, true);
-          b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/small/${opt.icon}.jpg" class="w-5 h-5 md:w-6 md:h-6 mb-1 opacity-70 group-hover:opacity-100"><span class="text-white group-hover:text-yellow-400 text-center leading-tight text-[10px] md:text-[11px] font-bold">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
+          b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/medium/${opt.icon}.jpg" class="w-7 h-7 rounded-md opacity-80 group-hover:opacity-100 shrink-0 object-cover"><span class="text-white group-hover:text-yellow-300 leading-tight text-[10px] md:text-[11px] font-bold flex-1">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
           optCont.appendChild(b);
         });
       } else optContSec.classList.add('hidden');
@@ -1889,9 +1921,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         embList = embList.filter(opt => !opt.gunOnly || isGunCraft);
         embList.forEach(opt => {
           const b = document.createElement('button');
-          b.className = "flex flex-col items-center justify-center p-2 md:p-3 bg-gray-900 rounded-lg md:rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group h-16 md:h-20 relative";
+          b.className = "hj-choice-tile flex items-center gap-2 p-2.5 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group min-h-14 md:min-h-16 relative text-left";
           b.onclick = () => copyText(opt.copy, b, color, true);
-          b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/small/${opt.icon}.jpg" class="w-5 h-5 md:w-6 md:h-6 mb-1 opacity-70 group-hover:opacity-100"><span class="text-white group-hover:text-yellow-400 text-center leading-tight text-[10px] md:text-[11px] font-bold">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
+          b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/medium/${opt.icon}.jpg" class="w-7 h-7 rounded-md opacity-80 group-hover:opacity-100 shrink-0 object-cover"><span class="text-white group-hover:text-yellow-300 leading-tight text-[10px] md:text-[11px] font-bold flex-1">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
           embCont.appendChild(b);
         });
       } else embContSec.classList.add('hidden');
@@ -1904,25 +1936,25 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       };
 
       feeCrafterSec.innerHTML = `
-        <div class="flex flex-col md:flex-row gap-4">
-          <div class="flex flex-col gap-2.5 flex-1">
-            <button onclick="copyText('${getCopyValue(item.fee)}', this, '#EAB308', true)" class="w-full px-4 py-2 bg-gray-900 rounded-xl border border-gray-800 flex justify-between items-center group hover:border-yellow-500 shadow-md">
+        <div class="flex flex-col md:flex-row gap-3">
+          <div class="flex flex-col gap-2 flex-1">
+            <button onclick="copyText('${getCopyValue(item.fee)}', this, '#EAB308', true)" class="hj-info-tile w-full px-4 py-2.5 bg-gray-900 rounded-xl border border-gray-800 flex justify-between items-center group hover:border-yellow-500">
               <span class="text-xs text-white font-black">기본 수수료</span>
               <span class="mat-status text-white group-hover:text-yellow-400 font-black text-base">${item.fee}</span>
             </button>
             ${item.is5Star ? `
-            <button id="fee-5star-btn" onclick="copyText('${getCopyValue(item.fee5Star || item.fee)}', this, '#EAB308', true)" class="w-full p-4 md:p-5 bg-gray-900 rounded-xl md:rounded-2xl border border-yellow-500/40 transition-all flex justify-between items-center group hover:border-yellow-400 shadow-md flex-1">
+            <button id="fee-5star-btn" onclick="copyText('${getCopyValue(item.fee5Star || item.fee)}', this, '#EAB308', true)" class="hj-info-tile w-full px-4 py-3 bg-gray-900 rounded-xl border border-yellow-500/40 transition-all flex justify-between items-center group hover:border-yellow-400 flex-1">
               <span class="text-xs md:text-sm text-yellow-500/70 font-black tracking-widest flex items-center gap-1"><span class="text-[10px] md:text-xs">★</span>5성 수수료</span>
               <span class="mat-status text-yellow-400 font-black text-lg md:text-xl">${item.fee5Star || item.fee}</span>
             </button>` : `
-            <button class="w-full p-4 bg-gray-900/40 rounded-xl border border-gray-800/50 flex justify-between items-center opacity-60 cursor-not-allowed flex-1">
+            <button class="hj-info-tile w-full px-4 py-3 bg-gray-900/40 rounded-xl border border-gray-800/50 flex justify-between items-center opacity-60 cursor-not-allowed flex-1">
               <span class="text-xs text-gray-600 font-black">5성 수수료</span>
               <span class="mat-status text-gray-500 font-black text-base">Coming Soon</span>
             </button>`}
           </div>
-          <button onclick="copyText('${item.crafter}', this, '${color}', true)" class="flex-1 p-4 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center group shadow-md hover:border-gray-700 transition-colors">
+          <button onclick="copyText('${item.crafter}', this, '${color}', true)" class="hj-info-tile flex-1 px-4 py-3 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center group hover:border-gray-700 transition-colors">
             <span class="text-xs text-white font-black">제작자</span>
-            <span class="mat-status font-black text-2xl md:text-4xl" style="color: ${color}">${item.crafter}</span>
+            <span class="mat-status font-black text-xl md:text-3xl" style="color: ${color}">${item.crafter}</span>
             <span class="text-xs md:text-sm text-white/80 font-bold mt-1.5">(클릭하시면 제작자 아이디가 복사됩니다)</span>
           </button>
         </div>
@@ -1942,7 +1974,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       
       const hoverClass = isLock ? 'opacity-40 grayscale cursor-not-allowed' : 'cursor-pointer hover:bg-gray-800 group';
       
-      btn.className = `w-full flex items-center p-2.5 md:p-3 border-b border-gray-800/30 last:border-0 text-left transition-all relative ${hoverClass}`;
+      btn.className = `w-full flex items-center p-2 md:p-2.5 border-b border-gray-800/30 last:border-0 text-left transition-all relative ${hoverClass}`;
       
       btn.onclick = () => { 
         if(!isLock) {
@@ -1973,14 +2005,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const starColor = isFav ? "text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.6)] scale-110" : "text-gray-700 group-hover:text-yellow-400/50";
       const favStarHtml = `
         <div class="shrink-0 flex items-center justify-center pl-2 md:pl-3 pr-1 z-20 cursor-pointer" onclick="window.toggleFav('${item.name}', event)">
-          <svg class="w-5 h-5 md:w-6 md:h-6 transition-all duration-300 ${starColor} hover:scale-125" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-4 h-4 md:w-5 md:h-5 transition-all duration-300 ${starColor} hover:scale-125" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
           </svg>
         </div>
       `;
 
       btn.innerHTML = `
-        <div class="relative shrink-0 w-10 h-10 md:w-11 md:h-11 mr-3 z-10">
+        <div class="relative shrink-0 w-9 h-9 md:w-10 md:h-10 mr-2.5 z-10">
           ${popularBadgeHTML}
           <a href="https://www.wowhead.com/item=${item.id || 0}" data-wowhead="domain=ko" onclick="return false;" class="cursor-default">
             <img src="https://wow.zamimg.com/images/wow/icons/large/${item.icon}.jpg" class="w-full h-full rounded-xl ${iconBorder} relative z-0">
