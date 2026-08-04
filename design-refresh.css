@@ -39,8 +39,16 @@ body {
 }
 
 #hj-goldline {
-  background: var(--hj-brass) !important;
-  opacity: 0.68;
+  width: 180px !important;
+  height: 18px !important;
+  margin: 3px auto -1px !important;
+  background: url("assets/ornaments/hooje-header-divider-v1.svg") center / 180px 18px no-repeat !important;
+  opacity: 0.88;
+}
+
+.header-addon-actions {
+  margin-left: 50% !important;
+  transform: translateX(-50%);
 }
 
 #app-container .font-black {
@@ -61,18 +69,11 @@ header,
   background-color: var(--hj-ink) !important;
   background-image:
     url("assets/ornaments/hooje-corner-subtle-v1.png"),
-    url("assets/ornaments/hooje-medallion-subtle-v1.png") !important;
-  background-position: left -64px top 24px, right 8% center !important;
+    url("assets/ornaments/hooje-drafting-traces-subtle-v1.png") !important;
+  background-position: left -64px top 24px, center 58% !important;
   background-repeat: no-repeat !important;
-  background-size: 220px auto, min(31vw, 420px) auto !important;
+  background-size: 220px auto, 96% auto !important;
   background-attachment: local !important;
-}
-
-#content-state {
-  background-image: url("assets/ornaments/hooje-divider-subtle-v1.png");
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-size: 88% auto;
 }
 
 .glass-panel {
@@ -158,6 +159,69 @@ header,
   box-shadow: 0 0 0 3px rgba(150, 152, 232, 0.08) !important;
 }
 
+.hj-status-message {
+  white-space: normal;
+  overflow: hidden;
+  line-height: 1.3;
+  max-height: 2.6em;
+  word-break: keep-all;
+  width: max-content;
+  max-width: min(34vw, 560px);
+}
+
+#my-order-summary {
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.75);
+}
+
+.header-utility-stack > a,
+.header-utility-stack > div {
+  width: 190px;
+  min-height: 0;
+  flex: 1 1 0;
+}
+
+.header-utility-stack {
+  gap: 8px;
+}
+
+.detail-heading-row {
+  padding-top: 34px;
+}
+
+.detail-heading-ornament {
+  width: min(560px, calc(100% - 32px));
+  height: 20px;
+  background: url("assets/ornaments/hooje-heading-flourish-v1.svg") center / 100% 20px no-repeat;
+  opacity: 0.8;
+}
+
+#detail-icon {
+  border-color: #4a5160 !important;
+  box-shadow: inset 0 0 0 1px rgba(196, 203, 216, 0.05) !important;
+  filter: saturate(0.94) contrast(1.03);
+}
+
+#detail-cart-btn-wrapper > button {
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.status-notice-box {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+#category-list .border-b,
+#fav-category-container .border-b {
+  background: rgba(10, 13, 19, 0.24);
+}
+
+#category-list .border-b:hover,
+#fav-category-container .border-b:hover {
+  background: rgba(196, 203, 216, 0.055) !important;
+}
+
 /* Compact component family: materials, choices, maker information and actions share one rhythm. */
 .hj-compact-tile,
 .hj-choice-tile,
@@ -177,6 +241,12 @@ header,
 
 .hj-choice-tile {
   overflow: hidden;
+  flex: 0 0 calc((100% - 8px) / 2);
+}
+
+.hj-choice-label .inline-flex {
+  justify-content: center;
+  vertical-align: middle;
 }
 
 .hj-choice-tile img,
@@ -193,8 +263,60 @@ header,
 }
 
 .hj-primary-action {
-  min-height: 52px;
+  min-height: 46px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055) !important;
+}
+
+/* Maker authentication trial: intentionally unboxed, like ink laid directly on the atelier surface. */
+.maker-authentication {
+  align-self: stretch;
+  opacity: 0.9;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.28));
+}
+
+.maker-authentication-seal {
+  width: clamp(58px, 7vw, 78px);
+  height: clamp(58px, 7vw, 78px);
+  filter: saturate(0.76) brightness(0.9);
+}
+
+.maker-authentication-signature,
+.maker-authentication-portrait {
+  image-rendering: auto;
+  filter: saturate(0.5) brightness(0.9);
+}
+
+.maker-authentication-signature {
+  z-index: 2;
+  color: #c4cbd8;
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(31px, 3.4vw, 48px);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: 0;
+  white-space: nowrap;
+  text-align: left;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.48);
+}
+
+.maker-authentication-portrait {
+  max-height: 100%;
+}
+
+.maker-authentication:hover {
+  opacity: 1;
+}
+
+@media (min-width: 640px) {
+  .hj-choice-tile {
+    flex-basis: calc((100% - 24px) / 4);
+  }
+}
+
+@media (min-width: 768px) {
+  .hj-choice-tile {
+    flex-basis: calc((100% - 40px) / 6);
+  }
 }
 
 /* Section engraving: visible enough to register, quiet enough to stay behind the information. */
@@ -294,8 +416,26 @@ span[style*="Great Vibes"] {
 }
 
 @media (max-width: 767px) {
+  .hj-status-message {
+    width: auto;
+    max-width: calc(100vw - 76px);
+  }
+
   #detail-panel {
-    background-position: left -90px top 16px, right -120px center !important;
-    background-size: 230px auto, 310px auto !important;
+    background-position: left -90px top 16px, center 58% !important;
+    background-size: 230px auto, 980px auto !important;
+  }
+
+  .maker-authentication {
+    max-height: 164px;
+  }
+
+  .maker-authentication-seal {
+    width: 62px;
+    height: 62px;
+  }
+
+  .maker-authentication-signature {
+    font-size: clamp(30px, 10vw, 44px);
   }
 }

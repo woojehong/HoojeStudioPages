@@ -377,48 +377,53 @@
       #sidebar.m-collapsed #category-list{ display: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="design-refresh.css?v=260804c">
+  <link rel="stylesheet" href="design-refresh.css?v=260804n">
 </head>
 <body>
 <div id="app-container" class="text-gray-200 relative">
 
   <header class="py-3 md:py-4 px-4 md:px-6 border-b border-gray-800 bg-gray-900/95 backdrop-blur-2xl flex flex-col md:flex-row items-center justify-between gap-3 shadow-2xl z-20 shrink-0 relative">
 
-    <div class="w-full md:w-1/3 flex justify-center md:justify-start order-2 md:order-1">
-      <div id="live-status" class="px-4 py-2.5 md:px-5 md:py-3 bg-gray-950 rounded-xl border-2 border-gray-600 flex items-center gap-2.5 transition-all duration-500">
-        <div id="status-dot" class="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full bg-gray-600 animate-pulse shrink-0"></div>
-        <span id="status-text" class="text-xs md:text-sm font-black text-white tracking-widest pre-wrap">연결 중...</span>
+    <div class="w-full md:w-[38%] md:self-stretch flex flex-col justify-between order-2 md:order-1 gap-2">
+      <div id="live-status" class="self-start w-fit max-w-full px-3 py-2 md:px-4 md:py-2.5 bg-gray-950 rounded-xl border border-gray-600 flex items-start gap-2.5 transition-all duration-500">
+        <div id="status-dot" class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-gray-600 animate-pulse shrink-0 mt-1"></div>
+        <span id="status-text" class="hj-status-message block text-xs md:text-sm font-black text-white tracking-wide">연결 중...</span>
+      </div>
+      <div id="my-order-summary" class="hidden self-start items-center gap-2 min-w-0 max-w-full pb-0.5">
+        <span id="my-order-dot" class="w-1.5 h-1.5 rounded-full bg-gray-600 shrink-0"></span>
+        <span class="text-[9px] md:text-[10px] font-black tracking-[0.14em] text-gray-400 shrink-0">내 주문</span>
+        <span id="my-order-text" class="text-[10px] md:text-[11px] font-bold text-gray-200 truncate"></span>
       </div>
     </div>
 
-    <div class="w-full md:w-1/3 flex flex-col items-center text-center order-1 md:order-2 shrink-0">
+    <div class="w-full md:w-[24%] flex flex-col items-center text-center order-1 md:order-2 shrink-0">
       <div onclick="window.showNotice()" class="cursor-pointer hover:opacity-80 transition-opacity flex flex-col items-center">
         <h1 id="hj-title" class="text-2xl md:text-4xl text-white" style="font-family:'Noto Serif KR',serif; font-weight:500; letter-spacing:0.36em; text-indent:0.36em;">후제공방</h1>
         <div id="hj-goldline" style="height:2px; width:92px; margin:9px auto 2px; background:linear-gradient(to right,rgba(201,162,39,0),#d8b13a,rgba(201,162,39,0)); border-radius:2px;"></div>
         <div class="mt-1 text-[10px] md:text-xs text-white/50 font-bold uppercase tracking-[0.2em]">World of Warcraft KR · Azshara</div>
       </div>
-      <div class="mt-3 w-full max-w-[360px] mx-auto hidden md:flex gap-2">
+      <div class="header-addon-actions mt-3 w-[380px] max-w-none mx-auto hidden md:flex gap-2">
         <a href="https://www.curseforge.com/wow/addons/hoojestudio" target="_blank" rel="noopener"
-           class="flex-1 inline-flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl font-black text-[11px] md:text-xs tracking-tight transition-all bg-gray-950 border border-orange-500/55 text-orange-300 hover:text-white hover:border-orange-400 hover:bg-orange-500/10">
+           class="min-w-0 flex-1 inline-flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl font-black text-[11px] md:text-xs tracking-tight transition-all bg-gray-950 border border-orange-500/55 text-orange-300 hover:text-white hover:border-orange-400 hover:bg-orange-500/10">
           <img src="assets/curseforge.png" alt="CurseForge" class="w-4 h-4 shrink-0 object-contain">
           <span class="whitespace-nowrap">커스포지에서 애드온 다운로드</span>
         </a>
         <a id="addon-download-link" href="https://github.com/woojehong/hoojestudio/releases/download/hoojestudio1.4/HoojeStudio.zip"
-           class="flex-1 inline-flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl font-black text-[11px] md:text-xs tracking-tight transition-all bg-gradient-to-r from-amber-500/20 to-yellow-400/10 border border-amber-400/50 hover:border-amber-300/80 text-amber-200 hover:text-white">
+           class="min-w-0 flex-1 inline-flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl font-black text-[11px] md:text-xs tracking-tight transition-all bg-gradient-to-r from-amber-500/20 to-yellow-400/10 border border-amber-400/50 hover:border-amber-300/80 text-amber-200 hover:text-white">
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
           <span id="addon-btn-label" class="whitespace-nowrap">애드온 직접 다운로드</span>
         </a>
       </div>
     </div>
 
-    <div class="w-full md:w-1/3 flex justify-center md:justify-end order-3 gap-2 items-center">
+    <div class="w-full md:w-[38%] md:self-stretch flex justify-center md:justify-end order-3 gap-2 items-center md:items-stretch">
       <div id="cart-btn" class="hidden px-4 py-2.5 md:px-5 md:py-3 bg-gray-950 rounded-xl border-2 border-emerald-500/40 flex items-center justify-center gap-2 hover:bg-emerald-500/10 hover:border-emerald-500/80 transition-all cursor-pointer group" onclick="toggleCartModal()">
         <svg class="w-4 h-4 md:w-5 md:h-5 text-emerald-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
         </svg>
         <span id="cart-count" class="text-emerald-400 font-black text-sm md:text-base tracking-widest group-hover:text-emerald-300">0</span>
       </div>
-      <div class="hidden md:flex flex-col gap-2">
+      <div class="header-utility-stack hidden md:flex flex-col self-stretch">
         <!-- 처음이신가요? (초보 주문 가이드) -->
         <a href="guide.html" class="px-4 py-2 md:px-5 md:py-2.5 bg-gray-950 rounded-xl border-2 border-[#8788EE]/50 flex items-center justify-center gap-2 hover:bg-[#8788EE]/10 hover:border-[#8788EE] transition-all cursor-pointer group">
           <svg class="w-4 h-4 md:w-5 md:h-5 text-[#a9aaf7] group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -667,61 +672,52 @@
         </div>
       </div>
       
-      <div id="content-state" class="w-full max-w-4xl mx-auto hidden space-y-6 md:space-y-8 pb-20 pt-4 md:pt-6">
-        <div class="flex flex-col md:flex-row items-center gap-3 md:gap-5 border-b border-gray-800 pb-4 md:pb-5 relative">
+      <div id="content-state" class="w-full max-w-4xl mx-auto hidden space-y-4 md:space-y-5 pb-14 pt-3 md:pt-4">
+        <div class="detail-heading-row flex flex-col md:flex-row items-center gap-3 md:gap-5 border-b border-gray-800 pb-4 md:pb-5 relative">
+          <div class="detail-heading-ornament absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none" aria-hidden="true"></div>
           <div id="detail-icon-wrapper" class="relative shrink-0 w-11 h-11 md:w-14 md:h-14">
              <a id="detail-wh-link" href="#" data-wowhead="domain=ko" onclick="return false;" class="cursor-default block">
-               <img id="detail-icon" src="" class="w-full h-full rounded-xl relative z-0 shadow-lg">
-               <div id="detail-5star-border" class="hidden gold-border-shine absolute inset-0 rounded-xl pointer-events-none"></div>
+               <img id="detail-icon" src="" class="w-full h-full rounded-xl relative z-0">
              </a>
-             <div id="detail-5star-badge" class="hidden wow-rank-5" style="top: -8px; right: -8px; width: 28px; height: 28px;">
-               <div class="wow-rank-5-bg"></div><div class="wow-rank-5-inner"></div>
-               <span class="wow-rank-5-text" style="font-size: 14px;">5</span>
-             </div>
           </div>
-          <div class="space-y-1.5 md:space-y-2 flex-1 w-full min-w-0 relative">
+          <div class="flex-1 w-full min-w-0 relative">
             <a id="detail-name-link" href="#" data-wowhead="domain=ko" onclick="return false;" class="cursor-default hover:text-[#8788EE] transition-colors block">
               <h2 id="detail-name" class="text-xl md:text-[1.65rem] leading-tight font-black text-white tracking-tight font-kr-title truncate"></h2>
             </a>
-            <div class="flex items-center justify-between w-full gap-2 mt-2">
-              <div class="px-3 py-1.5 md:px-4 md:py-2 bg-[#8788EE]/20 border border-[#8788EE]/70 rounded-lg md:rounded-xl shadow-md">
-                <span class="text-white text-xs md:text-sm font-black animate-pulse tracking-tight">💡 재료 이름을 클릭하시면 자동으로 복사됩니다!</span>
-              </div>
-              <div id="detail-cart-btn-wrapper" class="shrink-0 z-20"></div>
-            </div>
           </div>
+          <div id="detail-cart-btn-wrapper" class="shrink-0 z-20 self-center"></div>
         </div>
         
-        <div id="top-order-section" class="w-full mt-[-5px] mb-6"></div>
+        <div id="top-order-section" class="w-full mt-[-4px] mb-3 flex flex-col items-center"></div>
         
         <div>
-          <h4 id="detail-color-bar" class="text-base md:text-lg font-black mb-3 md:mb-4 flex items-center gap-2 tracking-widest">
-            <span id="detail-indicator" class="w-1.5 h-5 md:w-2 md:h-6 rounded-full"></span> 필수 재료
+          <h4 id="detail-color-bar" class="text-sm md:text-base font-black mb-2 flex items-center gap-2 tracking-widest">
+            <span id="detail-indicator" class="w-1.5 h-4 md:h-5 rounded-full"></span> 필수 재료
             <span class="text-[10px] md:text-xs text-[#8788EE] font-bold ml-2 tracking-tight opacity-90">[5성 제작 기준]</span>
           </h4>
           <div id="req-mats-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm"></div>
           
-          <div id="copy-all-section" class="w-full mt-4 mb-2"></div>
+          <div id="copy-all-section" class="w-full mt-2 mb-1"></div>
         </div>
         
         <div id="opt-mats-section">
-          <h4 class="text-white text-sm md:text-base font-black mb-3 flex items-center gap-2 tracking-widest">
+          <h4 class="text-white text-sm font-black mb-2 flex items-center gap-2 tracking-widest">
             <span class="w-1.5 h-4 bg-gray-700 rounded-full"></span> 선택 재료 - 서신
             <span class="text-[9px] md:text-[11px] text-white font-bold ml-2 tracking-tight">[5성 제작 기준]</span>
           </h4>
-          <div id="opt-mats-container" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2 font-bold"></div>
+          <div id="opt-mats-container" class="flex flex-wrap justify-center gap-2 font-bold"></div>
         </div>
         
-        <div id="embellish-mats-section" class="mt-6 md:mt-8">
-          <h4 class="text-white text-sm md:text-base font-black mb-3 flex items-center gap-2 tracking-widest">
+        <div id="embellish-mats-section" class="mt-3 md:mt-4">
+          <h4 class="text-white text-sm font-black mb-2 flex items-center gap-2 tracking-widest">
             <span class="w-1.5 h-4 bg-gray-700 rounded-full"></span> 선택 재료 - 장식
             <span class="text-[9px] md:text-[11px] text-white font-bold ml-2 tracking-tight">[5성 제작 기준]</span>
           </h4>
-          <div id="embellish-mats-container" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2 font-bold"></div>
+          <div id="embellish-mats-container" class="flex flex-wrap justify-center gap-2 font-bold"></div>
         </div>
         
-        <div id="fee-crafter-section" class="flex flex-col gap-3 border-t border-gray-800 pt-5 md:pt-6"></div>
-        <div id="bottom-order-section" class="w-full mt-1 md:mt-2"></div>
+        <div id="fee-crafter-section" class="flex flex-col gap-2 border-t border-gray-800 pt-3 md:pt-4"></div>
+        <div id="bottom-order-section" class="w-full mt-0 flex flex-col items-center"></div>
       </div>
     </section>
   </main>
@@ -1048,15 +1044,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     function generateStatusNoticeHTML() {
       const cfg = STATUS_NOTICE_CONFIG[currentStatusType];
       if (!cfg) return '';
-      return `<div class="status-notice-box w-full mt-2 px-3 py-2.5 rounded-xl flex flex-col items-center justify-center text-xs font-bold text-center" style="background:${cfg.bg}; border:1px solid ${cfg.border}; color:${cfg.color};"><span class="pre-wrap">${cfg.icon} ${cfg.msg}</span></div>`;
+      return `<div class="status-notice-box w-full mt-2 px-3 py-1 flex flex-col items-center justify-center text-xs font-bold text-center" style="color:${cfg.color};"><span class="pre-wrap">${cfg.icon} ${cfg.msg}</span></div>`;
     }
     function refreshStatusNotices() {
       document.querySelectorAll('.status-notice-box').forEach(el => {
         const cfg = STATUS_NOTICE_CONFIG[currentStatusType];
         if (!cfg) { el.style.display = 'none'; return; }
         el.style.display = '';
-        el.style.background = cfg.bg;
-        el.style.border = `1px solid ${cfg.border}`;
+        el.style.background = 'transparent';
+        el.style.border = '0';
         el.style.color = cfg.color;
         el.innerHTML = `<span class="shrink-0">${cfg.icon}</span><span>${cfg.msg}</span>`;
       });
@@ -1091,7 +1087,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         document.getElementById('status-text').innerText = `${data.type} : ${data.message}`;
         const rgb = statusRGB();
         const dot = document.getElementById('status-dot');
-        dot.className = `w-3 h-3 md:w-3.5 md:h-3.5 rounded-full animate-pulse shrink-0`;
+        dot.className = `w-2.5 h-2.5 md:w-3 md:h-3 rounded-full animate-pulse shrink-0 mt-1`;
         dot.style.background = `rgb(${rgb})`;
         const liveStatus = document.getElementById('live-status');
         liveStatus.style.borderColor = `rgb(${rgb})`;
@@ -1136,14 +1132,40 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const feedBox = document.getElementById('live-order-feed');
       const container = document.getElementById('live-order-container');
 
-      feedBox.classList.remove('hidden');
-
       // 일반 유저에게는 "본인 주문"만 표시 (localStorage로 내 주문 판별)
       const myKeys = new Set(getMyOrders().map(o => o.key));
       const ordersArray = ordersData
         ? Object.keys(ordersData).map(key => ({ id: key, ...ordersData[key] })).filter(o => myKeys.has(o.id))
         : [];
       ordersArray.sort((a, b) => b.timestamp - a.timestamp);
+
+      const myOrderText = document.getElementById('my-order-text');
+      const myOrderDot = document.getElementById('my-order-dot');
+      const HEADER_ORDER_STATUS = {
+        pending:  { label: '대기 중', color: '#f87171' },
+        accepted: { label: '접수 완료', color: '#38bdf8' },
+        done:     { label: '제작 완료', color: '#9ca3af' },
+        rejected: { label: '반려', color: '#facc15' },
+      };
+      if (myOrderText && myOrderDot) {
+        if (ordersArray.length === 0) {
+          document.getElementById('my-order-summary')?.classList.add('hidden');
+          document.getElementById('my-order-summary')?.classList.remove('flex');
+          myOrderText.textContent = '';
+          myOrderDot.style.background = '#4b5563';
+          myOrderDot.style.boxShadow = 'none';
+        } else {
+          document.getElementById('my-order-summary')?.classList.remove('hidden');
+          document.getElementById('my-order-summary')?.classList.add('flex');
+          const latestOrder = ordersArray[0];
+          const headerState = HEADER_ORDER_STATUS[latestOrder.status] || HEADER_ORDER_STATUS.pending;
+          const shortItemName = String(latestOrder.itemName || '').replace(/^\[[^\]]*\]\s*/, '');
+          myOrderText.textContent = `${headerState.label} · ${shortItemName}`;
+          myOrderText.className = 'text-[10px] md:text-[11px] font-bold text-gray-200 truncate';
+          myOrderDot.style.background = headerState.color;
+          myOrderDot.style.boxShadow = `0 0 6px ${headerState.color}88`;
+        }
+      }
 
       if (ordersArray.length === 0) {
         container.innerHTML = `<span class="md:hidden text-gray-500 text-[10px] font-medium pl-1">주문 알림을 보내면 여기에 실시간으로 표시됩니다.</span><span class="hidden md:inline text-gray-500 text-xs font-medium whitespace-nowrap pl-1">주문 알림을 보내시면 여기에 내 주문 현황이 실시간으로 표시됩니다.</span>`;
@@ -1200,6 +1222,19 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     const CLS_COLOR = { 
       "메오": "#8788EE", "후제": "#8788EE", "무통": "#8788EE", "앙리자이에": "#8788EE", "그로": "#8788EE", "포므리": "#0070DE", 
       "뒤작": "#A330C9", "디켐": "#FFF569", "크뤼그": "#C41E3A", "아르망": "#F48CBA", "라피트": "#3FC7EB", "장테": "#00FF96", "돔페리뇽": "#00FF98", "오베르": "#8788EE", "르루아": "#8788EE", "미정": "#6B7280"
+    };
+
+    const MAKER_IDENTITIES = {
+      "앙리자이에": { slug: "henri-jayer", signature: "Henri Jayer", portraitAlt: "왼쪽을 바라보는 앙리자이에의 은색 펜화 흉상" },
+      "아르망": { slug: "armand", signature: "Armand", portraitAlt: "왼쪽을 바라보는 아르망의 은색 펜화 흉상" },
+      "디켐": { slug: "dyquem", signature: "d’Yquem", portraitAlt: "왼쪽을 바라보는 디켐의 은색 펜화 흉상" },
+      "뒤작": { slug: "dujac", signature: "Dujac", portraitAlt: "왼쪽을 바라보는 뒤작의 은색 펜화 흉상" },
+      "크뤼그": { slug: "krug", signature: "Krug", portraitAlt: "왼쪽을 바라보는 크뤼그의 은색 펜화 흉상" },
+      "오베르": { slug: "aubert", signature: "Aubert", portraitAlt: "왼쪽을 바라보는 오베르의 은색 펜화 흉상" },
+      "돔페리뇽": { slug: "dom-perignon", signature: "Dom Pérignon", portraitAlt: "왼쪽을 바라보는 돔페리뇽의 은색 펜화 흉상", portraitVersion: "v2" },
+      "포므리": { slug: "pommery", signature: "Pommery", portraitAlt: "왼쪽을 바라보는 포므리의 은색 펜화 흉상" },
+      "라피트": { slug: "lafite", signature: "Lafite", portraitAlt: "왼쪽을 바라보는 라피트의 은색 펜화 흉상" },
+      "르루아": { slug: "leroy", signature: "Leroy", portraitAlt: "정면을 바라보는 르루아의 은색 펜화 흉상" }
     };
     
     const CAT_ICONS = {
@@ -1769,7 +1804,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     function generateOrderButtonHTML(crafter, itemName, showNotice=false) {
       if (itemCooldowns[itemName]) {
         return `
-          <button class="order-action-btn hj-primary-action w-full px-4 py-3 bg-gradient-to-r from-green-600/20 to-green-900/20 border border-green-500/50 rounded-xl font-black text-white cursor-not-allowed opacity-80 flex flex-col items-center justify-center gap-1">
+          <button class="order-action-btn hj-primary-action w-full md:w-1/2 mx-auto px-3 py-2 bg-gradient-to-r from-green-600/20 to-green-900/20 border border-green-500/50 rounded-xl font-black text-white cursor-not-allowed opacity-80 flex flex-col items-center justify-center gap-0.5">
             <span class="text-sm md:text-base z-10">✅ 주문 접수 완료!</span>
             <span class="text-xs md:text-sm text-green-400 relative z-10">잠시만 기다려주세요</span>
           </button>
@@ -1779,17 +1814,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const _sc = statusRGB();
       return `
         <button onclick="sendOrder('${crafter}', '${itemName}')"
-          class="order-action-btn hj-primary-action order-pulse w-full px-4 py-3 border rounded-xl font-black text-white active:scale-95 flex items-center justify-between gap-2 relative overflow-hidden group" style="--sc-rgb:${_sc}; background:linear-gradient(to right, rgba(${_sc},0.2), rgba(${_sc},0.1)); border-color:rgba(${_sc},0.6);">
+          class="order-action-btn hj-primary-action order-pulse w-full md:w-1/2 mx-auto px-3 py-2 border rounded-xl font-black text-white active:scale-95 flex items-center justify-between gap-2 relative overflow-hidden group" style="--sc-rgb:${_sc}; background:linear-gradient(to right, rgba(${_sc},0.2), rgba(${_sc},0.1)); border-color:rgba(${_sc},0.72);">
           <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></span>
-          <span class="finger-left text-lg md:text-xl select-none shrink-0 relative z-10">👉</span>
-          <div class="flex flex-col items-center flex-1 gap-1 relative z-10">
-            <span class="text-xs md:text-sm text-center leading-snug">
-              <span class="text-gray-300 font-bold">① 인게임에서 먼저 주문을 넣어주세요</span><br>
-              <span class="font-black text-white text-sm md:text-base">② 그 후 이 버튼을 눌러주세요!</span>
-            </span>
-            <span class="text-xs md:text-sm font-black tracking-wide animate-pulse" style="color:#f0abfc;">⚡ 클릭 즉시 제작자 핸드폰으로 알림이 전송됩니다</span>
+          <span class="finger-left text-base md:text-lg select-none shrink-0 relative z-10">👉</span>
+          <div class="flex flex-col items-center flex-1 gap-0.5 relative z-10">
+            <span class="text-xs md:text-sm text-center leading-tight text-gray-300 font-bold">인게임 주문 후 <span class="font-black text-white md:text-base">주문 알림 보내기</span></span>
+            <span class="text-[10px] md:text-xs font-black tracking-wide animate-pulse" style="color:#f0abfc;">⚡ 제작자에게 즉시 전송됩니다</span>
           </div>
-          <span class="finger-right text-lg md:text-xl select-none shrink-0 relative z-10">👈</span>
+          <span class="finger-right text-base md:text-lg select-none shrink-0 relative z-10">👈</span>
         </button>
         ${showNotice ? generateStatusNoticeHTML() : ''}
       `;
@@ -1803,8 +1835,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
 
       const color = CLS_COLOR[item.crafter] || "#8788EE";
       const detailIcon = document.getElementById('detail-icon');
-      const borderShine = document.getElementById('detail-5star-border');
-      const badge = document.getElementById('detail-5star-badge');
       const whLink = document.getElementById('detail-wh-link');
       const nameLink = document.getElementById('detail-name-link');
       const detailName = document.getElementById('detail-name');
@@ -1814,15 +1844,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       nameLink.href = wowheadUrl;
       detailIcon.src = `https://wow.zamimg.com/images/wow/icons/large/${item.icon}.jpg`;
       
-      if(item.is5Star) {
-        detailIcon.className = "w-full h-full rounded-xl relative z-0 shadow-lg";
-        borderShine.classList.remove('hidden');
-        badge.classList.remove('hidden');
-      } else {
-        detailIcon.className = "w-full h-full rounded-xl border border-gray-800 shadow-lg relative z-0";
-        borderShine.classList.add('hidden');
-        badge.classList.add('hidden');
-      }
+      detailIcon.className = "w-full h-full rounded-lg border border-[#4a5160] relative z-0 object-cover";
 
       const isDecorationDetail = item.name.includes('[장식 ');
       detailName.className = `text-xl md:text-3xl leading-tight font-black tracking-tight font-kr-title truncate ${isDecorationDetail ? 'text-[#D6BCFA]' : 'text-white'}`;
@@ -1846,10 +1868,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       reqCont.innerHTML = '';
       item.reqMats.forEach(m => {
         const b = document.createElement('button');
-        b.className = "hj-compact-tile flex items-center justify-between p-2.5 md:p-3 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group";
+        b.className = "hj-compact-tile flex items-center justify-between px-2.5 py-1.5 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group";
         b.onclick = () => copyText(m.n, b, color);
         let matNameHtml = applyGoldStar(m.n);
-        b.innerHTML = `<div class="flex items-center gap-2.5 flex-1 min-w-0"><img src="https://wow.zamimg.com/images/wow/icons/medium/${m.i}.jpg" class="w-6 h-6 md:w-7 md:h-7 rounded-md shrink-0 object-cover"><span class="group-hover:text-white font-bold text-left leading-tight">${matNameHtml}</span></div><span class="mat-status text-white font-black text-xs md:text-sm shrink-0 ml-2 tabular-nums">×${m.c}</span>`;
+        b.innerHTML = `<div class="flex items-center gap-1.5 flex-1 min-w-0"><img src="https://wow.zamimg.com/images/wow/icons/medium/${m.i}.jpg" class="w-[22px] h-[22px] rounded-md shrink-0 object-cover"><span class="group-hover:text-white font-bold text-left leading-tight text-xs md:text-sm">${matNameHtml}</span></div><span class="mat-status text-white font-black text-xs md:text-sm shrink-0 ml-2 tabular-nums">×${m.c}</span>`;
         reqCont.appendChild(b);
       });
 
@@ -1857,11 +1879,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const copyString = item.reqMats.map(m => `${m.n.replace(/\s*\(금색\)/g, ' (금성)')} x ${m.c}`).join(" / ");
       
       copyAllSec.innerHTML = `
-        <button onclick="copyTextExact('${copyString.replace(/'/g, "\\'")}', this, '${color}')" class="w-full py-2.5 px-4 bg-gray-900 border border-gray-700 hover:border-[${color}]/50 hover:bg-gray-800 transition-all rounded-lg text-left group shadow-md flex flex-col gap-1.5">
-          <div class="text-sm font-bold text-gray-200 group-hover:text-white flex items-center gap-2 transition-colors">
+        <button onclick="copyTextExact('${copyString.replace(/'/g, "\\'")}', this, '${color}')" class="w-full py-1.5 px-3 bg-gray-900 border border-gray-700 hover:border-[${color}]/50 hover:bg-gray-800 transition-all rounded-lg text-left group flex flex-col gap-0.5">
+          <div class="text-xs font-bold text-gray-200 group-hover:text-white flex items-center gap-2 transition-colors">
             <span class="mat-status">📋 클릭하여 전체 필수 재료 복사하기</span>
           </div>
-          <div class="text-[11px] md:text-xs text-gray-500 group-hover:text-gray-400 leading-tight transition-colors">${copyString}</div>
+          <div class="text-[10px] md:text-[11px] text-gray-500 group-hover:text-gray-400 leading-tight transition-colors truncate">${copyString}</div>
         </button>
       `;
 
@@ -1898,15 +1920,19 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       }
 
       const optContSec = document.getElementById('opt-mats-section');
+      const choiceLabelSize = (label) => {
+        const length = Array.from(label.replace(/\s+/g, '')).length;
+        return length >= 15 ? '7.5px' : length >= 12 ? '8.5px' : length >= 10 ? '9.5px' : '10.5px';
+      };
       if (showMissive) {
         optContSec.classList.remove('hidden');
         const optCont = document.getElementById('opt-mats-container');
         optCont.innerHTML = '';
         missiveList.forEach(opt => {
           const b = document.createElement('button');
-          b.className = "hj-choice-tile flex items-center gap-2 p-2.5 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group min-h-14 md:min-h-16 relative text-left";
+          b.className = "hj-choice-tile flex items-center justify-center gap-1.5 px-2 py-1.5 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group min-h-[42px] relative";
           b.onclick = () => copyText(opt.copy, b, color, true);
-          b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/medium/${opt.icon}.jpg" class="w-7 h-7 rounded-md opacity-80 group-hover:opacity-100 shrink-0 object-cover"><span class="text-white group-hover:text-yellow-300 leading-tight text-[10px] md:text-[11px] font-bold flex-1">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
+          b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/medium/${opt.icon}.jpg" class="w-[22px] h-[22px] rounded-md opacity-80 group-hover:opacity-100 shrink-0 object-cover"><span class="hj-choice-label text-white group-hover:text-yellow-300 leading-none font-bold text-center whitespace-nowrap" style="font-size:${choiceLabelSize(opt.label)}">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
           optCont.appendChild(b);
         });
       } else optContSec.classList.add('hidden');
@@ -1921,9 +1947,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         embList = embList.filter(opt => !opt.gunOnly || isGunCraft);
         embList.forEach(opt => {
           const b = document.createElement('button');
-          b.className = "hj-choice-tile flex items-center gap-2 p-2.5 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group min-h-14 md:min-h-16 relative text-left";
+          b.className = "hj-choice-tile flex items-center justify-center gap-1.5 px-2 py-1.5 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group min-h-[42px] relative";
           b.onclick = () => copyText(opt.copy, b, color, true);
-          b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/medium/${opt.icon}.jpg" class="w-7 h-7 rounded-md opacity-80 group-hover:opacity-100 shrink-0 object-cover"><span class="text-white group-hover:text-yellow-300 leading-tight text-[10px] md:text-[11px] font-bold flex-1">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
+          b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/medium/${opt.icon}.jpg" class="w-[22px] h-[22px] rounded-md opacity-80 group-hover:opacity-100 shrink-0 object-cover"><span class="hj-choice-label text-white group-hover:text-yellow-300 leading-none font-bold text-center whitespace-nowrap" style="font-size:${choiceLabelSize(opt.label)}">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
           embCont.appendChild(b);
         });
       } else embContSec.classList.add('hidden');
@@ -1934,29 +1960,27 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         const onlyNumbers = val.replace(/[^0-9]/g, "");
         return onlyNumbers === "" ? "1" : onlyNumbers;
       };
+      const makerIdentity = MAKER_IDENTITIES[item.crafter];
 
       feeCrafterSec.innerHTML = `
         <div class="flex flex-col md:flex-row gap-3">
           <div class="flex flex-col gap-2 flex-1">
-            <button onclick="copyText('${getCopyValue(item.fee)}', this, '#EAB308', true)" class="hj-info-tile w-full px-4 py-2.5 bg-gray-900 rounded-xl border border-gray-800 flex justify-between items-center group hover:border-yellow-500">
-              <span class="text-xs text-white font-black">기본 수수료</span>
-              <span class="mat-status text-white group-hover:text-yellow-400 font-black text-base">${item.fee}</span>
+            <button onclick="copyText('1', this, '#EAB308', true)" class="hj-info-tile w-full px-4 py-3 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center gap-2 group hover:border-yellow-500 flex-1">
+              <span class="text-xs md:text-sm text-white font-black text-center">수수료</span>
+              <span class="mat-status text-white group-hover:text-yellow-400 font-black text-xl md:text-2xl text-center">자율</span>
             </button>
-            ${item.is5Star ? `
-            <button id="fee-5star-btn" onclick="copyText('${getCopyValue(item.fee5Star || item.fee)}', this, '#EAB308', true)" class="hj-info-tile w-full px-4 py-3 bg-gray-900 rounded-xl border border-yellow-500/40 transition-all flex justify-between items-center group hover:border-yellow-400 flex-1">
-              <span class="text-xs md:text-sm text-yellow-500/70 font-black tracking-widest flex items-center gap-1"><span class="text-[10px] md:text-xs">★</span>5성 수수료</span>
-              <span class="mat-status text-yellow-400 font-black text-lg md:text-xl">${item.fee5Star || item.fee}</span>
-            </button>` : `
-            <button class="hj-info-tile w-full px-4 py-3 bg-gray-900/40 rounded-xl border border-gray-800/50 flex justify-between items-center opacity-60 cursor-not-allowed flex-1">
-              <span class="text-xs text-gray-600 font-black">5성 수수료</span>
-              <span class="mat-status text-gray-500 font-black text-base">Coming Soon</span>
-            </button>`}
+            <button onclick="copyText('${item.crafter}', this, '${color}', true)" class="hj-info-tile w-full px-4 py-3 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center group hover:border-gray-700 transition-colors flex-1">
+              <span class="text-xs text-white font-black">제작자</span>
+              <span class="mat-status font-black text-xl md:text-3xl" style="color: ${color}">${item.crafter}</span>
+              <span class="text-xs md:text-sm text-white/80 font-bold mt-1.5">(클릭하시면 제작자 아이디가 복사됩니다)</span>
+            </button>
           </div>
-          <button onclick="copyText('${item.crafter}', this, '${color}', true)" class="hj-info-tile flex-1 px-4 py-3 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center group hover:border-gray-700 transition-colors">
-            <span class="text-xs text-white font-black">제작자</span>
-            <span class="mat-status font-black text-xl md:text-3xl" style="color: ${color}">${item.crafter}</span>
-            <span class="text-xs md:text-sm text-white/80 font-bold mt-1.5">(클릭하시면 제작자 아이디가 복사됩니다)</span>
-          </button>
+          ${makerIdentity ? `
+          <div class="maker-authentication flex-1 min-h-[164px] md:min-h-[176px] relative overflow-hidden" aria-label="후제공방 인증을 받은 ${item.crafter} 제작자 서명">
+            <img src="assets/makers/common/hooje-auth-seal-v1.png" alt="후제공방 HJ 인증 도장" class="maker-authentication-seal absolute left-3 top-3 object-contain" loading="eager">
+            <span class="maker-authentication-signature absolute left-3 bottom-3 w-[48%]" aria-label="${makerIdentity.signature} 서명">${makerIdentity.signature}</span>
+            <img src="assets/makers/${makerIdentity.slug}/${makerIdentity.slug}-portrait-${makerIdentity.portraitVersion || 'v1'}.png?v=260804c" alt="${makerIdentity.portraitAlt}" class="maker-authentication-portrait absolute right-0 bottom-0 w-[54%] h-full object-contain object-right-bottom" loading="eager">
+          </div>` : ''}
         </div>
       `;
       if (window.$WowheadPower) { window.$WowheadPower.refreshLinks(); }
@@ -1968,13 +1992,16 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const is5Star = item.is5Star;
       const isFav = favorites.includes(item.name);
       const isDecoration = item.name.includes('[장식 ');
+      const itemNameParts = item.name.match(/^(\[[^\]]+\])\s*(.*)$/);
+      const itemSlotLabel = itemNameParts ? itemNameParts[1] : '';
+      const itemDisplayName = itemNameParts ? itemNameParts[2] : item.name;
       
       const nameColorClass = isDecoration ? '!text-[#D6BCFA]' : (is5Star ? 'text-yellow-100' : 'text-gray-200');
       const cColor = CLS_COLOR[item.crafter] || "#8788EE";
       
       const hoverClass = isLock ? 'opacity-40 grayscale cursor-not-allowed' : 'cursor-pointer hover:bg-gray-800 group';
       
-      btn.className = `w-full flex items-center p-2 md:p-2.5 border-b border-gray-800/30 last:border-0 text-left transition-all relative ${hoverClass}`;
+      btn.className = `w-full flex items-center px-2 py-1.5 border-b border-gray-700/60 last:border-0 text-left transition-all relative ${hoverClass}`;
       
       btn.onclick = () => { 
         if(!isLock) {
@@ -1986,21 +2013,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         } 
       };
       
-      const iconBorder = is5Star ? 'border-0' : 'border border-gray-700 group-hover:border-['+cColor+'] shadow-md';
-      const shineHTML = is5Star ? `<div class="gold-border-shine absolute inset-0 rounded-xl pointer-events-none z-10"></div>` : '';
-      const badgeHTML = is5Star ? `
-        <div class="wow-rank-5" style="top: -5px; right: -5px; width: 18px; height: 18px; z-index: 20;">
-          <div class="wow-rank-5-bg"></div><div class="wow-rank-5-inner"></div>
-          <span class="wow-rank-5-text" style="font-size: 10px;">5</span>
-        </div>` : '';
-
-      // [신규] HOT 마크 애니메이션
-      const popularBadgeHTML = item.popular ? `
-        <div class="absolute" style="bottom: -2px; left: -2px; z-index: 30;">
-          <div class="hot-badge-flame text-white text-[7px] md:text-[8px] font-black px-1.5 py-0 rounded shadow-[0_0_5px_rgba(255,0,0,0.5)] border border-red-300/40">
-            HOT
-          </div>
-        </div>` : '';
+      const iconBorder = 'border border-[#4a5160] group-hover:border-[#727b8c]';
 
       const starColor = isFav ? "text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.6)] scale-110" : "text-gray-700 group-hover:text-yellow-400/50";
       const favStarHtml = `
@@ -2012,20 +2025,17 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       `;
 
       btn.innerHTML = `
-        <div class="relative shrink-0 w-9 h-9 md:w-10 md:h-10 mr-2.5 z-10">
-          ${popularBadgeHTML}
+        <div class="relative shrink-0 w-8 h-8 md:w-9 md:h-9 mr-2.5 z-10">
           <a href="https://www.wowhead.com/item=${item.id || 0}" data-wowhead="domain=ko" onclick="return false;" class="cursor-default">
-            <img src="https://wow.zamimg.com/images/wow/icons/large/${item.icon}.jpg" class="w-full h-full rounded-xl ${iconBorder} relative z-0">
-            ${shineHTML}
-            ${badgeHTML}
+            <img src="https://wow.zamimg.com/images/wow/icons/large/${item.icon}.jpg" class="w-full h-full rounded-lg ${iconBorder} relative z-0">
           </a>
         </div>
         <div class="flex-1 min-w-0 z-10">
-          <a href="https://www.wowhead.com/item=${item.id || 0}" data-wowhead="domain=ko" onclick="return false;" class="text-[13px] md:text-[14px] font-black ${nameColorClass} ${isLock ? '' : 'group-hover:text-white'} hover:text-[${cColor}] transition-colors leading-tight truncate block cursor-default">
-            ${item.name} ${isLock ? '<span class="text-red-600 text-[10px] ml-1 font-bold uppercase tracking-tighter no-underline">[Coming Soon]</span>' : ''}
+          <a href="https://www.wowhead.com/item=${item.id || 0}" data-wowhead="domain=ko" onclick="return false;" class="text-[13px] md:text-[14px] font-black ${nameColorClass} ${isLock ? '' : 'group-hover:text-white'} transition-colors leading-none truncate block cursor-default">
+            ${itemSlotLabel || itemDisplayName} ${isLock ? '<span class="text-red-600 text-[9px] ml-1 font-bold uppercase tracking-tighter no-underline">[Coming Soon]</span>' : ''}
           </a>
-          <div class="text-[9px] md:text-[10px] font-black mt-1 uppercase tracking-widest flex items-center justify-between pointer-events-none" style="color: ${isLock ? '#6b7280' : cColor}">
-            <span>${item.crafter}</span>
+          <div class="text-[9px] md:text-[10px] font-bold mt-1 tracking-tight flex items-center justify-between pointer-events-none text-gray-400">
+            <span class="truncate">${itemSlotLabel ? itemDisplayName : ''}</span>
           </div>
         </div>
         ${favStarHtml}
