@@ -371,7 +371,7 @@
       #sidebar.m-collapsed #category-list{ display: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="design-refresh.css?v=260804a">
+  <link rel="stylesheet" href="design-refresh.css?v=260804b">
 </head>
 <body>
 <div id="app-container" class="text-gray-200 relative">
@@ -1319,6 +1319,28 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     let DB = {};
     const allItemsFlat = [];
 
+    const ENGINEERING_ICON_FALLBACKS = {
+      '판금 머리': 'inv_plate_questbloodelf_b_01_helm',
+      '판금 손목': 'inv_plate_questbloodelf_b_01_bracer',
+      '판금 발': 'inv_plate_questbloodelf_b_01_boot',
+      '사슬 머리': 'inv_helm_mail_questbloodelf_b_01',
+      '사슬 손목': 'inv_bracer_mail_questbloodelf_b_01',
+      '사슬 발': 'inv_boot_mail_questbloodelf_b_01',
+      '가죽 머리': 'inv_helm_leather_questbloodelf_b_01',
+      '가죽 손목': 'inv_bracer_leather_questbloodelf_b_01',
+      '가죽 발': 'inv_boot_leather_questbloodelf_b_01',
+      '천 머리': 'inv_helm_cloth_questbloodelf_b_01',
+      '천 손목': 'inv_bracer_cloth_questbloodelf_b_01',
+      '천 발': 'inv_boot_cloth_questbloodelf_b_01'
+    };
+
+    function withEngineeringIconFallback(item, catKey) {
+      if (catKey !== 'engineering' || item.icon) return item;
+      const match = item.name && item.name.match(/^\[기계공학\s+(판금|사슬|가죽|천)\s+(머리|손목|발)\]/);
+      if (!match) return item;
+      return { ...item, icon: ENGINEERING_ICON_FALLBACKS[`${match[1]} ${match[2]}`] || '' };
+    }
+
     // ── 자동 정렬 로직 ────────────────────────────────────────────────
     // 방어구 슬롯 순서: 머리→어깨→가슴→손목→손→허리→다리→발
     const ARMOR_SLOT_ORDER = { '머리':1,'어깨':2,'가슴':3,'손목':4,'손':5,'허리':6,'다리':7,'발':8 };
@@ -1394,10 +1416,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         const catName = CAT_KEY_TO_NAME[catKey];
         const catItems = itemsData[catKey];
         if (!catItems) return;
-        const raw = Object.values(catItems).map(item => ({
+        const raw = Object.values(catItems).map(item => withEngineeringIconFallback({
           ...item,
           reqMats: item.reqMats ? Object.values(item.reqMats) : []
-        }));
+        }, catKey));
         DB[catName] = sortItems(raw, catKey);
         DB[catName].forEach(item => allItemsFlat.push({ ...item, cat: catName }));
       });
@@ -1582,7 +1604,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     window.showNotice = function() {
       document.getElementById('notice-state').classList.remove('hidden');
       document.getElementById('content-state').classList.add('hidden');
-      if(window.innerWidth < 768) document.getElementById('detail-panel').scrollTop = 0;
+      const detailPanel = document.getElementById('detail-panel');
+      if (detailPanel) {
+        detailPanel.scrollTop = 0;
+        requestAnimationFrame(() => { detailPanel.scrollTop = 0; });
+      }
     };
 
     // sendOrder는 아래 플로팅 시스템 초기화 이후에 정의됩니다

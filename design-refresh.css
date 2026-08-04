@@ -56,6 +56,25 @@ header,
   box-shadow: none !important;
 }
 
+/* Bespoke atelier ornamentation: raster engravings, deliberately kept near watermark strength. */
+#detail-panel {
+  background-color: var(--hj-ink) !important;
+  background-image:
+    url("assets/ornaments/hooje-corner-subtle-v1.png"),
+    url("assets/ornaments/hooje-medallion-subtle-v1.png") !important;
+  background-position: left -64px top 24px, right 8% center !important;
+  background-repeat: no-repeat !important;
+  background-size: 220px auto, min(31vw, 420px) auto !important;
+  background-attachment: local !important;
+}
+
+#content-state {
+  background-image: url("assets/ornaments/hooje-divider-subtle-v1.png");
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: 88% auto;
+}
+
 .glass-panel {
   background: rgba(11, 14, 20, 0.94) !important;
   border-color: var(--hj-line) !important;
@@ -193,5 +212,12 @@ span[style*="Great Vibes"] {
   #coffee-fx,
   .hj-steam path {
     animation: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  #detail-panel {
+    background-position: left -90px top 16px, right -120px center !important;
+    background-size: 230px auto, 310px auto !important;
   }
 }
