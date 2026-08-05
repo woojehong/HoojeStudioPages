@@ -226,7 +226,6 @@
       .admin-notice-form button { flex: 1; padding-left: 12px !important; padding-right: 12px !important; }
       .admin-orders-header { flex-direction: column; }
       .order-bulk-actions { width: 100%; padding: 11px 0 0; border-left: 0; border-top: 1px solid var(--adm-line); }
-      .order-bulk-actions label { margin-right: auto; min-height: 40px; }
       .order-bulk-actions button { flex: 1; min-width: 0; }
       .orders-layout { flex-direction: column !important; gap: 12px !important; }
       .pending-summary-panel { order: -1; width: 100% !important; }
@@ -238,9 +237,73 @@
       .admin-order-actions button { width: 100%; min-width: 0; }
       .admin-settings-panel { padding-left: 14px !important; padding-right: 14px !important; }
     }
+    @media (max-width: 520px) {
+      .admin-live-panel { padding-top: 11px !important; padding-bottom: 11px !important; gap: 8px !important; }
+      .admin-live-panel > div:last-child { padding-top: 8px !important; }
+      #monitor-text .mon-type { font-size: 1.12rem; }
+      #monitor-text .mon-msg { margin-top: 2px; font-size: 0.76rem; line-height: 1.28; }
+      .admin-orders-panel { padding: 10px !important; }
+      .admin-orders-header {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center !important;
+        margin-bottom: 8px !important;
+        padding-bottom: 8px !important;
+        gap: 7px !important;
+      }
+      .admin-orders-title { min-width: 0; flex: 1; }
+      .admin-orders-title h3 { font-size: 0.94rem !important; white-space: nowrap; }
+      .admin-orders-title p { display: none; }
+      .order-bulk-actions {
+        width: auto;
+        padding: 0 0 0 7px;
+        border-top: 0;
+        border-left: 1px solid var(--adm-line);
+        flex-wrap: nowrap;
+        gap: 5px !important;
+      }
+      .order-bulk-actions button {
+        min-height: 38px;
+        padding: 0 9px !important;
+        font-size: 0.68rem !important;
+        white-space: nowrap;
+      }
+      .orders-layout { gap: 7px !important; }
+      .pending-summary-panel { gap: 0 !important; }
+      .pending-summary-panel > div:first-child { display: none; }
+      #pending-summary { gap: 4px !important; }
+      #pending-summary > button { min-width: 82px; min-height: 32px; padding: 4px 7px !important; }
+      #admin-order-list { gap: 4px !important; max-height: calc(100dvh - 250px) !important; }
+      .admin-order-card { border-radius: 8px !important; }
+      .admin-order-card > div:first-child { width: 4px !important; }
+      .admin-order-body {
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 5px !important;
+        padding: 6px 7px !important;
+        min-height: 52px;
+      }
+      .admin-order-body > div:first-child { gap: 2px !important; }
+      .admin-order-body > div:first-child > div:first-child { gap: 4px !important; }
+      .admin-order-actions {
+        display: flex !important;
+        flex: 0 0 auto;
+        width: auto !important;
+        flex-wrap: nowrap !important;
+        gap: 3px !important;
+      }
+      .admin-order-actions button {
+        width: auto;
+        min-width: 46px;
+        min-height: 38px;
+        padding: 0 7px !important;
+        font-size: 0.68rem !important;
+      }
+    }
     @media (max-width: 390px) {
       .admin-header-actions button { padding-left: 9px !important; padding-right: 9px !important; }
-      .admin-order-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .admin-order-actions button { min-width: 42px; padding-left: 5px !important; padding-right: 5px !important; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
@@ -339,10 +402,6 @@
         <p>대기 주문을 우선 확인하고 접수·완료를 처리하세요.</p>
       </div>
       <div class="order-bulk-actions flex items-center gap-2 flex-wrap">
-        <label class="flex items-center gap-1.5 cursor-pointer select-none">
-          <input type="checkbox" id="include1account" checked class="w-3.5 h-3.5 accent-[#8788EE]">
-          <span class="text-gray-400 text-[10px] font-black tracking-widest">1계정 포함</span>
-        </label>
         <button onclick="acceptAllOrders()" class="px-4 py-2 bg-sky-900/20 text-sky-300 border border-sky-500/20 font-black rounded-lg text-xs hover:bg-sky-700 hover:text-white transition-all">일괄 접수</button>
         <button onclick="completeAllOrders()" class="px-4 py-2 bg-emerald-600/10 text-emerald-400 border border-emerald-500/30 font-black rounded-lg text-xs hover:bg-emerald-600 hover:text-white transition-all">일괄 완료</button>
       </div>
@@ -757,7 +816,6 @@
       document.getElementById('notice-input').value = txt || "";
     });
 
-    const ONE_ACCOUNT_CRAFTERS = ['메오', '후제', '그로', '무통', '장테'];
     const PRIORITY_ORDER = ['포므리','돔페리뇽','오베르','메오','라피트','디켐','뒤작','아르망','크뤼그','르루아','앙리자이에','그로','무통','후제'];
 
     // ── 새 주문 효과음: Web Audio로 차임을 직접 생성 (외부 파일 의존 없음) ──
@@ -795,8 +853,32 @@
         });
       } catch (e) {}
     }
-    // ① 신규 주문: 상향 딩동
-    function playOrderChime() { _playSeq([[880, 0], [1174.66, 0.13]]); }
+    // 금속성 차임 한 타격: 외부 음원 없이 기본음과 배음을 겹쳐 직접 합성한다.
+    function _playBellStrike(freq, dt, dur = 0.72, vol = 0.34) {
+      if (!_sndEnabled()) return;
+      try {
+        _sndUnlock();
+        if (!_sndCtx || _sndCtx.state !== 'running') return;
+        const t0 = _sndCtx.currentTime + dt;
+        [[1, 1], [2.01, 0.22], [3.92, 0.08]].forEach(([ratio, level]) => {
+          const o = _sndCtx.createOscillator(), g = _sndCtx.createGain();
+          o.type = 'sine';
+          o.frequency.setValueAtTime(freq * ratio, t0);
+          g.gain.setValueAtTime(0.0001, t0);
+          g.gain.exponentialRampToValueAtTime(vol * level, t0 + 0.012);
+          g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+          o.connect(g);
+          g.connect(_sndCtx.destination);
+          o.start(t0);
+          o.stop(t0 + dur + 0.04);
+        });
+      } catch (e) {}
+    }
+    // ① 신규 주문: 짧고 또렷한 하향 2음 도어 차임(후제공방 독자 합성음)
+    function playOrderChime() {
+      _playBellStrike(1318.51, 0, 0.66, 0.34);
+      _playBellStrike(880, 0.29, 0.82, 0.38);
+    }
     // ② 10분 미수락: 긴급 삼연타 + 상향 마무리 (두드러지게)
     function playStaleChime() {
       _playSeq([
@@ -806,12 +888,12 @@
         [1318.5, 0.62, 0.55, 0.45, 'triangle'],
       ]);
     }
-    // ③ 수락 후 5분 미완료: 하향 동딩 (리마인더)
+    // ③ 수락 후 10분 미완료: 낮고 부드러운 하향 2음 (리마인더)
     function playUnfinishedChime() { _playSeq([[659.25, 0], [523.25, 0.16, 0.7, 0.35]]); }
 
     // ── 지연 경보 (주문·단계당 1회만) ──
     const PENDING_ALERT_MS  = 10 * 60 * 1000; // 미수락 10분
-    const ACCEPTED_ALERT_MS =  5 * 60 * 1000; // 수락 후 5분
+    const ACCEPTED_ALERT_MS = 10 * 60 * 1000; // 수락 후 10분
     const _orderStage = {};                    // id → { status, since }
     const _alerted = { pend: {}, acc: {} };    // 단계별 1회 알림 플래그
 
@@ -1045,15 +1127,11 @@
     setInterval(() => { if (allOrdersCache.length) renderOrderList(allOrdersCache); }, 60000);
 
     window.updateNotice = () => { const input = document.getElementById('notice-input'); if(input.value.trim()) set(ref(db, 'notice'), input.value); };
-    window.clearNotice = () => {
-      if (confirm('현재 공지를 삭제할까요?')) set(ref(db, 'notice'), "");
-    };
+    window.clearNotice = () => set(ref(db, 'notice'), "");
     window.acceptOrder = (id) => update(ref(db, `orders/${id}`), { status: 'accepted', acceptedAt: Date.now() });
     window.completeOrder = (id) => update(ref(db, `orders/${id}`), { status: 'done' });
     window.rejectOrder = (id) => update(ref(db, `orders/${id}`), { status: 'rejected' });
     window.undoOrder = (id) => update(ref(db, `orders/${id}`), { status: 'pending' });
-
-    function getInclude1Account() { return document.getElementById('include1account').checked; }
 
     window.completeCrafterOrders = (crafter) => {
       const updates = {};
@@ -1062,33 +1140,26 @@
           updates[`/orders/${o.id}/status`] = 'done';
         }
       });
-      const count = Object.keys(updates).length;
-      if (count && confirm(`${crafter}의 진행 주문 ${count}건을 모두 완료할까요?`)) update(ref(db), updates);
+      if (Object.keys(updates).length) update(ref(db), updates);
     };
 
     window.acceptAllOrders = () => {
-      const include1 = getInclude1Account();
       const updates = {};
       allOrdersCache.forEach(o => {
         if (o.status !== 'pending') return;
-        if (!include1 && ONE_ACCOUNT_CRAFTERS.includes(o.crafter)) return;
         updates[`/orders/${o.id}/status`] = 'accepted';
         updates[`/orders/${o.id}/acceptedAt`] = Date.now();
       });
-      const count = Object.keys(updates).filter(k => k.endsWith('/status')).length;
-      if (count && confirm(`대기 주문 ${count}건을 일괄 접수할까요?`)) update(ref(db), updates);
+      if (Object.keys(updates).length) update(ref(db), updates);
     };
 
     window.completeAllOrders = () => {
-      const include1 = getInclude1Account();
       const updates = {};
       allOrdersCache.forEach(o => {
         if (o.status !== 'accepted') return; // 접수된 주문만 일괄 완료
-        if (!include1 && ONE_ACCOUNT_CRAFTERS.includes(o.crafter)) return;
         updates[`/orders/${o.id}/status`] = 'done';
       });
-      const count = Object.keys(updates).length;
-      if (count && confirm(`접수된 주문 ${count}건을 일괄 완료할까요?`)) update(ref(db), updates);
+      if (Object.keys(updates).length) update(ref(db), updates);
     };
 
     // ── Firebase Auth ────────────────────────────────────────────────────
@@ -1227,7 +1298,6 @@
       await remove(ref(db, `reports/${key}`));
     };
     window.bulkDeleteConfirmed = async function() {
-      if (!confirm('확인된 항목(보관함 제외)을 모두 삭제할까요?')) return;
       const updates = {};
       Object.entries(allReportsData).forEach(([key, r]) => {
         if (r.confirmed && !r.archived) updates[`/reports/${key}`] = null;
@@ -1347,7 +1417,6 @@
       document.getElementById('shDesc').value = '';
     };
     window.delSearchItem = async (type, key) => {
-      if (!confirm('삭제할까요?')) return;
       await remove(ref(db, `searchItems/${type}/${key}`));
     };
 
@@ -1554,8 +1623,6 @@
     };
     window.deleteItem = async () => {
       if(!editingKey) return;
-      const name = document.getElementById('mi-name').value;
-      if(!confirm(`"${name}"\n정말 삭제하시겠습니까? 되돌릴 수 없습니다.`)) return;
       await remove(ref(db, `items/${currentCat}/${editingKey}`));
       closeItemModal();
     };
@@ -1603,7 +1670,6 @@
       }
     };
     window.resetAddonLabel = async () => {
-      if (!confirm('애드온 버튼 문구를 기본값으로 초기화할까요?')) return;
       try {
         await set(ref(db, 'addon_label'), null);
         document.getElementById('addon-label-input').value = '';
@@ -1624,7 +1690,6 @@
       }
     };
     window.resetAddonUrl = async () => {
-      if (!confirm('애드온 다운로드 링크를 기본값으로 초기화할까요?')) return;
       try {
         await set(ref(db, 'addon_url'), null);
         document.getElementById('addon-url-input').value = '';
@@ -1756,7 +1821,7 @@
     function saveSeasons(){ return set(ref(db,'stats/seasons'), _seasons); }
     window.updateSeason = function(id,field,val){ if(!_seasons[id]) return; if(field==='start' && !/^\d{4}-\d{2}-\d{2}$/.test(val)) return; if(field==='name' && !String(val).trim()){ renderSeasonPanel(); return; } _seasons[id][field]=val; saveSeasons(); };
     window.updateSeasonEnd = function(id,val){ if(!/^\d{4}-\d{2}-\d{2}$/.test(val)){ renderSeasonPanel(); return; } const arr=seasonsSorted(_seasons); const i=arr.findIndex(x=>x.id===id); if(i<0 || i+1>=arr.length) return; _seasons[arr[i+1].id].start=val; saveSeasons(); };  // 이 시즌 종료 = 다음 시즌 시작
-    window.deleteSeason = function(id){ if(id==='midnight_s1') return; if(!confirm('이 시즌 분기점을 삭제할까요?')) return; delete _seasons[id]; saveSeasons(); };
+    window.deleteSeason = function(id){ if(id==='midnight_s1') return; delete _seasons[id]; saveSeasons(); };
     window.addSeason = function(){ const d=(document.getElementById('sp-new-date')||{}).value||'', n=((document.getElementById('sp-new-name')||{}).value||'').trim(); if(!/^\d{4}-\d{2}-\d{2}$/.test(d)){ alert('변경일을 선택하세요'); return; } if(!n){ alert('새 시즌 이름을 입력하세요'); return; } const id='s_'+Date.now(); _seasons[id]={name:n, start:d}; const de=document.getElementById('sp-new-date'), ne=document.getElementById('sp-new-name'); if(de)de.value=''; if(ne)ne.value=''; saveSeasons(); };
 
     function bindDcCurrentSeason(){

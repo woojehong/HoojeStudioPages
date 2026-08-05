@@ -160,9 +160,21 @@ header,
 }
 
 #search-input {
+  height: 40px;
   background-color: var(--hj-surface-muted) !important;
   border-color: var(--hj-line) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02) !important;
+}
+
+.sidebar-primary-row,
+.sidebar-category-row {
+  box-sizing: border-box;
+  height: 40px;
+  min-height: 40px;
+}
+
+.sidebar-primary-row {
+  background: linear-gradient(90deg, rgba(150, 152, 232, 0.09), transparent 72%);
 }
 
 #search-input:focus {
@@ -208,6 +220,7 @@ header,
 
 #detail-icon {
   border-color: #4a5160 !important;
+  border-width: 2px !important;
   box-shadow: inset 0 0 0 1px rgba(196, 203, 216, 0.05) !important;
   filter: saturate(0.94) contrast(1.03);
 }
@@ -278,11 +291,68 @@ header,
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055) !important;
 }
 
+.copy-all-action {
+  text-align: center;
+}
+
+.order-action-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: #d7d9f6;
+  border: 1px solid rgba(var(--sc-rgb, 135, 136, 238), 0.46);
+  border-radius: 50%;
+  background: rgba(var(--sc-rgb, 135, 136, 238), 0.12);
+}
+
+.order-action-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.order-action-kicker {
+  color: rgba(224, 228, 237, 0.72);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.order-action-label {
+  color: #f3f4f8;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.order-action-required {
+  padding: 2px 6px;
+  color: rgba(235, 237, 249, 0.8);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  border: 1px solid rgba(var(--sc-rgb, 135, 136, 238), 0.38);
+  border-radius: 999px;
+}
+
 /* Maker authentication trial: intentionally unboxed, like ink laid directly on the atelier surface. */
 .maker-authentication {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
   align-self: stretch;
   opacity: 0.9;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.28));
+}
+
+.maker-authentication-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  min-height: 0;
+  padding-left: 12px;
 }
 
 .maker-authentication-seal {
@@ -311,7 +381,17 @@ header,
 }
 
 .maker-authentication-portrait {
-  max-height: 100%;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 1;
+  width: 54%;
+  height: calc(100% - 12px);
+  max-width: 54%;
+  max-height: calc(100% - 12px);
+  object-fit: contain;
+  object-position: right center;
+  transform: translateY(-50%);
 }
 
 .maker-authentication:hover {
@@ -516,6 +596,7 @@ span[style*="Great Vibes"] {
   z-index: 1;
   width: 49%;
   min-width: 330px;
+  overflow: hidden;
   pointer-events: none;
 }
 
@@ -529,12 +610,16 @@ span[style*="Great Vibes"] {
 
 .master-message-portrait {
   position: absolute;
-  right: -2%;
-  bottom: -18%;
+  top: 50%;
+  right: 0;
   z-index: 1;
   width: min(390px, 94%);
-  height: auto;
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: right center;
   opacity: 0.76;
+  transform: translateY(-50%);
   filter: saturate(0.7) contrast(1.02) drop-shadow(-12px 5px 20px rgba(0, 0, 0, 0.42));
 }
 
@@ -587,7 +672,7 @@ span[style*="Great Vibes"] {
     bottom: 0;
     width: 100%;
     min-width: 0;
-    height: 230px;
+    height: 220px;
   }
 
   .master-message-identity::after {
@@ -595,9 +680,14 @@ span[style*="Great Vibes"] {
   }
 
   .master-message-portrait {
-    right: -9px;
-    bottom: -55px;
-    width: 250px;
+    top: 50%;
+    right: 0;
+    width: min(240px, 66%);
+    height: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: right center;
+    transform: translateY(-50%);
     opacity: 0.68;
   }
 

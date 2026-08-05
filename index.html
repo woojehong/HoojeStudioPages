@@ -160,17 +160,6 @@
     }
     .order-pulse { animation: orderPulse 2s ease-in-out infinite; }
 
-    /* 손가락 좌우 통통 */
-    @keyframes fingerLeft {
-      0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(-5px); }
-    }
-    @keyframes fingerRight {
-      0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(5px); }
-    }
-    .finger-left { animation: fingerLeft 0.9s ease-in-out infinite; }
-    .finger-right { animation: fingerRight 0.9s ease-in-out infinite; }
   </style>
   <style id="hj-polish">
   /* ===== 후제공방 폴리시 v11 (라이브 디자인 유지) ===== */
@@ -698,16 +687,16 @@
         </div>
         
         <div id="opt-mats-section">
-          <h4 class="text-white text-sm font-black mb-1.5 flex items-center gap-2 tracking-widest">
-            <span class="w-1.5 h-4 bg-gray-700 rounded-full"></span> 선택 재료 - 서신
+          <h4 id="opt-mats-heading" class="detail-choice-heading text-sm font-black mb-1.5 flex items-center gap-2 tracking-widest">
+            <span class="detail-choice-indicator w-1.5 h-4 rounded-full"></span> 선택 재료 - 서신
             <span class="text-[9px] md:text-[11px] text-white font-bold ml-2 tracking-tight">[5성 제작 기준]</span>
           </h4>
           <div id="opt-mats-container" class="flex flex-wrap justify-center gap-2 font-bold"></div>
         </div>
         
         <div id="embellish-mats-section" class="mt-2 md:mt-3">
-          <h4 class="text-white text-sm font-black mb-1.5 flex items-center gap-2 tracking-widest">
-            <span class="w-1.5 h-4 bg-gray-700 rounded-full"></span> 선택 재료 - 장식
+          <h4 id="embellish-mats-heading" class="detail-choice-heading text-sm font-black mb-1.5 flex items-center gap-2 tracking-widest">
+            <span class="detail-choice-indicator w-1.5 h-4 rounded-full"></span> 선택 재료 - 장식
             <span class="text-[9px] md:text-[11px] text-white font-bold ml-2 tracking-tight">[5성 제작 기준]</span>
           </h4>
           <div id="embellish-mats-container" class="flex flex-wrap justify-center gap-2 font-bold"></div>
@@ -1845,14 +1834,16 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const _sc = statusRGB();
       return `
         <button onclick="sendOrder('${crafter}', '${itemName}')"
-          class="order-action-btn hj-primary-action order-pulse w-full md:w-1/2 mx-auto px-3 py-1.5 border rounded-xl font-black text-white active:scale-95 flex items-center justify-between gap-2 relative overflow-hidden group" style="--sc-rgb:${_sc}; background:linear-gradient(to right, rgba(${_sc},0.2), rgba(${_sc},0.1)); border-color:rgba(${_sc},0.72);">
+          class="order-action-btn hj-primary-action order-pulse w-full md:w-1/2 mx-auto px-3 py-1.5 border rounded-xl font-black text-white active:scale-95 flex items-center justify-center gap-2.5 relative overflow-hidden group" style="--sc-rgb:${_sc}; background:linear-gradient(to right, rgba(${_sc},0.2), rgba(${_sc},0.1)); border-color:rgba(${_sc},0.72);">
           <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></span>
-          <span class="finger-left text-base md:text-lg select-none shrink-0 relative z-10">👉</span>
-          <div class="flex flex-col items-center flex-1 gap-0.5 relative z-10">
-            <span class="text-xs md:text-sm text-center leading-tight text-gray-300 font-bold">인게임 주문 후 <span class="font-black text-white md:text-base">주문 알림 보내기</span></span>
-            <span class="text-[10px] md:text-xs font-black tracking-wide animate-pulse" style="color:#f0abfc;">⚡ 제작자에게 즉시 전송됩니다</span>
+          <span class="order-action-icon relative z-10 shrink-0" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/><path d="M12 2V1"/></svg>
+          </span>
+          <div class="order-action-copy flex flex-col items-start gap-0.5 relative z-10">
+            <span class="order-action-kicker">인게임 주문을 완료하셨다면</span>
+            <span class="order-action-label">제작자에게 주문 알림 보내기</span>
           </div>
-          <span class="finger-right text-base md:text-lg select-none shrink-0 relative z-10">👈</span>
+          <span class="order-action-required relative z-10">필수</span>
         </button>
         ${showNotice ? generateStatusNoticeHTML() : ''}
       `;
@@ -1875,7 +1866,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       nameLink.href = wowheadUrl;
       detailIcon.src = `https://wow.zamimg.com/images/wow/icons/large/${item.icon}.jpg`;
       
-      detailIcon.className = "w-full h-full rounded-lg border border-[#4a5160] relative z-0 object-cover";
+      detailIcon.className = "w-full h-full rounded-lg border-2 border-[#4a5160] relative z-0 object-cover";
 
       const isDecorationDetail = item.name.includes('[장식 ');
       detailName.className = `text-xl md:text-3xl leading-tight font-black tracking-tight font-kr-title truncate ${isDecorationDetail ? 'text-[#D6BCFA]' : 'text-white'}`;
@@ -1886,8 +1877,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       // [신규] 상세페이지 장바구니 버튼 생성
       const cartBtnWrapper = document.getElementById('detail-cart-btn-wrapper');
       cartBtnWrapper.innerHTML = `
-        <button onclick="addToCart('${item.name}')" class="px-3 py-2 md:px-4 md:py-2.5 bg-[#8788EE]/10 text-[#a9aaf7] border border-[#8788EE]/50 rounded-xl hover:bg-[#8788EE]/20 hover:scale-105 transition-all font-black text-xs md:text-sm flex items-center gap-2 shadow-md shrink-0">
-          <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+        <button onclick="addToCart('${item.name}')" class="detail-cart-action px-2.5 py-1.5 bg-[#8788EE]/10 text-[#a9aaf7] border border-[#8788EE]/50 rounded-xl hover:bg-[#8788EE]/20 hover:scale-105 transition-all font-black text-xs flex items-center gap-1.5 shadow-md shrink-0">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
           <span class="hidden md:inline">장바구니</span> 담기
         </button>
       `;
@@ -1910,13 +1901,19 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const copyString = item.reqMats.map(m => `${m.n.replace(/\s*\(금색\)/g, ' (금성)')} x ${m.c}`).join(" / ");
       
       copyAllSec.innerHTML = `
-        <button onclick="copyTextExact('${copyString.replace(/'/g, "\\'")}', this, '${color}')" class="w-full py-1 px-3 bg-gray-900 border border-gray-700 hover:border-gray-500/50 hover:bg-gray-800 transition-all rounded-lg text-left group flex flex-col gap-0.5">
-          <div class="text-xs font-bold text-gray-200 group-hover:text-white flex items-center gap-2 transition-colors">
-            <span class="mat-status">📋 클릭하여 전체 필수 재료 복사하기</span>
+        <button onclick="copyTextExact('${copyString.replace(/'/g, "\\'")}', this, '${color}')" class="copy-all-action hj-primary-action w-full md:w-1/2 mx-auto py-1.5 px-3 bg-gray-900 border border-gray-700 hover:border-gray-500/50 hover:bg-gray-800 transition-all rounded-lg group flex items-center justify-center">
+          <div class="text-xs font-bold text-gray-200 group-hover:text-white flex items-center justify-center gap-2 transition-colors">
+            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+            <span class="mat-status">전체 필수 재료 복사하기</span>
           </div>
-          <div class="text-[10px] md:text-[11px] text-gray-500 group-hover:text-gray-400 leading-tight transition-colors truncate">${copyString}</div>
         </button>
       `;
+
+      document.querySelectorAll('.detail-choice-heading').forEach(heading => {
+        heading.style.color = color;
+        const indicator = heading.querySelector('.detail-choice-indicator');
+        if (indicator) indicator.style.backgroundColor = color;
+      });
 
       const catName = allItemsFlat.find(i => i.name === item.name).cat;
       let showMissive = true, embellishType = null, missiveList = MISSIVES;
@@ -1995,12 +1992,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
 
       feeCrafterSec.innerHTML = `
         <div class="flex flex-col md:flex-row gap-3">
-          <div class="flex flex-col gap-2 flex-1">
-            <button onclick="copyText('1', this, '#EAB308', true)" class="hj-info-tile w-full px-3 py-2 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center gap-1 group hover:border-yellow-500 flex-1">
+          <div class="maker-info-stack flex flex-col gap-2 flex-1">
+            <button onclick="copyText('1', this, '#EAB308', true)" class="maker-fee-tile hj-info-tile w-full px-3 py-2 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center gap-1 group hover:border-yellow-500 flex-1">
               <span class="text-xs md:text-sm text-white font-black text-center">수수료</span>
               <span class="mat-status text-white group-hover:text-yellow-400 font-black text-xl md:text-2xl text-center">자율</span>
             </button>
-            <button onclick="copyText('${item.crafter}', this, '${color}', true)" class="hj-info-tile w-full px-3 py-2 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center group hover:border-gray-700 transition-colors flex-1">
+            <button onclick="copyText('${item.crafter}', this, '${color}', true)" class="maker-crafter-tile hj-info-tile w-full px-3 py-2 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center group hover:border-gray-700 transition-colors flex-1">
               <span class="text-xs text-white font-black">제작자</span>
               <span class="mat-status font-black text-xl md:text-3xl" style="color: ${color}">${item.crafter}</span>
               <span class="text-[10px] md:text-xs text-white/70 font-bold mt-0.5">(클릭하시면 제작자 아이디가 복사됩니다)</span>
@@ -2008,9 +2005,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
           </div>
           ${makerIdentity ? `
           <div class="maker-authentication flex-1 min-h-[164px] md:min-h-[176px] relative overflow-hidden" aria-label="후제공방 인증을 받은 ${item.crafter} 제작자 서명">
-            <img src="assets/makers/common/hooje-auth-seal-v1.png" alt="후제공방 HJ 인증 도장" class="maker-authentication-seal absolute left-3 top-3 object-contain" loading="eager">
-            <span class="maker-authentication-signature absolute left-3 bottom-3 w-[48%]" aria-label="${makerIdentity.signature} 서명">${makerIdentity.signature}</span>
-            <img src="assets/makers/${makerIdentity.slug}/${makerIdentity.slug}-portrait-${makerIdentity.portraitVersion || 'v1'}.png?v=260804c" alt="${makerIdentity.portraitAlt}" class="maker-authentication-portrait absolute right-0 bottom-0 w-[54%] h-full object-contain object-right-bottom" loading="eager">
+            <div class="maker-authentication-row maker-authentication-fee-row">
+              <img src="assets/makers/common/hooje-auth-seal-v2.webp" alt="후제공방 HJ 인증 도장" class="maker-authentication-seal object-contain" loading="eager">
+            </div>
+            <div class="maker-authentication-row maker-authentication-crafter-row">
+              <span class="maker-authentication-signature w-[48%]" aria-label="${makerIdentity.signature} 서명">${makerIdentity.signature}</span>
+            </div>
+            <img src="assets/makers/${makerIdentity.slug}/${makerIdentity.slug}-portrait-${makerIdentity.portraitVersion || 'v1'}.png?v=260804c" alt="${makerIdentity.portraitAlt}" class="maker-authentication-portrait" loading="eager">
           </div>` : ''}
         </div>
       `;
@@ -2044,7 +2045,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         } 
       };
       
-      const iconBorder = 'border border-[#4a5160] group-hover:border-[#727b8c]';
+      const iconBorder = 'border-2 border-[#4a5160] group-hover:border-[#727b8c]';
 
       const starColor = isFav ? "text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.6)] scale-110" : "text-gray-700 group-hover:text-yellow-400/50";
       const favStarHtml = `
@@ -2086,7 +2087,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         favDiv.className = "border border-yellow-500/40 rounded-xl overflow-hidden bg-gray-900 mb-2 md:mb-3";
 
         const favBtn = document.createElement('button');
-        favBtn.className = "w-full flex items-center justify-between p-2.5 md:p-3 bg-gradient-to-r from-yellow-500/10 to-gray-900 border-b border-yellow-500/20 transition-colors hover:bg-yellow-500/20";
+        favBtn.className = "sidebar-category-row w-full flex items-center justify-between px-2.5 md:px-3 bg-gradient-to-r from-yellow-500/10 to-gray-900 border-b border-yellow-500/20 transition-colors hover:bg-yellow-500/20";
         favBtn.innerHTML = `
           <span class="text-xs md:text-sm font-black text-yellow-400 tracking-tight font-kr-title flex items-center gap-1.5 flex-1 min-w-0">
             <span class="text-sm md:text-base">⭐</span> <span class="truncate">즐겨찾기 목록</span>
@@ -2116,8 +2117,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         const catBtn = document.createElement('button');
         catBtn.dataset.cat = cat;
         catBtn.className = isPVP
-          ? "w-full flex items-center justify-between p-2.5 md:p-3 bg-gray-800/25 border-b border-gray-700/30 transition-colors hover:bg-gray-800/45"
-          : "w-full flex items-center justify-between p-2.5 md:p-3 bg-gray-800/80 border-b border-gray-800 transition-colors hover:bg-gray-700";
+          ? "sidebar-category-row w-full flex items-center justify-between px-2.5 md:px-3 bg-gray-800/25 border-b border-gray-700/30 transition-colors hover:bg-gray-800/45"
+          : "sidebar-category-row w-full flex items-center justify-between px-2.5 md:px-3 bg-gray-800/80 border-b border-gray-800 transition-colors hover:bg-gray-700";
 
         const textColor  = isPVP ? 'text-gray-500' : 'text-gray-100';
         const countStyle = isPVP ? 'text-gray-600 bg-gray-950/50' : 'text-gray-400 bg-gray-950';
@@ -2488,7 +2489,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const noticeDiv = document.createElement('div');
       noticeDiv.className = "border border-white/15 rounded-lg overflow-hidden bg-transparent mb-2";
       noticeDiv.innerHTML = `
-        <button onclick="showNotice()" class="w-full flex items-center gap-2 py-2 px-3 transition-colors hover:bg-white/5">
+        <button onclick="showNotice()" class="sidebar-primary-row w-full flex items-center gap-2 px-3 transition-colors hover:bg-white/5">
           <span class="flex items-center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a9aaf7" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span>
           <span class="text-xs md:text-sm font-black text-white tracking-tight font-kr-title">메인화면</span>
         </button>
