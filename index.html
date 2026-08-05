@@ -961,9 +961,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     import { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken as getAppCheckToken } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app-check.js";
     import { getDatabase, ref, onValue, push as firebasePush, serverTimestamp, runTransaction as firebaseRunTransaction } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
-    const firebaseConfig = { apiKey: "AIzaSyDXH0-y0vUQ9K29XbtRXDEuIokTqDLmo_I", authDomain: "rougetsblendingroom.firebaseapp.com", databaseURL: "https://rougetsblendingroom-default-rtdb.firebaseio.com/", projectId: "rougetsblendingroom" };
+    const firebaseConfig = { apiKey: "AIzaSyDXH0-y0vUQ9K29XbtRXDEuIokTqDLmo_I", authDomain: "rougetsblendingroom.firebaseapp.com", databaseURL: "https://rougetsblendingroom-default-rtdb.firebaseio.com/", projectId: "rougetsblendingroom", appId: "1:1073459942609:web:ea6fb2595766ea7af021f0" };
     const app = initializeApp(firebaseConfig);
-    const appCheckHosts = new Set(["hooje.pro", "www.hooje.pro", "woojehong.github.io"]);
+    const appCheckHosts = new Set(["hooje.pro", "www.hooje.pro"]);
     let appCheck = null;
     if (appCheckHosts.has(location.hostname.toLowerCase())) {
       appCheck = initializeAppCheck(app, {
@@ -975,7 +975,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     // Firebase staging 배포 후에만 실제 URL을 입력한다. 빈 값이면 기존 Netlify 알림 경로를 유지한다.
     const FIREBASE_NOTIFY_ENDPOINT = "https://notifyorder-znq5mv362a-du.a.run.app";
 
-    async function sendOrderNotification(itemName) {
+    async function sendOrderNotification(itemName, orderKey) {
       if (!FIREBASE_NOTIFY_ENDPOINT) {
         return fetch(`/notify?item=${encodeURIComponent(itemName)}&src=web`);
       }
@@ -987,7 +987,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
           'Content-Type': 'application/json',
           'X-Firebase-AppCheck': tokenResult.token
         },
-        body: JSON.stringify({ item: itemName, source: 'web' })
+        body: JSON.stringify({ item: itemName, source: 'web', orderKey })
       });
     }
     const previewGuard = window.HoojePreviewGuard;
@@ -2397,7 +2397,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       refreshOrderButtons();
 
       // 토큰은 서버(notify.js)에서만 관리 — src=web: 주문 기록은 위에서 이미 했으므로 서버 측 중복 기록 방지
-      sendOrderNotification(itemName)
+      Promise.resolve(orderRef).then(() => sendOrderNotification(itemName, orderRef.key))
         .catch(err => console.error('[TG] 알림 오류:', err));
     };
 
