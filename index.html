@@ -377,7 +377,7 @@
       #sidebar.m-collapsed #category-list{ display: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="design-refresh.css?v=260805a">
+  <link rel="stylesheet" href="design-refresh.css?v=260805b">
 </head>
 <body>
 <div id="app-container" class="text-gray-200 relative">
@@ -672,8 +672,8 @@
         </div>
       </div>
       
-      <div id="content-state" class="w-full max-w-4xl mx-auto hidden space-y-4 md:space-y-5 pb-14 pt-3 md:pt-4">
-        <div class="detail-heading-row flex flex-col md:flex-row items-center gap-3 md:gap-5 border-b border-gray-800 pb-4 md:pb-5 relative">
+      <div id="content-state" class="w-full max-w-4xl mx-auto hidden space-y-3 md:space-y-4 pb-14 pt-3 md:pt-4">
+        <div class="detail-heading-row flex flex-col md:flex-row items-center gap-3 md:gap-4 border-b border-gray-800 pb-3 md:pb-4 relative">
           <div class="detail-heading-ornament absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none" aria-hidden="true"></div>
           <div id="detail-icon-wrapper" class="relative shrink-0 w-11 h-11 md:w-14 md:h-14">
              <a id="detail-wh-link" href="#" data-wowhead="domain=ko" onclick="return false;" class="cursor-default block">
@@ -688,35 +688,35 @@
           <div id="detail-cart-btn-wrapper" class="shrink-0 z-20 self-center"></div>
         </div>
         
-        <div id="top-order-section" class="w-full mt-[-4px] mb-3 flex flex-col items-center"></div>
+        <div id="top-order-section" class="w-full mt-[-4px] mb-2 flex flex-col items-center"></div>
         
         <div>
-          <h4 id="detail-color-bar" class="text-sm md:text-base font-black mb-2 flex items-center gap-2 tracking-widest">
+          <h4 id="detail-color-bar" class="text-sm md:text-base font-black mb-1.5 flex items-center gap-2 tracking-widest">
             <span id="detail-indicator" class="w-1.5 h-4 md:h-5 rounded-full"></span> 필수 재료
             <span class="text-[10px] md:text-xs text-[#8788EE] font-bold ml-2 tracking-tight opacity-90">[5성 제작 기준]</span>
           </h4>
-          <div id="req-mats-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm"></div>
+          <div id="req-mats-container" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-sm"></div>
           
-          <div id="copy-all-section" class="w-full mt-2 mb-1"></div>
+          <div id="copy-all-section" class="w-full mt-1.5"></div>
         </div>
         
         <div id="opt-mats-section">
-          <h4 class="text-white text-sm font-black mb-2 flex items-center gap-2 tracking-widest">
+          <h4 class="text-white text-sm font-black mb-1.5 flex items-center gap-2 tracking-widest">
             <span class="w-1.5 h-4 bg-gray-700 rounded-full"></span> 선택 재료 - 서신
             <span class="text-[9px] md:text-[11px] text-white font-bold ml-2 tracking-tight">[5성 제작 기준]</span>
           </h4>
           <div id="opt-mats-container" class="flex flex-wrap justify-center gap-2 font-bold"></div>
         </div>
         
-        <div id="embellish-mats-section" class="mt-3 md:mt-4">
-          <h4 class="text-white text-sm font-black mb-2 flex items-center gap-2 tracking-widest">
+        <div id="embellish-mats-section" class="mt-2 md:mt-3">
+          <h4 class="text-white text-sm font-black mb-1.5 flex items-center gap-2 tracking-widest">
             <span class="w-1.5 h-4 bg-gray-700 rounded-full"></span> 선택 재료 - 장식
             <span class="text-[9px] md:text-[11px] text-white font-bold ml-2 tracking-tight">[5성 제작 기준]</span>
           </h4>
           <div id="embellish-mats-container" class="flex flex-wrap justify-center gap-2 font-bold"></div>
         </div>
         
-        <div id="fee-crafter-section" class="flex flex-col gap-2 border-t border-gray-800 pt-3 md:pt-4"></div>
+        <div id="fee-crafter-section" class="flex flex-col gap-2 border-t border-gray-800 pt-2 md:pt-3"></div>
         <div id="bottom-order-section" class="w-full mt-0 flex flex-col items-center"></div>
       </div>
     </section>
@@ -1833,7 +1833,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const _sc = statusRGB();
       return `
         <button onclick="sendOrder('${crafter}', '${itemName}')"
-          class="order-action-btn hj-primary-action order-pulse w-full md:w-1/2 mx-auto px-3 py-2 border rounded-xl font-black text-white active:scale-95 flex items-center justify-between gap-2 relative overflow-hidden group" style="--sc-rgb:${_sc}; background:linear-gradient(to right, rgba(${_sc},0.2), rgba(${_sc},0.1)); border-color:rgba(${_sc},0.72);">
+          class="order-action-btn hj-primary-action order-pulse w-full md:w-1/2 mx-auto px-3 py-1.5 border rounded-xl font-black text-white active:scale-95 flex items-center justify-between gap-2 relative overflow-hidden group" style="--sc-rgb:${_sc}; background:linear-gradient(to right, rgba(${_sc},0.2), rgba(${_sc},0.1)); border-color:rgba(${_sc},0.72);">
           <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></span>
           <span class="finger-left text-base md:text-lg select-none shrink-0 relative z-10">👉</span>
           <div class="flex flex-col items-center flex-1 gap-0.5 relative z-10">
@@ -1887,7 +1887,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       reqCont.innerHTML = '';
       item.reqMats.forEach(m => {
         const b = document.createElement('button');
-        b.className = "hj-compact-tile flex items-center justify-between px-2.5 py-1.5 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group";
+        b.className = "hj-compact-tile flex items-center justify-between px-2.5 py-1 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group";
         b.onclick = () => copyText(m.n, b, color);
         let matNameHtml = applyGoldStar(m.n);
         b.innerHTML = `<div class="flex items-center gap-1.5 flex-1 min-w-0"><img src="https://wow.zamimg.com/images/wow/icons/medium/${m.i}.jpg" class="w-[22px] h-[22px] rounded-md shrink-0 object-cover"><span class="group-hover:text-white font-bold text-left leading-tight text-xs md:text-sm">${matNameHtml}</span></div><span class="mat-status text-white font-black text-xs md:text-sm shrink-0 ml-2 tabular-nums">×${m.c}</span>`;
@@ -1898,7 +1898,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const copyString = item.reqMats.map(m => `${m.n.replace(/\s*\(금색\)/g, ' (금성)')} x ${m.c}`).join(" / ");
       
       copyAllSec.innerHTML = `
-        <button onclick="copyTextExact('${copyString.replace(/'/g, "\\'")}', this, '${color}')" class="w-full py-1.5 px-3 bg-gray-900 border border-gray-700 hover:border-[${color}]/50 hover:bg-gray-800 transition-all rounded-lg text-left group flex flex-col gap-0.5">
+        <button onclick="copyTextExact('${copyString.replace(/'/g, "\\'")}', this, '${color}')" class="w-full py-1 px-3 bg-gray-900 border border-gray-700 hover:border-[${color}]/50 hover:bg-gray-800 transition-all rounded-lg text-left group flex flex-col gap-0.5">
           <div class="text-xs font-bold text-gray-200 group-hover:text-white flex items-center gap-2 transition-colors">
             <span class="mat-status">📋 클릭하여 전체 필수 재료 복사하기</span>
           </div>
@@ -1949,7 +1949,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         optCont.innerHTML = '';
         missiveList.forEach(opt => {
           const b = document.createElement('button');
-          b.className = "hj-choice-tile flex items-center justify-center gap-1.5 px-2 py-1.5 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group min-h-[42px] relative";
+          b.className = "hj-choice-tile flex items-center justify-center gap-1.5 px-2 py-1 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group min-h-[38px] relative";
           b.onclick = () => copyText(opt.copy, b, color, true);
           b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/medium/${opt.icon}.jpg" class="w-[22px] h-[22px] rounded-md opacity-80 group-hover:opacity-100 shrink-0 object-cover"><span class="hj-choice-label text-white group-hover:text-yellow-300 leading-none font-bold text-center whitespace-nowrap" style="font-size:${choiceLabelSize(opt.label)}">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
           optCont.appendChild(b);
@@ -1966,7 +1966,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         embList = embList.filter(opt => !opt.gunOnly || isGunCraft);
         embList.forEach(opt => {
           const b = document.createElement('button');
-          b.className = "hj-choice-tile flex items-center justify-center gap-1.5 px-2 py-1.5 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group min-h-[42px] relative";
+          b.className = "hj-choice-tile flex items-center justify-center gap-1.5 px-2 py-1 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group min-h-[38px] relative";
           b.onclick = () => copyText(opt.copy, b, color, true);
           b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/medium/${opt.icon}.jpg" class="w-[22px] h-[22px] rounded-md opacity-80 group-hover:opacity-100 shrink-0 object-cover"><span class="hj-choice-label text-white group-hover:text-yellow-300 leading-none font-bold text-center whitespace-nowrap" style="font-size:${choiceLabelSize(opt.label)}">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
           embCont.appendChild(b);
@@ -1984,14 +1984,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       feeCrafterSec.innerHTML = `
         <div class="flex flex-col md:flex-row gap-3">
           <div class="flex flex-col gap-2 flex-1">
-            <button onclick="copyText('1', this, '#EAB308', true)" class="hj-info-tile w-full px-4 py-3 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center gap-2 group hover:border-yellow-500 flex-1">
+            <button onclick="copyText('1', this, '#EAB308', true)" class="hj-info-tile w-full px-3 py-2 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center gap-1 group hover:border-yellow-500 flex-1">
               <span class="text-xs md:text-sm text-white font-black text-center">수수료</span>
               <span class="mat-status text-white group-hover:text-yellow-400 font-black text-xl md:text-2xl text-center">자율</span>
             </button>
-            <button onclick="copyText('${item.crafter}', this, '${color}', true)" class="hj-info-tile w-full px-4 py-3 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center group hover:border-gray-700 transition-colors flex-1">
+            <button onclick="copyText('${item.crafter}', this, '${color}', true)" class="hj-info-tile w-full px-3 py-2 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center group hover:border-gray-700 transition-colors flex-1">
               <span class="text-xs text-white font-black">제작자</span>
               <span class="mat-status font-black text-xl md:text-3xl" style="color: ${color}">${item.crafter}</span>
-              <span class="text-xs md:text-sm text-white/80 font-bold mt-1.5">(클릭하시면 제작자 아이디가 복사됩니다)</span>
+              <span class="text-[10px] md:text-xs text-white/70 font-bold mt-0.5">(클릭하시면 제작자 아이디가 복사됩니다)</span>
             </button>
           </div>
           ${makerIdentity ? `
