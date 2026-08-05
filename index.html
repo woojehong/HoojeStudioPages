@@ -1016,7 +1016,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const tref = ref(db, 'stats/daily/' + kstDay);
       onValue(vref, s => { const el=document.getElementById('footer-visit-count'); if(el) el.textContent=(s.val()||0).toLocaleString(); });
       onValue(tref, s => { const el=document.getElementById('footer-today-count'); if(el) el.textContent=(s.val()||0).toLocaleString(); });
-      onValue(ref(db, 'stats/cf_downloads'), s => { const v=s.val(); const el=document.getElementById('footer-cf-count'); if(el && v!=null) el.textContent=Number(v).toLocaleString(); });
+      onValue(ref(db, 'stats/cf_downloads'), s => { const v=s.val(); const el=document.getElementById('footer-cf-count'); if(el && v!=null) el.textContent=Number(v).toLocaleString() + '+'; });
       // 유입 경로 판별: utm_source 우선 → 리퍼러 도메인 → 직접
       function refSource(){
         try{
