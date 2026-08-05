@@ -356,6 +356,12 @@ header,
   margin-inline: auto;
 }
 
+@media (min-width: 768px) {
+  .detail-compact-action {
+    width: min(calc(100% - 24px), 260px);
+  }
+}
+
 .tmi-addon-stack {
   width: min(100%, 374px);
 }
