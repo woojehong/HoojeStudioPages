@@ -51,6 +51,54 @@ body {
   transform: translateX(-50%);
 }
 
+/* Compact desktop masthead: preserve the three-zone composition with less vertical weight. */
+@media (min-width: 768px) {
+  #app-container > header {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    gap: 6px !important;
+  }
+
+  #hj-title {
+    font-size: 30px !important;
+    line-height: 1.08 !important;
+  }
+
+  #hj-goldline {
+    width: 150px !important;
+    height: 10px !important;
+    margin: 1px auto 0 !important;
+    background-size: 150px 10px !important;
+  }
+
+  .header-addon-actions {
+    width: 360px !important;
+    margin-top: 5px !important;
+  }
+
+  .header-addon-actions > a {
+    height: 32px;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+  }
+
+  #live-status {
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+  }
+
+  .header-utility-stack {
+    gap: 6px !important;
+  }
+
+  .header-utility-stack > a,
+  .header-utility-stack > div {
+    height: 35px;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+}
+
 /* Keep the established three-zone masthead; only prevent its centre lockup from wrapping. */
 @media (min-width: 768px) {
   #app-container > header > :nth-child(2) {
@@ -295,6 +343,19 @@ header,
   text-align: center;
 }
 
+.tmi-addon-stack {
+  width: min(100%, 374px);
+}
+
+.tmi-addon-downloads,
+.tmi-addon-stack > a {
+  width: 100%;
+}
+
+.tmi-addon-downloads > a {
+  min-width: 0;
+}
+
 .order-action-icon {
   display: inline-flex;
   align-items: center;
@@ -327,13 +388,16 @@ header,
   line-height: 1.15;
 }
 
-.order-action-required {
-  padding: 2px 6px;
-  color: rgba(235, 237, 249, 0.8);
-  font-size: 8px;
-  letter-spacing: 0.14em;
-  border: 1px solid rgba(var(--sc-rgb, 135, 136, 238), 0.38);
-  border-radius: 999px;
+.order-action-btn {
+  height: 48px;
+  min-height: 48px !important;
+  max-height: 48px;
+}
+
+.order-action-complete-icon {
+  color: #bbf7d0;
+  border-color: rgba(74, 222, 128, 0.45);
+  background: rgba(34, 197, 94, 0.12);
 }
 
 /* Maker authentication trial: intentionally unboxed, like ink laid directly on the atelier surface. */
@@ -486,6 +550,25 @@ span[style*="Great Vibes"] {
   box-shadow: 0 0 0 1px rgba(var(--sc-rgb, 135, 136, 238), 0.14) !important;
 }
 
+.order-pulse::after {
+  content: "";
+  position: absolute;
+  inset: -30% auto -30% -18%;
+  z-index: 0;
+  width: 12%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.34), transparent);
+  transform: skewX(-18deg) translateX(-220%);
+  animation: orderBeaconSweep 4.8s ease-in-out infinite;
+}
+
+@keyframes orderBeaconSweep {
+  0%, 62% { transform: skewX(-18deg) translateX(-220%); opacity: 0; }
+  68% { opacity: 0.9; }
+  86% { transform: skewX(-18deg) translateX(1050%); opacity: 0.72; }
+  87%, 100% { transform: skewX(-18deg) translateX(1050%); opacity: 0; }
+}
+
 @keyframes orderPulse {
   0%, 100% {
     box-shadow: 0 0 0 1px rgba(var(--sc-rgb, 135, 136, 238), 0.16);
@@ -499,6 +582,7 @@ span[style*="Great Vibes"] {
 
 @media (prefers-reduced-motion: reduce) {
   .order-pulse,
+  .order-pulse::after,
   .lo-dot-pulse,
   #coffee-fx,
   .hj-steam path {
@@ -646,6 +730,37 @@ span[style*="Great Vibes"] {
   color: rgba(235, 238, 249, 0.94);
   font-family: "Great Vibes", cursive;
   font-size: 43px;
+}
+
+@media (min-width: 768px) {
+  .master-message-portrait {
+    top: 82px;
+    right: 4px;
+    width: min(320px, 79%);
+    height: calc(100% - 104px);
+    max-height: calc(100% - 104px);
+    object-position: right top;
+    transform: none;
+  }
+
+  .master-message-signature {
+    bottom: 43px;
+  }
+}
+
+#tmi-heading {
+  font-size: 24px !important;
+  margin-bottom: 22px !important;
+}
+
+#notice-state #tmi-heading::after {
+  content: "";
+  display: block;
+  width: min(300px, 72vw) !important;
+  height: 14px !important;
+  margin: 10px auto 0 !important;
+  background: url("assets/ornaments/hooje-divider-subtle-v1.png") center / 600px 14px no-repeat !important;
+  opacity: 0.68;
 }
 
 @media (max-width: 767px) {
