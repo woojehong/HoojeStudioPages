@@ -945,7 +945,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     // Firebase staging 배포 후에만 실제 URL을 입력한다. 빈 값이면 기존 Netlify 알림 경로를 유지한다.
     const FIREBASE_NOTIFY_ENDPOINT = "https://notifyorder-znq5mv362a-du.a.run.app";
 
-    async function sendOrderNotification(itemName, orderKey) {
+    async function sendOrderNotification(itemName, category) {
       if (!FIREBASE_NOTIFY_ENDPOINT) {
         return fetch(`/notify?item=${encodeURIComponent(itemName)}&src=web`);
       }
@@ -957,7 +957,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
           'Content-Type': 'application/json',
           'X-Firebase-AppCheck': tokenResult.token
         },
-        body: JSON.stringify({ item: itemName, source: 'web', orderKey })
+        body: JSON.stringify({ item: itemName, source: 'web', category: category || '' })
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok || result.ok !== true) {
@@ -1131,8 +1131,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       if(nx) _seasonTimer=setTimeout(_bindSeasonCount, Math.min(nx-now+1000, 2147483000));  // 다음 8시 경계에 자동 전환
     }
     onValue(ref(db, 'stats/seasons'), s => { _seasons = s.val() || {}; _bindSeasonCount(); });
-    onValue(ref(db, 'orders'), (snap) => {
-      const ordersData = snap.val();
+    function renderMyOrders(ordersData) {
       const feedBox = document.getElementById('live-order-feed');
       const container = document.getElementById('live-order-container');
 
@@ -1221,7 +1220,31 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
 
       // 플로팅 시스템 업데이트
       updateFloating(ordersData);
-    });
+    }
+
+    const myOrderUnsubs = new Map();
+    const myOrderData = Object.create(null);
+    function syncMyOrderSubscriptions() {
+      const activeKeys = new Set(getMyOrders().map(order => order.key));
+      for (const [key, unsubscribe] of myOrderUnsubs.entries()) {
+        if (!activeKeys.has(key)) {
+          unsubscribe();
+          myOrderUnsubs.delete(key);
+          delete myOrderData[key];
+        }
+      }
+      for (const key of activeKeys) {
+        if (myOrderUnsubs.has(key)) continue;
+        const unsubscribe = onValue(ref(db, `orders/${key}`), (snapshot) => {
+          const order = snapshot.val();
+          if (order) myOrderData[key] = order;
+          else delete myOrderData[key];
+          renderMyOrders(myOrderData);
+        });
+        myOrderUnsubs.set(key, unsubscribe);
+      }
+      renderMyOrders(myOrderData);
+    }
 
     const CLS_COLOR = { 
       "메오": "#8788EE", "후제": "#8788EE", "무통": "#8788EE", "앙리자이에": "#8788EE", "그로": "#8788EE", "포므리": "#0070DE", 
@@ -2187,6 +2210,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       if (list.some(o => o.key === key)) return; // 중복 저장 방지 (새로고침 등)
       list.push({ key, timestamp });
       localStorage.setItem(FLOAT_LS_KEY, JSON.stringify(list));
+      syncMyOrderSubscriptions();
     }
 
     // 24시간 초과 항목 정리
@@ -2197,6 +2221,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       if (fresh.length !== list.length) localStorage.setItem(FLOAT_LS_KEY, JSON.stringify(fresh));
       return fresh;
     }
+    syncMyOrderSubscriptions();
 
     // 이미 닫은 상태 기록
     function getSeenMap() { return JSON.parse(localStorage.getItem(FLOAT_SEEN_KEY) || '{}'); }
@@ -2356,30 +2381,18 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         refreshOrderButtons();
       }, 60000);
 
-      const orderRef = push(ref(db, 'orders'), {
-        crafter, itemName, status: 'pending', source: 'web', timestamp: serverTimestamp()
-      });
-      // key 저장 (serverTimestamp 대신 로컬 시각 사용)
-      saveMyOrderKey(orderRef.key, Date.now());
-
-      // 주문 카운터 +1 (누적 + 시즌 + 일일 통계: 총합/제작자/카테고리) — 영구, 7일 정리와 무관
-      try {
-        const _sk = x => String(x).replace(/[.#$\[\]\/]/g, '_');
-        const _d = new Date(Date.now() + 9*3600*1000).toISOString().slice(0,10);
-        const _cat = (allItemsFlat.find(i => i.name === itemName) || {}).cat || '기타';
-        runTransaction(ref(db, 'stats/orders_total'), c => (c||0)+1).catch(()=>{});
-        runTransaction(ref(db, 'stats/season/' + ((_currentSeason(_seasons)||{}).id || CURRENT_SEASON_KEY)), c => (c||0)+1).catch(()=>{});
-        runTransaction(ref(db, 'stats/orders_daily/' + _d + '/t'), c => (c||0)+1).catch(()=>{});
-        runTransaction(ref(db, 'stats/orders_daily/' + _d + '/c/' + _sk(crafter)), c => (c||0)+1).catch(()=>{});
-        runTransaction(ref(db, 'stats/orders_daily/' + _d + '/g/' + _sk(_cat)), c => (c||0)+1).catch(()=>{});
-      } catch(e){}
-
       refreshOrderButtons();
-
-      // 토큰은 서버(notify.js)에서만 관리 — src=web: 주문 기록은 위에서 이미 했으므로 서버 측 중복 기록 방지
-      Promise.resolve(orderRef).then(() => sendOrderNotification(itemName, orderRef.key))
+      const category = (allItemsFlat.find(i => i.name === itemName) || {}).cat || '기타';
+      sendOrderNotification(itemName, category)
+        .then(result => {
+          saveMyOrderKey(result.orderKey, Date.now());
+          refreshOrderButtons();
+        })
         .catch(err => {
           console.error('[TG] 알림 오류:', err);
+          itemCooldowns[itemName] = false;
+          localStorage.removeItem(cdKey);
+          refreshOrderButtons();
           showNotificationFailure();
         });
     };
