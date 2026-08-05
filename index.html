@@ -973,7 +973,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     }
     const db = getDatabase(app);
     // Firebase staging 배포 후에만 실제 URL을 입력한다. 빈 값이면 기존 Netlify 알림 경로를 유지한다.
-    const FIREBASE_NOTIFY_ENDPOINT = "";
+    const FIREBASE_NOTIFY_ENDPOINT = "https://notifyorder-znq5mv362a-du.a.run.app";
 
     async function sendOrderNotification(itemName) {
       if (!FIREBASE_NOTIFY_ENDPOINT) {
