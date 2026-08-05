@@ -318,7 +318,7 @@
   /* #5 세리프 숫자(수수료·재료 수량) */
   #fee-crafter-section .mat-status, #req-mats-container .mat-status{ font-family:'Pretendard',sans-serif !important; }
 </style>
-  <style id="hj-bg">
+  <style id="hj-bg-legacy" media="not all">
     /* 은은한 배경: 보라 글로우 + 비네팅 + 필름 그레인 (정적·과하지 않게) */
     body {
       background-image:
@@ -366,7 +366,7 @@
       #sidebar.m-collapsed #category-list{ display: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="design-refresh.css?v=260805d">
+  <link rel="stylesheet" href="design-refresh.css?v=260805e">
 </head>
 <body>
 <div id="app-container" class="text-gray-200 relative">
@@ -376,7 +376,9 @@
     <div class="w-full md:w-[38%] md:self-stretch flex flex-col justify-between order-2 md:order-1 gap-2">
       <div id="live-status" class="self-start w-fit max-w-full px-3 py-2 md:px-4 md:py-2.5 bg-gray-950 rounded-xl border border-gray-600 flex items-start gap-2.5 transition-all duration-500">
         <div id="status-dot" class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-gray-600 animate-pulse shrink-0 mt-1"></div>
-        <span id="status-text" class="hj-status-message block text-xs md:text-sm font-black text-white tracking-wide">연결 중...</span>
+        <span id="status-text" class="hj-status-message text-xs md:text-sm font-black text-white tracking-wide">
+          <span id="status-label">연결 중</span><span class="status-colon" aria-hidden="true">:</span><span id="status-message">상태를 확인하고 있습니다.</span>
+        </span>
       </div>
       <div id="my-order-summary" class="hidden self-start items-center gap-2 min-w-0 max-w-full pb-0.5">
         <span id="my-order-dot" class="w-1.5 h-1.5 rounded-full bg-gray-600 shrink-0"></span>
@@ -541,7 +543,7 @@
         <svg class="w-4 h-4 md:w-5 md:h-5 shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#d35050" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path fill="#ffffff" d="M9.545 15.568V8.432L15.818 12z"/></svg> 흑마법사 후제 최신 영상
       </h3>
     </div>
-    <div id="youtube-list" class="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-3"></div>
+    <div id="youtube-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 md:gap-3"></div>
   </div>
 
   <div class="p-5 md:p-7 relative">
@@ -1088,7 +1090,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const data = snap.val();
       if(data) {
         currentStatusType = data.type;
-        document.getElementById('status-text').innerText = `${data.type} : ${data.message}`;
+        document.getElementById('status-label').textContent = data.type;
+        document.getElementById('status-message').textContent = data.message;
         const rgb = statusRGB();
         const dot = document.getElementById('status-dot');
         dot.className = `w-2.5 h-2.5 md:w-3 md:h-3 rounded-full animate-pulse shrink-0 mt-1`;

@@ -784,6 +784,15 @@ span[style*="Great Vibes"] {
 }
 
 @media (max-width: 767px) {
+  #app-container > main,
+  #sidebar,
+  #detail-panel,
+  #notice-state {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+  }
+
   .master-message {
     display: block;
     min-height: 440px;
@@ -916,5 +925,95 @@ span[style*="Great Vibes"] {
     right: auto;
     left: 20px;
     bottom: 22px;
+  }
+}
+
+/* Phase 3: one ornament system, exact masthead symmetry, and safe compact mobile flow. */
+body {
+  background-image:
+    radial-gradient(ellipse 88% 44% at 50% -10%, rgba(150, 152, 232, 0.075), transparent 66%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.01), transparent 34%) !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+#hj-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.018 !important;
+  mix-blend-mode: soft-light !important;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27180%27%20height%3D%27180%27%3E%3Cfilter%20id%3D%27n%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%270.82%27%20numOctaves%3D%272%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20type%3D%27saturate%27%20values%3D%270%27%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20filter%3D%27url%28%23n%29%27%20opacity%3D%270.6%27%2F%3E%3C%2Fsvg%3E");
+  background-size: 180px 180px;
+}
+
+.hj-status-message {
+  display: grid !important;
+  grid-template-columns: max-content 0.7em minmax(0, 1fr);
+  align-items: start;
+  width: auto;
+  min-width: 0;
+  white-space: normal;
+}
+
+.status-colon {
+  text-align: center;
+}
+
+#status-message {
+  min-width: 0;
+  white-space: pre-line;
+}
+
+#youtube-list,
+#youtube-list > a {
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  #app-container > header {
+    padding-right: 12px !important;
+    padding-left: 12px !important;
+  }
+
+  #live-status {
+    margin-left: 0 !important;
+  }
+
+  .header-utility-stack {
+    align-self: center !important;
+    justify-content: center;
+    gap: 6px !important;
+  }
+
+  .header-utility-stack > a,
+  .header-utility-stack > div {
+    flex: 0 0 42px !important;
+    height: 42px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .master-message {
+    min-height: 382px;
+    padding: 25px 20px 16px;
+  }
+
+  .master-message-identity {
+    height: 188px;
+  }
+
+  .master-message-portrait {
+    right: 46px;
+    width: min(212px, 56%);
+  }
+
+  .master-message-signature {
+    bottom: 16px;
+  }
+
+  #detail-panel {
+    padding-bottom: calc(82px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
