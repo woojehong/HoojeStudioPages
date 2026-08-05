@@ -83,8 +83,16 @@ body {
   }
 
   #live-status {
+    box-sizing: border-box;
+    min-height: 35px;
+    margin-left: -8px;
     padding-top: 7px !important;
     padding-bottom: 7px !important;
+    align-items: center !important;
+  }
+
+  #live-status #status-dot {
+    margin-top: 0 !important;
   }
 
   .header-utility-stack {
@@ -93,7 +101,9 @@ body {
 
   .header-utility-stack > a,
   .header-utility-stack > div {
-    height: 35px;
+    box-sizing: border-box;
+    flex: 0 0 35px !important;
+    height: 35px !important;
     padding-top: 5px !important;
     padding-bottom: 5px !important;
   }
@@ -744,8 +754,20 @@ span[style*="Great Vibes"] {
   }
 
   .master-message-signature {
+    right: clamp(155px, 17vw, 200px);
     bottom: 43px;
   }
+}
+
+#hj-legal-strip a,
+.hj-footer-legal a {
+  color: #b9bec9;
+  text-decoration: none;
+}
+
+#hj-legal-strip a:hover,
+.hj-footer-legal a:hover {
+  color: #eceef2;
 }
 
 #tmi-heading {
