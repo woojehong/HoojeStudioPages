@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>주문 알림 전송 중 | 후제공방</title>
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <style>
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:#030712; color:#e5e7eb; font-family:system-ui,-apple-system,sans-serif; }
+    main { width:min(520px,calc(100% - 40px)); padding:32px; text-align:center; border:1px solid rgba(135,136,238,.45); border-radius:20px; background:rgba(17,24,39,.88); box-shadow:0 24px 70px rgba(0,0,0,.45); }
+    h1 { margin:0 0 12px; font-size:22px; } p { margin:8px 0; color:#9ca3af; line-height:1.65; }
+    .dot { width:12px; height:12px; margin:0 auto 18px; border-radius:50%; background:#8788ee; box-shadow:0 0 18px #8788ee; animation:pulse 1.2s infinite; }
+    .error { color:#fecaca; } a { color:#c7c8f5; font-weight:800; }
+    @keyframes pulse { 50% { opacity:.35; transform:scale(.8); } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="dot" aria-hidden="true"></div>
+    <h1 id="title">제작자에게 알림을 전송하고 있습니다</h1>
+    <p id="message">잠시만 기다려 주세요. 완료되면 후제공방으로 자동 이동합니다.</p>
+    <p><a href="/">후제공방 메인으로</a></p>
+  </main>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+    import { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app-check.js";
+
+    const title = document.getElementById('title');
+    const message = document.getElementById('message');
+    const allowedHosts = new Set(['hooje.pro', 'www.hooje.pro']);
+    const item = (new URLSearchParams(location.search).get('item') || '').trim();
+    const endpoint = 'https://notifyorder-znq5mv362a-du.a.run.app';
+
+    function fail(text) {
+      title.textContent = '알림 전송에 실패했습니다';
+      message.textContent = text;
+      message.className = 'error';
+    }
+
+    if (!allowedHosts.has(location.hostname.toLowerCase())) {
+      fail('공개 미리보기에서는 주문 알림을 전송할 수 없습니다. hooje.pro에서 이용해 주세요.');
+    } else if (!item || item.length > 160) {
+      fail('아이템 정보가 올바르지 않습니다. 애드온에서 알림 버튼을 다시 눌러주세요.');
+    } else {
+      try {
+        const app = initializeApp({
+          apiKey: 'AIzaSyDXH0-y0vUQ9K29XbtRXDEuIokTqDLmo_I',
+          authDomain: 'rougetsblendingroom.firebaseapp.com',
+          databaseURL: 'https://rougetsblendingroom-default-rtdb.firebaseio.com/',
+          projectId: 'rougetsblendingroom',
+          appId: '1:1073459942609:web:ea6fb2595766ea7af021f0'
+        });
+        const appCheck = initializeAppCheck(app, {
+          provider: new ReCaptchaEnterpriseProvider('6Le7onQtAAAAAGnrEqkqXuMU-w1ircjFYyqbhpCm'),
+          isTokenAutoRefreshEnabled: true
+        });
+        const token = await getToken(appCheck, false);
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Firebase-AppCheck': token.token },
+          body: JSON.stringify({ item, source: 'addon' })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.ok !== true || !result.orderKey) {
+          throw new Error(result.error || `notification_http_${response.status}`);
+        }
+        const next = new URL('/', location.origin);
+        next.searchParams.set('notified', '1');
+        next.searchParams.set('c', result.crafter || '');
+        next.searchParams.set('i', item);
+        next.searchParams.set('o', result.orderKey);
+        location.replace(next.href);
+      } catch (error) {
+        console.error('[HoojeStudio notify]', error);
+        fail('주문은 게임에 남아 있습니다. 잠시 후 애드온의 알림 버튼을 다시 눌러주세요.');
+      }
+    }
+  </script>
+</body>
+</html>
