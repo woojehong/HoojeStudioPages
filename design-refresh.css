@@ -136,12 +136,10 @@ header,
 /* Bespoke atelier ornamentation: raster engravings, deliberately kept near watermark strength. */
 #detail-panel {
   background-color: var(--hj-ink) !important;
-  background-image:
-    url("assets/ornaments/hooje-corner-subtle-v1.png"),
-    url("assets/ornaments/hooje-drafting-traces-subtle-v1.png") !important;
-  background-position: left -64px top 24px, center 58% !important;
+  background-image: url("assets/ornaments/hooje-corner-subtle-v1.png") !important;
+  background-position: left -72px top 32px !important;
   background-repeat: no-repeat !important;
-  background-size: 220px auto, 96% auto !important;
+  background-size: 210px auto !important;
   background-attachment: local !important;
 }
 
@@ -607,8 +605,8 @@ span[style*="Great Vibes"] {
   }
 
   #detail-panel {
-    background-position: left -90px top 16px, center 58% !important;
-    background-size: 230px auto, 980px auto !important;
+    background-position: left -108px top 20px !important;
+    background-size: 210px auto !important;
   }
 
   .maker-authentication {
@@ -840,5 +838,83 @@ span[style*="Great Vibes"] {
 
   .master-message-signature span {
     font-size: 38px;
+  }
+
+  #float-cluster {
+    right: 8px !important;
+    bottom: calc(42px + env(safe-area-inset-bottom, 0px)) !important;
+    gap: 6px !important;
+  }
+
+  #float-cluster > button,
+  #float-cluster > a,
+  #coffee-fx button {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  #coffee-fx {
+    gap: 0 !important;
+  }
+
+  #coffee-fx > span {
+    display: none !important;
+  }
+
+  #float-cluster svg {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+/* A narrow desktop still has a sidebar, so viewport breakpoints alone are not enough. */
+@media (min-width: 768px) and (max-width: 1100px) {
+  .master-message {
+    display: block;
+    min-height: 420px;
+    padding: 30px 24px 20px;
+  }
+
+  .master-message-copy {
+    max-width: none;
+    padding: 7px 0 0;
+  }
+
+  .master-message-copy p {
+    position: relative;
+    z-index: 4;
+    max-width: 100%;
+    font-size: 14px;
+    line-height: 1.76;
+    text-wrap: pretty;
+  }
+
+  .master-message-identity {
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    min-width: 0;
+    height: 210px;
+  }
+
+  .master-message-identity::after {
+    background: linear-gradient(180deg, #080b12 0%, rgba(8, 11, 18, 0.62) 20%, transparent 56%);
+  }
+
+  .master-message-portrait {
+    top: 50%;
+    right: 0;
+    width: min(240px, 54%);
+    height: 100%;
+    max-height: 100%;
+    object-position: right center;
+    transform: translateY(-50%);
+    opacity: 0.7;
+  }
+
+  .master-message-signature {
+    right: auto;
+    left: 20px;
+    bottom: 22px;
   }
 }
