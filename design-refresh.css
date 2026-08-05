@@ -51,6 +51,17 @@ body {
   transform: translateX(-50%);
 }
 
+/* Keep the established three-zone masthead; only prevent its centre lockup from wrapping. */
+@media (min-width: 768px) {
+  #app-container > header > :nth-child(2) {
+    overflow: visible;
+  }
+
+  #app-container > header #hj-title + #hj-goldline + div {
+    white-space: nowrap;
+  }
+}
+
 #app-container .font-black {
   font-weight: 700 !important;
 }
