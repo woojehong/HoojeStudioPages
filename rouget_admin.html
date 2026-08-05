@@ -12,7 +12,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-    body { font-family: 'Pretendard', sans-serif; background-color: #030712; color: white; overflow-x: hidden; }
+    body { font-family: 'Pretendard', sans-serif; background-color: #0b0c0f; color: white; overflow-x: hidden; }
     .active-status { box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); border: 2px solid white !important; transform: scale(1.02); z-index: 10; }
     .custom-scrollbar::-webkit-scrollbar { width: 5px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
@@ -21,19 +21,41 @@
     .pre-wrap { white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; }
 
     /* ════════ 관제탑 정갈화 (adm-polish) · 대표님 전용 ════════ */
-    :root { --adm-line: rgba(255,255,255,0.08); --adm-accent: #8788EE; }
+    :root {
+      --adm-bg: #0b0c0f;
+      --adm-surface: #121419;
+      --adm-surface-raised: #181b22;
+      --adm-line: #2a2e37;
+      --adm-line-soft: #20232b;
+      --adm-text: #f5f6f8;
+      --adm-muted: #9ca3af;
+      --adm-accent: #9293ed;
+      --adm-danger: #dc6b73;
+      --adm-success: #4fb78b;
+      --adm-touch: 46px;
+    }
+    * { -webkit-tap-highlight-color: transparent; }
+    body { justify-content: flex-start !important; padding: 0 !important; }
+    button, input, textarea, select { font: inherit; }
+    button { touch-action: manipulation; }
+    button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+      outline: 2px solid var(--adm-accent) !important;
+      outline-offset: 2px;
+    }
+    #mainContent { padding: 0 14px 48px; }
     #mainContent .font-black { font-weight: 700 !important; letter-spacing: -0.005em; }
     #mainContent h2, #mainContent h3 { letter-spacing: -0.012em; }
     .glass-panel {
-      background: rgba(13,13,17,0.82) !important;
+      background: var(--adm-surface) !important;
       border: 1px solid var(--adm-line) !important;
-      box-shadow: 0 1px 0 rgba(255,255,255,0.02) inset, 0 8px 30px rgba(0,0,0,0.35) !important;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.025) inset !important;
+      backdrop-filter: none !important;
     }
     #mainContent .text-yellow-400 { color: #d6c887 !important; }
     #mainContent .text-amber-400, #mainContent .text-amber-300 { color: #cda574 !important; }
     .active-status {
-      box-shadow: 0 0 0 1.5px rgba(255,255,255,0.88) inset, 0 0 16px rgba(135,136,238,0.35) !important;
-      border: 1.5px solid rgba(255,255,255,0.9) !important;
+      box-shadow: 0 0 0 2px var(--adm-accent) inset !important;
+      border-color: var(--adm-accent) !important;
       transform: none !important;
     }
     #monitor-dot { width: 13px !important; height: 13px !important; margin-top: 7px !important;
@@ -44,17 +66,191 @@
       line-height: 1.45; font-weight: 600; color: #b6bcc9; white-space: pre-wrap; }
     #monitor-notice { font-style: normal !important; color: #f2a3a3 !important; }
     .ord-bracket { display: none; }
+
+    /* 관리자 핵심 작업: 좁은 창에서도 상태 확인 → 주문 처리 → 송출 순서가 유지된다. */
+    .admin-control-header {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      order: 0;
+      width: calc(100% + 28px);
+      margin: 0 -14px 12px;
+      background: rgba(11,12,15,0.96);
+      border-bottom: 1px solid var(--adm-line);
+      backdrop-filter: blur(10px);
+    }
+    .admin-header-inner {
+      width: 100%;
+      max-width: 60rem;
+      min-height: 56px;
+      margin: 0 auto;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .admin-brand { min-width: 0; display: flex; align-items: baseline; gap: 9px; }
+    .admin-brand strong { color: var(--adm-text); font-size: 0.95rem; letter-spacing: -0.02em; white-space: nowrap; }
+    .admin-brand span { color: #747b88; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; white-space: nowrap; }
+    .admin-header-actions { display: flex; align-items: center; gap: 7px; }
+    .admin-header-actions button {
+      position: static !important;
+      min-height: 38px;
+      padding: 0 12px !important;
+      border-radius: 9px !important;
+      background: var(--adm-surface) !important;
+      border: 1px solid var(--adm-line) !important;
+      color: #c3c7cf !important;
+      font-size: 0.72rem !important;
+      line-height: 1;
+    }
+    #sound-toggle-btn { min-width: 42px; font-size: 0.92rem !important; }
+    #unread-badge { order: 1; max-width: 60rem !important; margin-top: 0 !important; margin-bottom: 12px !important; }
+    .admin-live-panel { order: 2; }
+    .admin-orders-panel { order: 3; }
+    .admin-status-panel { order: 4; }
+    .admin-notice-panel { order: 5; }
+    .admin-settings-heading { order: 6; }
+    .admin-settings-panel { order: 7; }
+    .admin-footer { order: 8; }
+    #mainContent > .glass-panel {
+      width: 100%;
+      max-width: 60rem !important;
+      margin-top: 0 !important;
+      margin-bottom: 12px !important;
+      padding: 18px !important;
+      border-radius: 14px !important;
+    }
+    .admin-live-panel {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 0.55fr);
+      align-items: center;
+      gap: 16px !important;
+      border-color: #343846 !important;
+    }
+    .admin-live-panel > div:last-child {
+      padding: 0 0 0 16px !important;
+      border-top: 0 !important;
+      border-left: 1px solid var(--adm-line) !important;
+    }
+    #monitor-text .mon-type { font-size: 1.4rem; }
+    #monitor-text .mon-msg { margin-top: 4px; font-size: 0.86rem; color: #aeb4bf; }
+    #monitor-notice { white-space: normal; line-height: 1.4; overflow-wrap: anywhere; }
+    .admin-card-heading { margin: 0 0 13px; }
+    .admin-card-heading h3 { color: var(--adm-text); font-size: 1rem; font-weight: 750; }
+    .admin-card-heading p { margin-top: 3px; color: #777e8b; font-size: 0.7rem; font-weight: 650; }
+    .admin-status-panel .grid { margin-bottom: 10px !important; }
+    .admin-status-panel .grid button {
+      min-height: var(--adm-touch);
+      padding: 8px 10px !important;
+      background: var(--adm-surface-raised) !important;
+      border: 1px solid var(--adm-line) !important;
+      border-left-width: 3px !important;
+      border-radius: 10px !important;
+      box-shadow: none !important;
+      color: #e3e5e9 !important;
+      font-size: 0.78rem !important;
+    }
+    .admin-status-panel .grid button:nth-child(1) { border-left-color: #4fb78b !important; }
+    .admin-status-panel .grid button:nth-child(2) { border-left-color: #5b96cb !important; }
+    .admin-status-panel .grid button:nth-child(3) { border-left-color: #8b7dc5 !important; }
+    .admin-status-panel .grid button:nth-child(4) { border-left-color: #bba65c !important; }
+    .admin-status-panel .grid button:nth-child(5) { border-left-color: #c18a5d !important; }
+    .admin-status-panel .grid button:nth-child(6) { border-left-color: #68707d !important; }
+    #status-desc-input, #notice-input {
+      min-height: var(--adm-touch);
+      background: #0d0f13 !important;
+      border-color: var(--adm-line) !important;
+      box-shadow: none !important;
+    }
+    .admin-notice-form { align-items: stretch; }
+    .admin-notice-form button { min-height: var(--adm-touch); box-shadow: none !important; }
+    .admin-notice-form button:first-child { background: #b44f58 !important; }
+    .admin-notice-form button:last-child { color: #aeb3bc !important; border: 1px solid var(--adm-line); }
+    .admin-orders-panel { border-color: #3b4050 !important; }
+    .admin-orders-header { align-items: flex-start !important; }
+    .admin-orders-title h3 { color: var(--adm-text) !important; font-size: 1.08rem; }
+    .admin-orders-title p { margin-top: 3px; color: #7e8592; font-size: 0.7rem; font-weight: 650; }
+    .order-bulk-actions { padding-left: 12px; border-left: 1px solid var(--adm-line); }
+    .order-bulk-actions button { min-height: 40px; padding: 0 14px !important; }
+    .orders-layout { min-width: 0; }
+    #admin-order-list { max-height: min(56vh, 620px) !important; }
+    .admin-order-card { background: #0e1014 !important; border: 1px solid var(--adm-line) !important; border-radius: 11px !important; }
+    .admin-order-body { padding: 12px !important; }
+    .admin-order-actions button {
+      min-width: 66px;
+      min-height: 42px;
+      padding: 0 14px !important;
+      border-radius: 9px !important;
+      font-size: 0.75rem !important;
+      box-shadow: none !important;
+    }
+    .admin-order-actions .order-accept { background: #2f6f98 !important; }
+    .admin-order-actions .order-complete { background: #27845f !important; }
+    .admin-order-actions .order-secondary { background: #252933 !important; color: #c4c8cf !important; border: 1px solid #343945 !important; }
+    .admin-order-actions .order-reject { background: transparent !important; color: #d2ae68 !important; border: 1px solid #665537 !important; }
+    .pending-summary-panel { width: 9rem !important; }
+    #pending-summary > button { min-height: 42px; }
+    .admin-settings-heading {
+      width: 100%;
+      max-width: 60rem;
+      margin: 8px 0 9px;
+      padding: 0 2px;
+      color: #7e8591;
+      font-size: 0.7rem;
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .admin-settings-panel { padding: 0 16px !important; }
+    .admin-settings-panel > div:first-child { min-height: 54px; padding: 0 !important; }
+    .admin-settings-panel > div:first-child h3 { color: #c8cbd2 !important; font-size: 0.93rem !important; }
+    .admin-settings-panel > div:first-child span[id$="chevron"] { color: #777e8a !important; }
+    .admin-settings-panel > div:not(:first-child) { padding-top: 16px !important; padding-bottom: 16px; border-color: var(--adm-line-soft) !important; }
+
     @media (max-width: 640px) {
       .ord-full { display: none; }
       .ord-bracket { display: inline; }
-      #monitor-text .mon-type { font-size: 1.42rem; }
+      #mainContent { padding-left: 10px; padding-right: 10px; }
+      .admin-control-header { width: calc(100% + 20px); margin-left: -10px; margin-right: -10px; }
+      .admin-header-inner { padding-left: 10px; padding-right: 10px; }
+      .admin-brand span { display: none; }
+      .admin-live-panel { grid-template-columns: 1fr; gap: 12px !important; }
+      .admin-live-panel > div:last-child { padding: 12px 0 0 !important; border-left: 0 !important; border-top: 1px solid var(--adm-line) !important; }
+      .admin-live-panel > div:last-child span { flex: 0 0 auto; }
+      #monitor-text .mon-type { font-size: 1.28rem; }
+      #mainContent > .glass-panel { padding: 14px !important; margin-bottom: 10px !important; border-radius: 12px !important; }
+      .admin-status-panel .grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+      .admin-notice-form > div { width: 100%; }
+      .admin-notice-form button { flex: 1; padding-left: 12px !important; padding-right: 12px !important; }
+      .admin-orders-header { flex-direction: column; }
+      .order-bulk-actions { width: 100%; padding: 11px 0 0; border-left: 0; border-top: 1px solid var(--adm-line); }
+      .order-bulk-actions label { margin-right: auto; min-height: 40px; }
+      .order-bulk-actions button { flex: 1; min-width: 0; }
+      .orders-layout { flex-direction: column !important; gap: 12px !important; }
+      .pending-summary-panel { order: -1; width: 100% !important; }
+      #pending-summary { flex-direction: row !important; overflow-x: auto; overflow-y: hidden !important; max-height: none !important; padding-bottom: 2px; }
+      #pending-summary > button { min-width: 104px; }
+      #admin-order-list { padding-right: 0 !important; }
+      .admin-order-body { gap: 10px !important; }
+      .admin-order-actions { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .admin-order-actions button { width: 100%; min-width: 0; }
+      .admin-settings-panel { padding-left: 14px !important; padding-right: 14px !important; }
+    }
+    @media (max-width: 390px) {
+      .admin-header-actions button { padding-left: 9px !important; padding-right: 9px !important; }
+      .admin-order-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
     }
   </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4">
 
 <!-- ── 로그인 오버레이 ── -->
-<div id="loginOverlay" class="fixed inset-0 z-[999] flex items-center justify-center" style="background-color:#030712;">
+<div id="loginOverlay" class="fixed inset-0 z-[999] flex items-center justify-center" style="background-color:#0b0c0f;">
   <div class="w-full max-w-sm mx-4 p-8 rounded-2xl border border-gray-800" style="background:rgba(10,10,10,0.9);">
     <div class="flex flex-col items-center mb-8">
       <h2 class="text-white text-2xl font-black tracking-widest">관제탑</h2>
@@ -70,8 +266,15 @@
 
 <!-- ── 메인 콘텐츠 ── -->
 <div id="mainContent" class="hidden w-full flex flex-col items-center">
-<button onclick="doLogout()" class="fixed top-4 right-4 z-50 px-3 py-1.5 bg-gray-900 border border-gray-700 text-gray-400 text-[10px] font-black rounded-lg hover:border-red-500 hover:text-red-400 transition-all tracking-widest">로그아웃</button>
-<button id="sound-toggle-btn" onclick="toggleOrderSound()" title="새 주문 효과음" class="fixed top-4 right-24 z-50 px-3 py-1 bg-gray-900 border border-gray-700 text-sm rounded-lg hover:border-[#8788EE] transition-all">🔔</button>
+  <header class="admin-control-header" aria-label="관리자 빠른 제어">
+    <div class="admin-header-inner">
+      <div class="admin-brand"><strong>후제공방 관제탑</strong><span>OPERATIONS</span></div>
+      <div class="admin-header-actions">
+        <button id="sound-toggle-btn" onclick="toggleOrderSound()" title="새 주문 효과음" aria-label="새 주문 효과음 켜기 또는 끄기">🔔</button>
+        <button onclick="doLogout()" class="tracking-widest">로그아웃</button>
+      </div>
+    </div>
+  </header>
 
   <!-- 미확인 메시지 배지 -->
   <div id="unread-badge" class="hidden w-full max-w-2xl mb-3 mt-4 px-4 py-3 rounded-xl border border-red-500/40 bg-red-500/10 flex items-center justify-between gap-3">
@@ -82,7 +285,7 @@
     <button onclick="confirmAllReports()" class="px-3 py-1.5 bg-red-900/30 text-red-400 border border-red-500/30 font-black rounded-lg text-[10px] hover:bg-red-600 hover:text-white transition-all">일괄 확인</button>
   </div>
 
-  <div class="w-full max-w-2xl mb-5 p-6 rounded-2xl glass-panel border-[#8788EE]/40 flex flex-col gap-4 shadow-2xl">
+  <div class="admin-live-panel w-full max-w-2xl mb-5 p-6 rounded-2xl glass-panel border-[#8788EE]/40 flex flex-col gap-4 shadow-2xl">
     <div class="flex items-center justify-between">
       <div class="flex flex-col flex-1">
         <span class="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-1">Live Monitor</span>
@@ -98,21 +301,29 @@
     </div>
   </div>
 
-  <div class="w-full max-w-2xl mb-5 p-5 rounded-2xl glass-panel border-[#8788EE]/20 shadow-xl">
+  <div class="admin-status-panel w-full max-w-2xl mb-5 p-5 rounded-2xl glass-panel border-[#8788EE]/20 shadow-xl">
+    <div class="admin-card-heading">
+      <h3>운영 상태 송출</h3>
+      <p>상세 문구를 확인한 뒤 상태 버튼을 누르면 즉시 반영됩니다.</p>
+    </div>
     <div class="grid grid-cols-3 gap-2 mb-2">
-      <button id="btn-온라인" onclick="setStatus('온라인', '즉시 제작 가능 ✨', 'bg-green-500')" class="py-4 rounded-xl font-black text-xs md:text-sm bg-green-600 hover:bg-green-500 shadow-lg active:scale-95 transition-all border border-transparent">✨ 온라인</button>
-      <button id="btn-쐐기 중" onclick="setStatus('쐐기 중', '20분 내 제작 가능 🗝️', 'bg-blue-500')" class="py-4 rounded-xl font-black text-xs md:text-sm bg-blue-600 hover:bg-blue-500 shadow-lg active:scale-95 transition-all border border-transparent">🗝️ 쐐기 중</button>
-      <button id="btn-레이드 중" onclick="setStatus('레이드 중', '1시간 내 제작 가능 ⚔️', 'bg-purple-500')" class="py-4 rounded-xl font-black text-xs md:text-sm bg-purple-600 hover:bg-purple-500 shadow-lg active:scale-95 transition-all border border-transparent">⚔️ 레이드 중</button>
-      <button id="btn-자리 비움" onclick="setStatus('자리 비움', '10분 내외로 짧은 자리 비움 중입니다.' + String.fromCharCode(10) + '곧 돌아와 바로 제작합니다 ⚡', 'bg-yellow-500')" class="py-4 rounded-xl font-black text-xs md:text-sm bg-yellow-600 hover:bg-yellow-500 shadow-lg active:scale-95 transition-all border border-transparent">🔔 자리 비움</button>
-      <button id="btn-외출 중" onclick="setStatus('외출 중', '틈틈이 원격으로 제작 중입니다.' + String.fromCharCode(10) + '여유롭게 기다리실 수 있는 분만 의뢰 부탁드립니다 🙏', 'bg-orange-500')" class="py-4 rounded-xl font-black text-xs md:text-sm bg-orange-600 hover:bg-orange-500 shadow-lg active:scale-95 transition-all border border-transparent">🙏 외출 중</button>
-      <button id="btn-오프라인" onclick="setStatus('오프라인', '6시간 내 제작 가능 💤', 'bg-gray-600')" class="py-4 rounded-xl font-black text-xs md:text-sm bg-gray-700 hover:bg-gray-600 shadow-lg active:scale-95 transition-all border border-transparent">💤 오프라인</button>
+      <button id="btn-온라인" onclick="setStatus('온라인', '즉시 제작 가능 ✨', 'bg-green-500')" class="py-4 rounded-xl font-black text-xs md:text-sm bg-green-600 hover:bg-green-500 shadow-lg active:scale-95 transition-all border border-transparent">온라인</button>
+      <button id="btn-쐐기 중" onclick="setStatus('쐐기 중', '20분 내 제작 가능 🗝️', 'bg-blue-500')" class="py-4 rounded-xl font-black text-xs md:text-sm bg-blue-600 hover:bg-blue-500 shadow-lg active:scale-95 transition-all border border-transparent">쐐기 중</button>
+      <button id="btn-레이드 중" onclick="setStatus('레이드 중', '1시간 내 제작 가능 ⚔️', 'bg-purple-500')" class="py-4 rounded-xl font-black text-xs md:text-sm bg-purple-600 hover:bg-purple-500 shadow-lg active:scale-95 transition-all border border-transparent">레이드 중</button>
+      <button id="btn-자리 비움" onclick="setStatus('자리 비움', '10분 내외로 짧은 자리 비움 중입니다.' + String.fromCharCode(10) + '곧 돌아와 바로 제작합니다 ⚡', 'bg-yellow-500')" class="py-4 rounded-xl font-black text-xs md:text-sm bg-yellow-600 hover:bg-yellow-500 shadow-lg active:scale-95 transition-all border border-transparent">자리 비움</button>
+      <button id="btn-외출 중" onclick="setStatus('외출 중', '틈틈이 원격으로 제작 중입니다.' + String.fromCharCode(10) + '여유롭게 기다리실 수 있는 분만 의뢰 부탁드립니다 🙏', 'bg-orange-500')" class="py-4 rounded-xl font-black text-xs md:text-sm bg-orange-600 hover:bg-orange-500 shadow-lg active:scale-95 transition-all border border-transparent">외출 중</button>
+      <button id="btn-오프라인" onclick="setStatus('오프라인', '6시간 내 제작 가능 💤', 'bg-gray-600')" class="py-4 rounded-xl font-black text-xs md:text-sm bg-gray-700 hover:bg-gray-600 shadow-lg active:scale-95 transition-all border border-transparent">오프라인</button>
     </div>
     <textarea id="status-desc-input" rows="2" placeholder="상세 문구 입력 (엔터로 줄바꿈 가능)..." class="w-full bg-black/40 border border-gray-800 rounded-xl p-4 text-sm text-white outline-none focus:border-[#8788EE] font-bold transition-all shadow-inner custom-scrollbar resize-none"></textarea>
     <p class="text-[10px] text-gray-600 mt-2 font-bold px-1">* 문구 작성 후 위 상태 버튼을 누르면 송출됩니다.</p>
   </div>
 
-  <div class="w-full max-w-2xl mb-5 p-5 rounded-2xl glass-panel border-red-500/30 shadow-xl">
-    <div class="flex flex-col sm:flex-row gap-3">
+  <div class="admin-notice-panel w-full max-w-2xl mb-5 p-5 rounded-2xl glass-panel border-red-500/30 shadow-xl">
+    <div class="admin-card-heading">
+      <h3>긴급 공지</h3>
+      <p>현재 공지는 위 실시간 현황에서 먼저 확인하세요.</p>
+    </div>
+    <div class="admin-notice-form flex flex-col sm:flex-row gap-3">
       <input type="text" id="notice-input" placeholder="공지 내용 입력..." class="flex-1 bg-black/40 border border-gray-800 rounded-xl p-4 text-sm text-white outline-none focus:border-red-500 font-bold shadow-inner">
       <div class="flex gap-2">
         <button onclick="updateNotice()" class="px-8 py-4 bg-red-600 text-white font-black rounded-xl hover:bg-red-500 transition-all shadow-lg text-sm">송출</button>
@@ -121,10 +332,13 @@
     </div>
   </div>
 
-  <div class="w-full max-w-2xl p-5 rounded-2xl glass-panel border-[#8788EE]/40 shadow-2xl">
-    <div class="flex items-center justify-between mb-4 border-b border-[#8788EE]/10 pb-4 flex-wrap gap-2">
-      <h3 class="text-[#8788EE] font-black tracking-tighter text-lg">⚡ LIVE ORDERS</h3>
-      <div class="flex items-center gap-2 flex-wrap">
+  <div class="admin-orders-panel w-full max-w-2xl p-5 rounded-2xl glass-panel border-[#8788EE]/40 shadow-2xl">
+    <div class="admin-orders-header flex items-center justify-between mb-4 border-b border-[#8788EE]/10 pb-4 flex-wrap gap-3">
+      <div class="admin-orders-title">
+        <h3 class="text-[#8788EE] font-black tracking-tighter text-lg">진행 주문</h3>
+        <p>대기 주문을 우선 확인하고 접수·완료를 처리하세요.</p>
+      </div>
+      <div class="order-bulk-actions flex items-center gap-2 flex-wrap">
         <label class="flex items-center gap-1.5 cursor-pointer select-none">
           <input type="checkbox" id="include1account" checked class="w-3.5 h-3.5 accent-[#8788EE]">
           <span class="text-gray-400 text-[10px] font-black tracking-widest">1계정 포함</span>
@@ -133,21 +347,23 @@
         <button onclick="completeAllOrders()" class="px-4 py-2 bg-emerald-600/10 text-emerald-400 border border-emerald-500/30 font-black rounded-lg text-xs hover:bg-emerald-600 hover:text-white transition-all">일괄 완료</button>
       </div>
     </div>
-    <div class="flex gap-4">
+    <div class="orders-layout flex gap-4">
       <div id="admin-order-list" class="flex flex-col gap-2 max-h-[400px] overflow-y-auto custom-scrollbar pr-1 flex-1">
         <div class="text-gray-600 text-center py-8 text-xs font-bold uppercase tracking-widest">No active orders</div>
       </div>
-      <div class="shrink-0 w-28 flex flex-col gap-1">
+      <div class="pending-summary-panel shrink-0 w-28 flex flex-col gap-1">
         <div class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1.5 px-1">제작자별 잔여</div>
         <div id="pending-summary" class="flex flex-col gap-1.5 max-h-[400px] overflow-y-auto custom-scrollbar"></div>
       </div>
     </div>
   </div>
 
+  <div class="admin-settings-heading">관리 도구 · 필요할 때만 열기</div>
+
   <!-- 아이템 관리 -->
-  <div class="w-full max-w-2xl mb-5 mt-2 p-5 rounded-2xl glass-panel border-yellow-500/30 shadow-xl">
+  <div class="admin-settings-panel w-full max-w-2xl mb-5 mt-2 p-5 rounded-2xl glass-panel border-yellow-500/30 shadow-xl">
     <div class="flex items-center justify-between pb-4" id="item-manager-header" style="cursor:pointer;" onclick="toggleItemManager()">
-      <h3 class="text-yellow-400 font-black tracking-tighter text-lg">⚒️ 아이템 관리</h3>
+      <h3 class="text-yellow-400 font-black tracking-tighter text-lg">아이템 관리</h3>
       <div class="flex items-center gap-2">
         <button onclick="event.stopPropagation(); openAddItemModal()" class="px-4 py-2 bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 font-black rounded-lg text-xs hover:bg-yellow-500 hover:text-black transition-all">+ 새 아이템</button>
         <span id="item-manager-chevron" class="text-yellow-400 font-black text-sm transition-transform">▼</span>
@@ -169,9 +385,9 @@
   </div>
 
   <!-- 검색 도우미 (서신/장식) -->
-  <div class="w-full max-w-2xl mb-5 mt-2 p-5 rounded-2xl glass-panel border-purple-500/30 shadow-xl">
+  <div class="admin-settings-panel w-full max-w-2xl mb-5 mt-2 p-5 rounded-2xl glass-panel border-purple-500/30 shadow-xl">
     <div class="flex items-center justify-between pb-4 cursor-pointer" onclick="toggleSearchHelper()">
-      <h3 class="text-purple-400 font-black tracking-tighter text-lg">🔎 검색 도우미 (서신/장식)</h3>
+      <h3 class="text-purple-400 font-black tracking-tighter text-lg">검색 도우미 (서신/장식)</h3>
       <span id="search-helper-chevron" class="text-purple-400 font-black text-sm transition-transform">▼</span>
     </div>
     <div id="search-helper-body" class="hidden border-t border-purple-500/10 pt-4">
@@ -194,9 +410,9 @@
   </div>
 
   <!-- 제보 메뉴 -->
-  <div class="w-full max-w-2xl mb-5 mt-2 p-5 rounded-2xl glass-panel border-gray-700/30 shadow-xl">
+  <div class="admin-settings-panel w-full max-w-2xl mb-5 mt-2 p-5 rounded-2xl glass-panel border-gray-700/30 shadow-xl">
     <div class="flex items-center justify-between pb-4 cursor-pointer" onclick="toggleReportManager()">
-      <h3 class="text-gray-400 font-black tracking-tighter text-lg">💌 제보 / 바란다</h3>
+      <h3 class="text-gray-400 font-black tracking-tighter text-lg">제보 / 바란다</h3>
       <span id="report-manager-chevron" class="text-gray-400 font-black text-sm transition-transform">▼</span>
     </div>
     <div id="report-manager-body" class="hidden border-t border-gray-800 pt-4">
@@ -214,9 +430,9 @@
   </div>
 
   <!-- 애드온 다운로드 버튼 문구 + 링크 -->
-  <div class="w-full max-w-2xl mb-5 mt-2 p-5 rounded-2xl glass-panel border-amber-500/20 shadow-xl">
+  <div class="admin-settings-panel w-full max-w-2xl mb-5 mt-2 p-5 rounded-2xl glass-panel border-amber-500/20 shadow-xl">
     <div class="flex items-center justify-between pb-4 cursor-pointer" onclick="toggleAddonLabel()">
-      <h3 class="text-amber-400 font-black tracking-tighter text-lg">📦 애드온 다운로드 설정</h3>
+      <h3 class="text-amber-400 font-black tracking-tighter text-lg">애드온 다운로드 설정</h3>
       <span id="addon-label-chevron" class="text-amber-400 font-black text-sm transition-transform">▼</span>
     </div>
     <div id="addon-label-body" class="hidden border-t border-amber-500/10 pt-4 flex flex-col gap-4">
@@ -250,9 +466,9 @@
   </div>
 
   <!-- 분기점(시즌) 설정 -->
-  <div class="w-full max-w-2xl mb-5 p-5 rounded-2xl glass-panel border-[#8788EE]/20 shadow-xl">
+  <div class="admin-settings-panel w-full max-w-2xl mb-5 p-5 rounded-2xl glass-panel border-[#8788EE]/20 shadow-xl">
     <div class="flex items-center justify-between pb-4 cursor-pointer" onclick="toggleSeasonPanel()">
-      <h3 class="text-[#a9aaf7] font-black tracking-tighter text-lg flex items-center gap-2">🗓️ 분기점 설정</h3>
+      <h3 class="text-[#a9aaf7] font-black tracking-tighter text-lg flex items-center gap-2">분기점 설정</h3>
       <span id="seasonpanel-chevron" class="text-[#a9aaf7] font-black text-sm transition-transform">▼</span>
     </div>
     <div id="seasonpanel-body" class="hidden border-t border-[#8788EE]/10 pt-4 flex flex-col gap-4">
@@ -271,9 +487,9 @@
   </div>
 
   <!-- 데이터센터 -->
-  <div class="w-full max-w-2xl mb-5 p-5 rounded-2xl glass-panel border-[#8788EE]/20 shadow-xl">
+  <div class="admin-settings-panel w-full max-w-2xl mb-5 p-5 rounded-2xl glass-panel border-[#8788EE]/20 shadow-xl">
     <div class="flex items-center justify-between pb-4 cursor-pointer" onclick="toggleDataCenter()">
-      <h3 class="text-[#a9aaf7] font-black tracking-tighter text-lg flex items-center gap-2">📊 데이터센터</h3>
+      <h3 class="text-[#a9aaf7] font-black tracking-tighter text-lg flex items-center gap-2">데이터센터</h3>
       <span id="datacenter-chevron" class="text-[#a9aaf7] font-black text-sm transition-transform">▼</span>
     </div>
     <div id="datacenter-body" class="hidden border-t border-[#8788EE]/10 pt-4 flex flex-col gap-6">
@@ -325,9 +541,9 @@
   </div>
 
   <!-- 유입 경로 -->
-  <div class="w-full max-w-2xl mb-5 p-5 rounded-2xl glass-panel border-[#8788EE]/20 shadow-xl">
+  <div class="admin-settings-panel w-full max-w-2xl mb-5 p-5 rounded-2xl glass-panel border-[#8788EE]/20 shadow-xl">
     <div class="flex items-center justify-between pb-4 cursor-pointer" onclick="toggleRefPanel()">
-      <h3 class="text-[#a9aaf7] font-black tracking-tighter text-lg flex items-center gap-2">🔗 유입 경로</h3>
+      <h3 class="text-[#a9aaf7] font-black tracking-tighter text-lg flex items-center gap-2">유입 경로</h3>
       <span id="refpanel-chevron" class="text-[#a9aaf7] font-black text-sm transition-transform">▼</span>
     </div>
     <div id="refpanel-body" class="hidden border-t border-[#8788EE]/10 pt-4 flex flex-col gap-4">
@@ -343,7 +559,7 @@
     </div>
   </div>
 
-  <div class="mt-6 mb-4 text-gray-700 text-[9px] font-black opacity-40 tracking-[0.4em] uppercase">Hooje Studio Tower v5.0</div>
+  <div class="admin-footer mt-6 mb-4 text-gray-700 text-[9px] font-black opacity-40 tracking-[0.4em] uppercase">Hooje Studio Tower v5.0</div>
 
 </div><!-- /mainContent -->
 
@@ -684,10 +900,10 @@
       summary.innerHTML = `
         ${sorted.map(([crafter, count]) => {
           const color = CLS_COLOR[crafter] || '#6B7280';
-          return `<div onclick="completeCrafterOrders(this.dataset.crafter)" data-crafter="${escapeHTML(crafter)}" class="flex items-center justify-between px-2 py-2.5 rounded-lg bg-black/30 border border-gray-900 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all cursor-pointer" title="${escapeHTML(crafter)} 전체 완료">
+          return `<button type="button" onclick="completeCrafterOrders(this.dataset.crafter)" data-crafter="${escapeHTML(crafter)}" class="flex items-center justify-between px-2 py-2.5 rounded-lg bg-black/30 border border-gray-900 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all cursor-pointer" title="${escapeHTML(crafter)} 전체 완료">
             <span class="text-[10px] font-black" style="color:${color}">${escapeHTML(crafter)}</span>
             <span class="text-[10px] font-black text-white">${count}</span>
-          </div>`;
+          </button>`;
         }).join('')}
       `;
     }
@@ -737,22 +953,22 @@
         // 버튼 (onclick / id 핸들러 보존)
         let buttons = '';
         if (status === 'done') {
-          buttons = `<button onclick="undoOrder('${o.id}')" class="px-3 py-1.5 bg-gray-900 text-white text-[10px] font-black rounded-lg border border-gray-800 hover:bg-gray-700 transition-all">UNDO</button>`;
+          buttons = `<button onclick="undoOrder('${o.id}')" class="order-secondary px-3 py-1.5 bg-gray-900 text-white text-[10px] font-black rounded-lg border border-gray-800 hover:bg-gray-700 transition-all">되돌리기</button>`;
         } else if (status === 'accepted') {
-          buttons = `<button onclick="completeOrder('${o.id}')" class="px-3 py-1.5 bg-emerald-600 text-white text-[10px] font-black rounded-lg hover:bg-emerald-500 transition-all">완료</button>
-                     <button onclick="rejectOrder('${o.id}')" class="px-3 py-1.5 bg-yellow-600 text-white text-[10px] font-black rounded-lg hover:bg-yellow-500 transition-all">반려</button>
-                     <button onclick="undoOrder('${o.id}')" class="px-3 py-1.5 bg-gray-900 text-white text-[10px] font-black rounded-lg border border-gray-800 hover:bg-gray-700 transition-all">UNDO</button>`;
+          buttons = `<button onclick="completeOrder('${o.id}')" class="order-complete px-3 py-1.5 bg-emerald-600 text-white text-[10px] font-black rounded-lg hover:bg-emerald-500 transition-all">완료</button>
+                     <button onclick="rejectOrder('${o.id}')" class="order-reject px-3 py-1.5 bg-yellow-600 text-white text-[10px] font-black rounded-lg hover:bg-yellow-500 transition-all">반려</button>
+                     <button onclick="undoOrder('${o.id}')" class="order-secondary px-3 py-1.5 bg-gray-900 text-white text-[10px] font-black rounded-lg border border-gray-800 hover:bg-gray-700 transition-all">되돌리기</button>`;
         } else if (status === 'rejected') {
-          buttons = `<button onclick="undoOrder('${o.id}')" class="px-3 py-1.5 bg-gray-900 text-white text-[10px] font-black rounded-lg border border-gray-800 hover:bg-gray-700 transition-all">UNDO</button>`;
+          buttons = `<button onclick="undoOrder('${o.id}')" class="order-secondary px-3 py-1.5 bg-gray-900 text-white text-[10px] font-black rounded-lg border border-gray-800 hover:bg-gray-700 transition-all">되돌리기</button>`;
         } else {
-          buttons = `<button onclick="acceptOrder('${o.id}')" class="px-3 py-1.5 bg-sky-700 text-white text-[10px] font-black rounded-lg hover:bg-sky-500 transition-all">접수</button>
-                     <button onclick="completeOrder('${o.id}')" class="px-3 py-1.5 bg-emerald-600 text-white text-[10px] font-black rounded-lg hover:bg-emerald-500 transition-all">완료</button>
-                     <button onclick="rejectOrder('${o.id}')" class="px-3 py-1.5 bg-yellow-600 text-white text-[10px] font-black rounded-lg hover:bg-yellow-500 transition-all">반려</button>`;
+          buttons = `<button onclick="acceptOrder('${o.id}')" class="order-accept px-3 py-1.5 bg-sky-700 text-white text-[10px] font-black rounded-lg hover:bg-sky-500 transition-all">접수</button>
+                     <button onclick="completeOrder('${o.id}')" class="order-complete px-3 py-1.5 bg-emerald-600 text-white text-[10px] font-black rounded-lg hover:bg-emerald-500 transition-all">완료</button>
+                     <button onclick="rejectOrder('${o.id}')" class="order-reject px-3 py-1.5 bg-yellow-600 text-white text-[10px] font-black rounded-lg hover:bg-yellow-500 transition-all">반려</button>`;
         }
 
-        return `<div class="flex items-stretch shrink-0 bg-black/40 rounded-xl border-2 border-gray-700/70 hover:border-gray-600 transition-colors overflow-hidden">
+        return `<div class="admin-order-card flex items-stretch shrink-0 bg-black/40 rounded-xl border-2 border-gray-700/70 hover:border-gray-600 transition-colors overflow-hidden">
                   <div class="w-1.5 shrink-0" style="background:${cfg.bar};"></div>
-                  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 flex-1 min-w-0 p-3">
+                  <div class="admin-order-body flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 flex-1 min-w-0 p-3">
                     <div class="flex flex-col gap-1 min-w-0 flex-1">
                       <div class="flex items-center flex-wrap gap-1.5 text-[10px]">
                         <span class="font-bold text-white tracking-tighter shrink-0">${time}</span>
@@ -766,7 +982,7 @@
                         ${viaHtml}
                       </div>
                     </div>
-                    <div class="flex items-center justify-end flex-wrap gap-1 shrink-0 w-full sm:w-auto">${buttons}</div>
+                    <div class="admin-order-actions flex items-center justify-end flex-wrap gap-1 shrink-0 w-full sm:w-auto">${buttons}</div>
                   </div>
                 </div>`;
       }).join('');
@@ -829,7 +1045,9 @@
     setInterval(() => { if (allOrdersCache.length) renderOrderList(allOrdersCache); }, 60000);
 
     window.updateNotice = () => { const input = document.getElementById('notice-input'); if(input.value.trim()) set(ref(db, 'notice'), input.value); };
-    window.clearNotice = () => set(ref(db, 'notice'), "");
+    window.clearNotice = () => {
+      if (confirm('현재 공지를 삭제할까요?')) set(ref(db, 'notice'), "");
+    };
     window.acceptOrder = (id) => update(ref(db, `orders/${id}`), { status: 'accepted', acceptedAt: Date.now() });
     window.completeOrder = (id) => update(ref(db, `orders/${id}`), { status: 'done' });
     window.rejectOrder = (id) => update(ref(db, `orders/${id}`), { status: 'rejected' });
@@ -844,7 +1062,8 @@
           updates[`/orders/${o.id}/status`] = 'done';
         }
       });
-      if (Object.keys(updates).length) update(ref(db), updates);
+      const count = Object.keys(updates).length;
+      if (count && confirm(`${crafter}의 진행 주문 ${count}건을 모두 완료할까요?`)) update(ref(db), updates);
     };
 
     window.acceptAllOrders = () => {
@@ -856,7 +1075,8 @@
         updates[`/orders/${o.id}/status`] = 'accepted';
         updates[`/orders/${o.id}/acceptedAt`] = Date.now();
       });
-      if (Object.keys(updates).length) update(ref(db), updates);
+      const count = Object.keys(updates).filter(k => k.endsWith('/status')).length;
+      if (count && confirm(`대기 주문 ${count}건을 일괄 접수할까요?`)) update(ref(db), updates);
     };
 
     window.completeAllOrders = () => {
@@ -867,7 +1087,8 @@
         if (!include1 && ONE_ACCOUNT_CRAFTERS.includes(o.crafter)) return;
         updates[`/orders/${o.id}/status`] = 'done';
       });
-      if (Object.keys(updates).length) update(ref(db), updates);
+      const count = Object.keys(updates).length;
+      if (count && confirm(`접수된 주문 ${count}건을 일괄 완료할까요?`)) update(ref(db), updates);
     };
 
     // ── Firebase Auth ────────────────────────────────────────────────────
@@ -1382,6 +1603,7 @@
       }
     };
     window.resetAddonLabel = async () => {
+      if (!confirm('애드온 버튼 문구를 기본값으로 초기화할까요?')) return;
       try {
         await set(ref(db, 'addon_label'), null);
         document.getElementById('addon-label-input').value = '';
@@ -1402,6 +1624,7 @@
       }
     };
     window.resetAddonUrl = async () => {
+      if (!confirm('애드온 다운로드 링크를 기본값으로 초기화할까요?')) return;
       try {
         await set(ref(db, 'addon_url'), null);
         document.getElementById('addon-url-input').value = '';
