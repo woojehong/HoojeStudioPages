@@ -8,6 +8,9 @@
     '/.netlify/functions/notify',
     '/.netlify/functions/cf-downloads'
   ]);
+  const BLOCKED_FUNCTION_HOSTS = new Set([
+    'notifyorder-znq5mv362a-du.a.run.app'
+  ]);
 
   function isReadOnlyLocation(locationLike) {
     if (!locationLike) return false;
@@ -37,6 +40,7 @@
 
     const pathname = url.pathname.replace(/^\/HoojeStudioPages(?=\/|$)/i, '') || '/';
     if (BLOCKED_FUNCTION_PATHS.has(pathname)) return true;
+    if (BLOCKED_FUNCTION_HOSTS.has(url.hostname.toLowerCase())) return true;
     if (url.hostname === 'api.telegram.org' && /^\/bot/i.test(url.pathname)) return true;
 
     const method = String((init && init.method) || (input && input.method) || 'GET').toUpperCase();
