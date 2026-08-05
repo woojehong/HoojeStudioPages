@@ -667,9 +667,7 @@
           </div>
           <div id="detail-cart-btn-wrapper" class="shrink-0 z-20 self-center"></div>
         </div>
-        
-        <div id="top-order-section" class="w-full mt-[-4px] mb-2 flex flex-col items-center"></div>
-        
+
         <div>
           <h4 id="detail-color-bar" class="text-sm md:text-base font-black mb-1.5 flex items-center gap-2 tracking-widest">
             <span id="detail-indicator" class="w-1.5 h-4 md:h-5 rounded-full"></span> 필수 재료
@@ -1882,7 +1880,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         </button>
       `;
 
-      document.getElementById('top-order-section').innerHTML = generateOrderButtonHTML(item.crafter, item.name, false);
       document.getElementById('bottom-order-section').innerHTML = generateOrderButtonHTML(item.crafter, item.name, true);
       
       const reqCont = document.getElementById('req-mats-container');
@@ -1996,10 +1993,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
               <span class="text-xs md:text-sm text-white font-black text-center">수수료</span>
               <span class="mat-status text-white group-hover:text-yellow-400 font-black text-xl md:text-2xl text-center">자율</span>
             </button>
-            <button onclick="copyText('${item.crafter}', this, '${color}', true)" class="maker-crafter-tile hj-info-tile w-full px-3 py-2 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center group hover:border-gray-700 transition-colors flex-1">
-              <span class="text-xs text-white font-black">제작자</span>
-              <span class="mat-status font-black text-xl md:text-3xl" style="color: ${color}">${item.crafter}</span>
-              <span class="text-[10px] md:text-xs text-white/70 font-bold mt-0.5">(클릭하시면 제작자 아이디가 복사됩니다)</span>
+            <button onclick="copyText('${item.crafter}', this, '${color}', true)" class="maker-crafter-tile hj-info-tile w-full px-3 py-2 bg-gray-900 rounded-xl border border-gray-800 flex flex-col justify-center items-center gap-1 group hover:border-gray-700 transition-colors flex-1">
+              <span class="text-xs md:text-sm text-white font-black text-center">제작자</span>
+              <span class="mat-status font-black text-xl md:text-2xl text-center" style="color: ${color}">${item.crafter}</span>
+              <span class="text-[10px] md:text-xs text-white/70 font-bold">(클릭하시면 제작자 아이디가 복사됩니다)</span>
             </button>
           </div>
           ${makerIdentity ? `
@@ -2362,9 +2359,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     // ── 주문 버튼 재생성: 항상 "현재 보고 있는 아이템" 기준 ────────────
     function refreshOrderButtons() {
       if (!currentDetailItem) return;
-      const top = document.getElementById('top-order-section');
       const bottom = document.getElementById('bottom-order-section');
-      if (top) top.innerHTML = generateOrderButtonHTML(currentDetailItem.crafter, currentDetailItem.name, false);
       if (bottom) bottom.innerHTML = generateOrderButtonHTML(currentDetailItem.crafter, currentDetailItem.name, true);
     }
 
