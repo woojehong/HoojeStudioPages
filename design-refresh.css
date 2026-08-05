@@ -358,7 +358,7 @@ header,
 
 @media (min-width: 768px) {
   .detail-compact-action {
-    width: min(calc(100% - 24px), 260px);
+    width: calc((100% - 16px) / 3);
   }
 }
 
