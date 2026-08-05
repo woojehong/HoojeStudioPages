@@ -351,6 +351,11 @@ header,
   text-align: center;
 }
 
+.detail-compact-action {
+  width: min(calc(100% - 24px), 320px);
+  margin-inline: auto;
+}
+
 .tmi-addon-stack {
   width: min(100%, 374px);
 }

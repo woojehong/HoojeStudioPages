@@ -1816,7 +1816,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     function generateOrderButtonHTML(crafter, itemName, showNotice=false) {
       if (itemCooldowns[itemName]) {
         return `
-          <button class="order-action-btn order-action-complete hj-primary-action w-full md:w-1/2 mx-auto px-3 py-1.5 bg-gradient-to-r from-green-600/20 to-green-900/20 border border-green-500/50 rounded-xl font-black text-white cursor-not-allowed opacity-80 flex items-center justify-center gap-2.5 relative overflow-hidden">
+          <button class="order-action-btn order-action-complete detail-compact-action hj-primary-action px-3 py-1.5 bg-gradient-to-r from-green-600/20 to-green-900/20 border border-green-500/50 rounded-xl font-black text-white cursor-not-allowed opacity-80 flex items-center justify-center gap-2.5 relative overflow-hidden">
             <span class="order-action-icon order-action-complete-icon relative z-10 shrink-0" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>
             </span>
@@ -1831,7 +1831,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const _sc = statusRGB();
       return `
         <button onclick="sendOrder('${crafter}', '${itemName}')"
-          class="order-action-btn hj-primary-action order-pulse w-full md:w-1/2 mx-auto px-3 py-1.5 border rounded-xl font-black text-white active:scale-95 flex items-center justify-center gap-2.5 relative overflow-hidden group" style="--sc-rgb:${_sc}; background:linear-gradient(to right, rgba(${_sc},0.2), rgba(${_sc},0.1)); border-color:rgba(${_sc},0.72);">
+          class="order-action-btn detail-compact-action hj-primary-action order-pulse px-3 py-1.5 border rounded-xl font-black text-white active:scale-95 flex items-center justify-center gap-2.5 relative overflow-hidden group" style="--sc-rgb:${_sc}; background:linear-gradient(to right, rgba(${_sc},0.2), rgba(${_sc},0.1)); border-color:rgba(${_sc},0.72);">
           <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></span>
           <span class="order-action-icon relative z-10 shrink-0" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/><path d="M12 2V1"/></svg>
@@ -1897,7 +1897,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const copyString = item.reqMats.map(m => `${m.n.replace(/\s*\(금색\)/g, ' (금성)')} x ${m.c}`).join(" / ");
       
       copyAllSec.innerHTML = `
-        <button onclick="copyTextExact('${copyString.replace(/'/g, "\\'")}', this, '${color}')" class="copy-all-action hj-primary-action w-full md:w-1/2 mx-auto py-1.5 px-3 bg-gray-900 border border-gray-700 hover:border-gray-500/50 hover:bg-gray-800 transition-all rounded-lg group flex items-center justify-center">
+        <button onclick="copyTextExact('${copyString.replace(/'/g, "\\'")}', this, '${color}')" class="copy-all-action detail-compact-action hj-primary-action py-1.5 px-3 bg-gray-900 border border-gray-700 hover:border-gray-500/50 hover:bg-gray-800 transition-all rounded-lg group flex items-center justify-center">
           <div class="text-xs font-bold text-gray-200 group-hover:text-white flex items-center justify-center gap-2 transition-colors">
             <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
             <span class="mat-status">전체 필수 재료 복사하기</span>
