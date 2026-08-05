@@ -479,7 +479,7 @@
     const appCheckHosts = new Set(["hooje.pro", "www.hooje.pro"]);
     if (appCheckHosts.has(location.hostname.toLowerCase())) {
       initializeAppCheck(app, {
-        provider: new ReCaptchaEnterpriseProvider("6Le7onQtAAAAAGnrEqkqXuMU-w1IrcjFYyqbhpCm"),
+        provider: new ReCaptchaEnterpriseProvider("6Le7onQtAAAAAGnrEqkqXuMU-w1ircjFYyqbhpCm"),
         isTokenAutoRefreshEnabled: true
       });
     }
@@ -772,8 +772,23 @@
       }).join('');
     }
 
+    let latestOrdersRaw = null;
+    function pruneOldOrders(data) {
+      if (!auth.currentUser || window.__ordersPruned || !data) return;
+      window.__ordersPruned = true;
+      const now = Date.now();
+      const D7 = 7 * 24 * 60 * 60 * 1000;
+      const prune = {};
+      Object.keys(data).forEach(k => {
+        const ts = data[k] && data[k].timestamp;
+        if (ts && (now - ts) > D7) prune[`/orders/${k}`] = null;
+      });
+      if (Object.keys(prune).length) update(ref(db), prune).catch(() => {});
+    }
+
     onValue(ref(db, 'orders'), (snap) => {
       const data = snap.val();
+      latestOrdersRaw = data;
       currentPendingOrders = {};
       if(!data) {
         allOrdersCache = [];
@@ -790,17 +805,8 @@
         .sort((a,b) => b.timestamp - a.timestamp);
       allOrdersCache = orders;
 
-      // 7일 지난 주문 자동 정리 (DB 무한 누적 방지, 세션당 1회)
-      if (!window.__ordersPruned) {
-        window.__ordersPruned = true;
-        const D7 = 7 * H24;
-        const prune = {};
-        Object.keys(data).forEach(k => {
-          const ts = data[k] && data[k].timestamp;
-          if (ts && (now - ts) > D7) prune[`/orders/${k}`] = null;
-        });
-        if (Object.keys(prune).length) update(ref(db), prune).catch(() => {});
-      }
+      // 7일 지난 주문은 관리자 인증 후에만 정리한다.
+      pruneOldOrders(data);
 
       // 새 주문 감지: 개수가 아닌 ID 기준 (오래된 주문 정리와 겹쳐도 정확)
       const _ids = new Set(orders.map(o => o.id));
@@ -866,6 +872,15 @@
 
     // ── Firebase Auth ────────────────────────────────────────────────────
     const ADMIN_EMAIL = "admin@hooje.pro";
+    let reportsUnsub = null;
+    function startReportSubscription() {
+      if (reportsUnsub) return;
+      reportsUnsub = onValue(ref(db, 'reports'), (snap) => {
+        allReportsData = snap.val() || {};
+        updateUnreadBadge();
+        if (!document.getElementById('report-manager-body').classList.contains('hidden')) renderReports();
+      });
+    }
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById('loginOverlay').style.display = 'none';
@@ -873,8 +888,13 @@
         document.getElementById('mainContent').style.display = 'flex';
         document.getElementById('mainContent').style.flexDirection = 'column';
         document.getElementById('mainContent').style.alignItems = 'center';
+        window.__ordersPruned = false;
+        pruneOldOrders(latestOrdersRaw);
+        startReportSubscription();
         initItemManager();
       } else {
+        if (reportsUnsub) { reportsUnsub(); reportsUnsub = null; }
+        allReportsData = {};
         document.getElementById('loginOverlay').style.display = 'flex';
         document.getElementById('mainContent').classList.add('hidden');
       }
@@ -893,12 +913,7 @@
     let currentReportTab = 'error';
     let allReportsData = {};
 
-    // 실시간 감시: 미확인 배지 + 데이터 캐시
-    onValue(ref(db, 'reports'), (snap) => {
-      allReportsData = snap.val() || {};
-      updateUnreadBadge();
-      if (!document.getElementById('report-manager-body').classList.contains('hidden')) renderReports();
-    });
+    // 제보 데이터는 관리자 인증이 확인된 뒤에만 구독한다.
 
     function updateUnreadBadge() {
       const unread = Object.values(allReportsData).filter(r => !r.confirmed && !r.archived).length;
@@ -1537,7 +1552,10 @@
 
     onValue(ref(db,'stats/seasons'), s=>{
       const v=s.val();
-      if(!v || !Object.keys(v).length){ set(ref(db,'stats/seasons'), { midnight_s1:{ name:'한밤 시즌1', start:'2026-06-28' } }); return; }
+      if(!v || !Object.keys(v).length){
+        if (auth.currentUser) set(ref(db,'stats/seasons'), { midnight_s1:{ name:'한밤 시즌1', start:'2026-06-28' } });
+        return;
+      }
       _seasons=v; renderSeasonPanel(); rebuildSeasonFilter(); _rebuildCrafterPeriod(); _rebuildRefPeriod(); bindDcCurrentSeason(); updateSeasonSum(); if(_dcOpen()){ renderVisitsChart(); renderOrdersChart(); renderCrafterChart(); }
     });
 
