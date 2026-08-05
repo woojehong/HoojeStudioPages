@@ -774,7 +774,11 @@
     // 외부(방문자) 입력 데이터 HTML 이스케이프 — 관리자 세션 XSS 방지
     const escapeHTML = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
+        .then(registration => registration.update())
+        .catch(error => console.warn('[SW] 등록 실패:', error));
+    }
     let wakeLock = null;
     const requestWakeLock = async () => {
       try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
@@ -1505,7 +1509,7 @@
       list.innerHTML = entries.map(([key, item]) => `
         <div class="flex items-center justify-between bg-black/30 p-3 rounded-xl border border-gray-900 hover:border-gray-700 transition-colors ${item.active ? '' : 'opacity-40'}">
           <div class="flex items-center gap-3 overflow-hidden flex-1">
-            <img src="https://wow.zamimg.com/images/wow/icons/small/${item.icon || 'inv_misc_questionmark'}.jpg" class="w-8 h-8 rounded-lg shrink-0 border border-gray-800">
+            <img src="https://wow.zamimg.com/images/wow/icons/small/${item.icon || 'inv_misc_questionmark'}.jpg" alt="${escapeHTML(item.name)} 아이콘" loading="lazy" decoding="async" class="w-8 h-8 rounded-lg shrink-0 border border-gray-800">
             <div class="overflow-hidden">
               <div class="text-sm font-black text-white truncate">${escapeHTML(item.name)}</div>
               <div class="flex items-center gap-2 mt-0.5">

@@ -472,7 +472,7 @@
         </button>
         <div class="relative" id="m-search-wrap">
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c7c8a" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input type="text" id="search-input" placeholder="아이템 이름 검색..." class="w-full bg-gray-900 border border-[#8788EE]/40 focus:border-[#8788EE] rounded-xl py-3 pl-10 pr-10 text-white font-bold placeholder-gray-500 outline-none transition-all text-sm font-kr-title shadow-lg">
-          <button id="search-clear-btn" onclick="clearSearchInput()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white font-black text-base transition-colors leading-none">✕</button>
+          <button id="search-clear-btn" onclick="clearSearchInput()" aria-label="검색어 지우기" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white font-black text-base transition-colors leading-none">✕</button>
         </div>
       </div>
       <div id="notice-tab-container"></div>
@@ -712,14 +712,14 @@
           <path class="s2" d="M16 20 C13 14, 19 11, 16 6 C14.5 3, 17 1, 17 0"/>
           <path class="s3" d="M21 20 C18 15, 24 12, 21 7 C19.5 4, 22 2, 22 0"/>
         </svg>
-        <button onclick="showDonationPopup()" class="w-11 h-11 rounded-full overflow-hidden shadow-lg transition-all hover:scale-110 hover:brightness-110 p-0 border-0 bg-transparent">
+        <button onclick="showDonationPopup()" aria-label="후원 방법 보기" class="w-11 h-11 rounded-full overflow-hidden shadow-lg transition-all hover:scale-110 hover:brightness-110 p-0 border-0 bg-transparent">
           <img src="assets/coffee.webp?v=260628h" alt="Support me" class="w-full h-full object-cover rounded-full">
         </button>
       </div>
     </div>
 
     <!-- 봉투+하트 제보 버튼 -->
-    <button onclick="toggleReportMenu()" id="report-btn" class="w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 bg-gray-700 border border-gray-600">
+    <button onclick="toggleReportMenu()" id="report-btn" aria-label="문의 및 제보 메뉴 열기" class="w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 bg-gray-700 border border-gray-600">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="2" y="5" width="20" height="14" rx="2" stroke="white" stroke-width="1.8"/>
         <path d="M2 7l10 7 10-7" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
@@ -751,7 +751,7 @@
     <div class="rounded-3xl p-6 md:p-8 shadow-2xl border border-amber-700/40" style="background:rgba(6,10,20,0.97);">
       <div class="flex items-center justify-between mb-6">
         <span class="text-amber-400 font-black text-2xl flex items-center gap-3">☕ 후원 방법</span>
-        <button onclick="hideDonationPopup()" class="text-gray-500 hover:text-white font-black text-3xl leading-none">✕</button>
+        <button onclick="hideDonationPopup()" aria-label="후원 안내 닫기" class="text-gray-500 hover:text-white font-black text-3xl leading-none">✕</button>
       </div>
 
       <!-- QR 2종 -->
@@ -815,7 +815,7 @@
     <div class="rounded-2xl p-6 shadow-2xl border border-gray-700" style="background:rgba(6,10,20,0.97);">
       <div class="flex items-center justify-between mb-4">
         <span id="report-modal-title" class="font-black text-base text-white"></span>
-        <button onclick="closeReportModal()" class="text-gray-600 hover:text-white font-black text-lg leading-none">✕</button>
+        <button onclick="closeReportModal()" aria-label="문의 창 닫기" class="text-gray-600 hover:text-white font-black text-lg leading-none">✕</button>
       </div>
 
       <!-- 재료 오류 제보 전용 -->
@@ -866,7 +866,7 @@
       <div class="flex items-start justify-between gap-3 mb-3">
         <span id="order-floating-icon" class="text-2xl shrink-0">⚒️</span>
         <p id="order-floating-msg" class="text-sm font-bold text-white leading-relaxed flex-1"></p>
-        <button onclick="dismissFloating()" class="text-gray-600 hover:text-white text-lg font-black shrink-0 leading-none">✕</button>
+        <button onclick="dismissFloating()" aria-label="주문 상태 알림 닫기" class="text-gray-600 hover:text-white text-lg font-black shrink-0 leading-none">✕</button>
       </div>
     </div>
   </div>
@@ -1747,10 +1747,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         div.className = "flex items-center justify-between p-2 md:p-2.5 bg-gray-900 border border-gray-800 rounded-xl";
         div.innerHTML = `
           <div class="flex items-center gap-3 truncate">
-            <img src="https://wow.zamimg.com/images/wow/icons/medium/${item.icon}.jpg" class="w-7 h-7 md:w-8 md:h-8 rounded-lg border border-gray-700 shrink-0">
+            <img src="https://wow.zamimg.com/images/wow/icons/medium/${item.icon}.jpg" alt="${escapeHTML(item.name)} 아이콘" loading="lazy" decoding="async" class="w-7 h-7 md:w-8 md:h-8 rounded-lg border border-gray-700 shrink-0">
             <span class="text-white font-bold text-xs md:text-sm truncate">${item.name}</span>
           </div>
-          <button onclick="removeFromCart('${item.name}')" class="shrink-0 p-1.5 text-gray-500 hover:text-red-400 transition-colors">✕</button>
+          <button onclick="removeFromCart('${item.name}')" aria-label="${escapeHTML(item.name)} 장바구니에서 제거" class="shrink-0 p-1.5 text-gray-500 hover:text-red-400 transition-colors">✕</button>
         `;
         itemsContainer.appendChild(div);
       });
@@ -1779,7 +1779,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         };
         btn.innerHTML = `
           <div class="flex items-center gap-3">
-            <img src="https://wow.zamimg.com/images/wow/icons/small/${mat.i}.jpg" class="w-5 h-5 md:w-6 md:h-6 rounded-md shrink-0">
+            <img src="https://wow.zamimg.com/images/wow/icons/small/${mat.i}.jpg" alt="${escapeHTML(mat.n)} 아이콘" loading="lazy" decoding="async" class="w-5 h-5 md:w-6 md:h-6 rounded-md shrink-0">
             <span class="text-gray-300 group-hover:text-emerald-300 font-bold text-[11px] md:text-xs text-left">${applyGoldStar(mat.n)}</span>
           </div>
           <span class="text-white font-black text-xs md:text-sm shrink-0 ml-2 drop-shadow-md">x ${mat.c}</span>
@@ -1863,6 +1863,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       whLink.href = wowheadUrl;
       nameLink.href = wowheadUrl;
       detailIcon.src = `https://wow.zamimg.com/images/wow/icons/large/${item.icon}.jpg`;
+      detailIcon.alt = `${item.name} 아이콘`;
       
       detailIcon.className = "w-full h-full rounded-lg border-2 border-[#4a5160] relative z-0 object-cover";
 
@@ -1891,7 +1892,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         b.className = "hj-compact-tile flex items-center justify-between px-2.5 py-1 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group";
         b.onclick = () => copyText(m.n, b, color);
         let matNameHtml = applyGoldStar(m.n);
-        b.innerHTML = `<div class="flex items-center gap-1.5 flex-1 min-w-0"><img src="https://wow.zamimg.com/images/wow/icons/medium/${m.i}.jpg" class="w-[22px] h-[22px] rounded-md shrink-0 object-cover"><span class="group-hover:text-white font-bold text-left leading-tight text-xs md:text-sm">${matNameHtml}</span></div><span class="mat-status text-white font-black text-xs md:text-sm shrink-0 ml-2 tabular-nums">×${m.c}</span>`;
+        b.innerHTML = `<div class="flex items-center gap-1.5 flex-1 min-w-0"><img src="https://wow.zamimg.com/images/wow/icons/medium/${m.i}.jpg" alt="${escapeHTML(m.n)} 아이콘" loading="lazy" decoding="async" class="w-[22px] h-[22px] rounded-md shrink-0 object-cover"><span class="group-hover:text-white font-bold text-left leading-tight text-xs md:text-sm">${matNameHtml}</span></div><span class="mat-status text-white font-black text-xs md:text-sm shrink-0 ml-2 tabular-nums">×${m.c}</span>`;
         reqCont.appendChild(b);
       });
 
@@ -1958,7 +1959,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
           const b = document.createElement('button');
           b.className = "hj-choice-tile flex items-center justify-center gap-1.5 px-2 py-1 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group min-h-[38px] relative";
           b.onclick = () => copyText(opt.copy, b, color, true);
-          b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/medium/${opt.icon}.jpg" class="w-[22px] h-[22px] rounded-md opacity-80 group-hover:opacity-100 shrink-0 object-cover"><span class="hj-choice-label text-white group-hover:text-yellow-300 leading-none font-bold text-center whitespace-nowrap" style="font-size:${choiceLabelSize(opt.label)}">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
+          b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/medium/${opt.icon}.jpg" alt="${escapeHTML(opt.label)} 아이콘" loading="lazy" decoding="async" class="w-[22px] h-[22px] rounded-md opacity-80 group-hover:opacity-100 shrink-0 object-cover"><span class="hj-choice-label text-white group-hover:text-yellow-300 leading-none font-bold text-center whitespace-nowrap" style="font-size:${choiceLabelSize(opt.label)}">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
           optCont.appendChild(b);
         });
       } else optContSec.classList.add('hidden');
@@ -1975,7 +1976,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
           const b = document.createElement('button');
           b.className = "hj-choice-tile flex items-center justify-center gap-1.5 px-2 py-1 bg-gray-900 rounded-xl border border-gray-800 hover:bg-gray-800 transition-all group min-h-[38px] relative";
           b.onclick = () => copyText(opt.copy, b, color, true);
-          b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/medium/${opt.icon}.jpg" class="w-[22px] h-[22px] rounded-md opacity-80 group-hover:opacity-100 shrink-0 object-cover"><span class="hj-choice-label text-white group-hover:text-yellow-300 leading-none font-bold text-center whitespace-nowrap" style="font-size:${choiceLabelSize(opt.label)}">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
+          b.innerHTML = `<img src="https://wow.zamimg.com/images/wow/icons/medium/${opt.icon}.jpg" alt="${escapeHTML(opt.label)} 아이콘" loading="lazy" decoding="async" class="w-[22px] h-[22px] rounded-md opacity-80 group-hover:opacity-100 shrink-0 object-cover"><span class="hj-choice-label text-white group-hover:text-yellow-300 leading-none font-bold text-center whitespace-nowrap" style="font-size:${choiceLabelSize(opt.label)}">${applyGoldStar(opt.label)}</span><span class="mat-status hidden"></span>`;
           embCont.appendChild(b);
         });
       } else embContSec.classList.add('hidden');
@@ -2052,7 +2053,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       btn.innerHTML = `
         <div class="relative shrink-0 w-8 h-8 md:w-9 md:h-9 mr-2.5 z-10">
           <a href="https://www.wowhead.com/item=${item.id || 0}" data-wowhead="domain=ko" onclick="return false;" class="cursor-default">
-            <img src="https://wow.zamimg.com/images/wow/icons/large/${item.icon}.jpg" class="w-full h-full rounded-lg ${iconBorder} relative z-0">
+            <img src="https://wow.zamimg.com/images/wow/icons/large/${item.icon}.jpg" alt="${escapeHTML(item.name)} 아이콘" loading="lazy" decoding="async" class="w-full h-full rounded-lg ${iconBorder} relative z-0">
           </a>
         </div>
         <div class="flex-1 min-w-0 z-10">
@@ -2189,7 +2190,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
               <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="group relative bg-gray-950 rounded-lg md:rounded-xl overflow-hidden ${fixedClass} transition-all shadow-md flex flex-col">
                 ${badgeHtml}
                 <div class="hj-thumb relative aspect-video overflow-hidden bg-[#030712]">
-                  <img src="${thumb}" class="w-full h-full object-cover">
+                  <img src="${thumb}" alt="${escapeHTML(v.title)} 영상 미리보기" loading="lazy" decoding="async" class="w-full h-full object-cover">
                 </div>
                 <div class="p-2 md:p-2.5">
                   <p class="text-[9px] md:text-[11px] font-bold text-gray-400 line-clamp-1 group-hover:text-white transition-colors leading-snug">${title}</p>
