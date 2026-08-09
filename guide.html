@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>후제공방 · 처음이신가요? (주문 가이드)</title>
+  <title>후제공방 · 처음 주문 가이드</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="preview-safety.js"></script>
   <meta name="description" content="후제공방 초보자를 위한 주문 가이드 — 아이템 찾기부터 완료 알림까지, 처음이라도 쉽게 따라할 수 있게 안내합니다.">
@@ -15,7 +15,7 @@
     * { -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Pretendard', sans-serif; background-color: #030712; color: #ececf2; overflow-x: hidden; }
     .ink { color: #ececf2; }
-    .dim { color: #9aa0ad; }
+    .dim { color: #bcc2cc; }
     .accent { color: var(--accent-soft); }
     .hairline { border: 1px solid rgba(255,255,255,0.08); }
     .panel { background: rgba(13,13,17,0.72); backdrop-filter: blur(10px);
@@ -33,6 +33,11 @@
     .faq-chev { transition: transform 0.25s ease; }
     html { scroll-behavior: smooth; }
     a { text-decoration: none; }
+    .guide-quickline { display:grid; grid-template-columns:repeat(7,auto); align-items:center; justify-content:start; gap:10px; width:fit-content; max-width:100%; margin-top:22px; padding:11px 14px; border:1px solid rgba(135,136,238,.28); border-radius:12px; background:rgba(12,15,23,.78); color:#d8dbe1; font-size:12px; font-weight:800; }
+    .guide-quickline span { display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+    .guide-quickline b { color:#b9baf6; font-size:10px; letter-spacing:.08em; }
+    .guide-quickline i { color:#676d7b; font-style:normal; }
+    @media (max-width:640px) { .guide-quickline { grid-template-columns:1fr 1fr; width:100%; gap:7px; } .guide-quickline i { display:none; } .guide-quickline span { padding:8px 9px; border-radius:8px; background:rgba(135,136,238,.07); } }
   </style>
   <style id="hj-bg">
     /* 은은한 배경: 보라 글로우 + 비네팅 + 필름 그레인 */
@@ -70,18 +75,21 @@
     <section class="pt-14 pb-10 reveal">
       <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full hairline text-[11px] font-black tracking-[0.18em] accent uppercase mb-5">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-        처음이신가요?
+        FIRST ORDER GUIDE
       </span>
       <h1 class="text-3xl md:text-5xl font-black ink leading-tight tracking-tight">
-        후제공방,<br><span class="accent">이렇게 주문하면 됩니다</span>
+        처음이어도 괜찮습니다.<br><span class="accent">이 순서대로 주문하세요</span>
       </h1>
       <p class="dim mt-5 text-sm md:text-base leading-relaxed">
-        와우 제작 서비스가 처음이라도 괜찮아요.<br>
-        아래 6단계만 따라오시면 누구나 쉽게 주문할 수 있습니다.
+        품목을 확인하고, 금성 재료로 인게임 주문을 넣은 다음<br>
+        사이트의 주문 알림 버튼을 누르면 됩니다.
       </p>
       <div class="mt-6 mx-auto w-fit flex items-center gap-3 px-6 py-4 rounded-2xl text-center" style="background:rgba(135,136,238,0.10); border:1px solid rgba(135,136,238,0.4);">
         <svg class="w-7 h-7 accent shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
         <span class="text-2xl md:text-[26px] font-black ink"><span class="accent">아즈샤라 서버</span>만 이용이 가능합니다</span>
+      </div>
+      <div class="guide-quickline" aria-label="핵심 주문 순서">
+        <span><b>01</b> 품목 확인</span><i>→</i><span><b>02</b> 금성 재료</span><i>→</i><span><b>03</b> 인게임 주문</span><i>→</i><span><b>04</b> 알림 전송</span>
       </div>
     </section>
 
@@ -107,8 +115,8 @@
           <svg class="w-5 h-5 dim mt-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/></svg>
         </div>
         <div>
-          <h2 class="text-lg md:text-xl font-black ink mb-1.5">필수 재료 확인하기</h2>
-          <p class="dim text-sm md:text-[15px] leading-relaxed">아이템을 누르면 필요한 재료가 펼쳐집니다. <span class="accent font-bold">재료 이름을 클릭하면 자동으로 복사</span>돼요. 여러 개를 한 번에 의뢰할 거라면 <span class="accent font-bold">장바구니</span>에 담아 재료를 한 번에 정리할 수 있습니다.</p>
+          <h2 class="text-lg md:text-xl font-black ink mb-1.5">금성 재료를 빠짐없이 준비하기</h2>
+          <p class="dim text-sm md:text-[15px] leading-relaxed">아이템을 누르면 필수 재료와 수량이 표시됩니다. <span class="accent font-bold">전체 필수 재료 복사</span>를 이용하거나, 여러 품목은 <span class="accent font-bold">장바구니</span>에 담아 한 번에 정리하세요.</p>
         </div>
       </div>
 
@@ -123,7 +131,7 @@
           <p class="dim text-sm md:text-[15px] leading-relaxed">사이트에서 <span class="accent font-bold">제작자 이름을 클릭하면 자동으로 복사</span>됩니다. 와우에 접속해 의뢰할 <span class="accent font-bold">제작자에게 붙여넣기</span> 하여 제작 의뢰를 넣어주세요.</p>
           <div class="mt-3 rounded-xl p-3.5 flex gap-2.5" style="background:rgba(234,179,8,0.08); border:1px solid rgba(234,179,8,0.32);">
             <svg class="w-4 h-4 shrink-0 mt-0.5" style="color:#e8c97a" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
-            <p class="text-[13px] leading-relaxed" style="color:#e8c97a;"><span class="font-black">5성 확정을 원하신다면</span> 반드시 <span class="font-black" style="color:#fde68a;">금성 재료</span>를 구매해 준비하시고, <span class="font-black" style="color:#fde68a;">개수가 누락되지 않았는지</span> 꼭 확인 후 의뢰해주세요. (은성 재료로는 5성이 확정되지 않습니다.)</p>
+            <p class="text-[13px] leading-relaxed" style="color:#e8c97a;"><span class="font-black">모든 제작품은 최고 품질을 기준으로 제작합니다.</span> 반드시 <span class="font-black" style="color:#fde68a;">금성 재료</span>를 준비하고, <span class="font-black" style="color:#fde68a;">재료가 하나라도 비어 있지 않은지</span> 확인해 주세요. 은성 재료가 섞였거나 재료가 누락되면 반송될 수 있습니다.</p>
           </div>
           <div class="mt-3 rounded-xl p-4 panel" style="border-color:rgba(135,136,238,0.32);">
             <p class="text-[13px] leading-relaxed ink mb-3 flex gap-2">
@@ -136,7 +144,7 @@
                   <img src="assets/curseforge.png" alt="CurseForge" class="w-4 h-4 shrink-0 object-contain">
                   <span class="whitespace-nowrap">커스포지에서 애드온 다운로드</span>
                 </a>
-                <a href="https://github.com/woojehong/hoojestudio/releases/download/hoojestudio1.4/HoojeStudio.zip" class="flex-1 inline-flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl font-black text-[11px] md:text-xs tracking-tight transition-all bg-gradient-to-r from-amber-500/20 to-yellow-400/10 border border-amber-400/50 text-amber-200 hover:text-white hover:border-amber-300/80">
+                <a href="https://github.com/woojehong/hoojestudio/releases/latest/download/HoojeStudio.zip" class="flex-1 inline-flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl font-black text-[11px] md:text-xs tracking-tight transition-all bg-gradient-to-r from-amber-500/20 to-yellow-400/10 border border-amber-400/50 text-amber-200 hover:text-white hover:border-amber-300/80">
                   <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
                   <span class="whitespace-nowrap">애드온 직접 다운로드</span>
                 </a>
@@ -208,8 +216,8 @@
 
         <div class="panel rounded-2xl p-5">
           <svg class="w-6 h-6 mb-3" style="color:#d9b25a" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.6 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></svg>
-          <h4 class="font-black ink text-base mb-1.5">5성 확정을 원한다면</h4>
-          <p class="dim text-[13px] leading-relaxed"><span class="accent font-bold">‘5성확정’</span>이 켜진 아이템에 한해, 재료를 모두 <span class="accent font-bold">금성</span>으로 넣고 최소 품질을 <span class="accent font-bold">5성</span>으로 설정해 의뢰해주세요. (PVP 장비는 등급 무관)</p>
+          <h4 class="font-black ink text-base mb-1.5">금성 재료가 기본입니다</h4>
+          <p class="dim text-[13px] leading-relaxed">일반 장비와 PVP 장비 모두 최고 품질로 제작합니다. 필수 재료를 모두 <span class="accent font-bold">금성</span>으로 넣고, 재료 수량이 빠지지 않았는지 확인해 주세요.</p>
         </div>
 
         <div class="panel rounded-2xl p-5">
@@ -267,7 +275,7 @@
             <li><span class="accent font-black">④</span> 와우를 <span class="ink">완전히 껐다 켜기</span> (접속 중이면 <span class="ink">/reload</span>)</li>
             <li><span class="accent font-black">⑤</span> 캐릭터 선택 화면의 <span class="ink">‘애드온’</span>에서 HoojeStudio 체크 확인</li>
           </ol>
-          <a href="https://github.com/woojehong/hoojestudio/releases/download/hoojestudio1.4/HoojeStudio.zip" class="mt-4 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-black text-xs bg-gradient-to-r from-amber-500/20 to-yellow-400/10 border border-amber-400/50 text-amber-200 hover:text-white hover:border-amber-300/80 transition-all"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg> 애드온 직접 다운로드</a>
+          <a href="https://github.com/woojehong/hoojestudio/releases/latest/download/HoojeStudio.zip" class="mt-4 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-black text-xs bg-gradient-to-r from-amber-500/20 to-yellow-400/10 border border-amber-400/50 text-amber-200 hover:text-white hover:border-amber-300/80 transition-all"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg> 최신 버전 직접 다운로드</a>
         </div>
 
       </div>

@@ -484,7 +484,7 @@
     <section id="detail-panel" class="flex-1 md:h-full bg-gray-950/80 px-5 pt-2 pb-5 md:px-8 md:pt-3 md:pb-8 overflow-y-auto relative z-0" onclick="handleDetailPanelClick(event)">
       <!-- 장바구니 플로팅 (우측 상단 sticky) -->
       <div class="sticky top-3 z-30 h-0 w-full pointer-events-none">
-        <div id="cart-float-btn" class="pointer-events-auto absolute right-0 top-0 w-11 h-11 rounded-full bg-gray-900 border-2 border-emerald-500/50 flex items-center justify-center shadow-lg transition-all hover:scale-110 hover:border-emerald-400 cursor-pointer group" onclick="event.stopPropagation(); toggleCartModal()">
+        <div id="cart-float-btn" class="hidden pointer-events-auto absolute right-0 top-0 w-11 h-11 rounded-full bg-gray-900 border-2 border-emerald-500/50 flex items-center justify-center shadow-lg transition-all hover:scale-110 hover:border-emerald-400 cursor-pointer group" onclick="event.stopPropagation(); toggleCartModal()">
           <svg class="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
           </svg>
@@ -498,55 +498,220 @@
       
       <div id="notice-state" class="w-full max-w-4xl mx-auto mt-1 md:mt-2 flex flex-col items-stretch">
 
-  <div class="relative pt-6 mb-3 md:mb-4 w-full order-last md:order-none">
+  <div class="home-editorial-layout">
+  <aside class="home-media-rail" aria-label="후제공방 소식과 영상">
+  <div id="home-banner-dock" class="home-banner-dock relative pt-6 mb-3 md:mb-4 w-full">
 
-    <!-- 길드원 모집 중 뱃지 — Starfall 칸 위에 띄우기 -->
-    <div class="absolute -top-1.5 left-0 w-1/2 md:w-1/4 flex justify-center pointer-events-none">
-      <div class="hj-guild-badge text-[10px] md:text-xs font-black px-2.5 py-1 md:px-3 md:py-1 rounded-full">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px;margin-right:4px"><path d="m3 11 18-5v12L3 14z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>길드원 모집 중
-      </div>
-    </div>
-
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-x-2 gap-y-7 md:gap-4 w-full">
+    <div class="home-banner-grid grid grid-cols-2 md:grid-cols-4 gap-x-2 gap-y-7 md:gap-3 w-full">
 
     <!-- Starfall Forest — 골드 glow -->
-    <a href="https://starfallforest.netlify.app/" target="_blank" class="block w-full overflow-hidden rounded-xl md:rounded-2xl border-2 border-yellow-500/50 transition-all group aspect-[3/1] relative starfall-pulse">
-      <img src="assets/starfall_banner.webp" alt="Starfall Forest" class="w-full h-full object-cover">
-    </a>
+    <div class="home-banner-slot">
+      <span class="home-banner-bubble hj-guild-badge"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>길드원 모집 중</span>
+      <a href="https://starfallforest.netlify.app/" target="_blank" class="block w-full overflow-hidden rounded-xl md:rounded-2xl border-2 border-yellow-500/50 transition-all group aspect-[3/1] relative starfall-pulse">
+        <img src="assets/starfall_banner.webp" alt="Starfall Forest" class="w-full h-full object-cover">
+      </a>
+    </div>
 
     <!-- 유기견 공격대 — 은빛 glow -->
-    <a href="https://woojehong.github.io/TeamSAD/" target="_blank" class="block w-full overflow-hidden rounded-xl md:rounded-2xl border border-gray-400/30 transition-all group aspect-[3/1] ugdog-pulse">
-      <img src="assets/sad_banner.webp?v=260628" alt="유기견 공격대" class="w-full h-full object-cover">
-    </a>
+    <div class="home-banner-slot">
+      <span class="home-banner-bubble home-banner-bubble-placeholder" aria-hidden="true">배너 안내</span>
+      <a href="https://woojehong.github.io/TeamSAD/" target="_blank" class="block w-full overflow-hidden rounded-xl md:rounded-2xl border border-gray-400/30 transition-all group aspect-[3/1] ugdog-pulse">
+        <img src="assets/sad_banner.webp?v=260628" alt="유기견 공격대" class="w-full h-full object-cover">
+      </a>
+    </div>
 
     <!-- 사왕이 와우 로그분석 — 스틸블루 (말풍선 뱃지) -->
-    <div class="relative w-full">
-      <div class="absolute bottom-full left-0 right-0 mb-1 flex justify-center pointer-events-none z-20">
-        <div class="hj-sawang-badge text-[9px] md:text-[11px] font-black px-2 py-1 md:px-3 rounded-full whitespace-nowrap">📊 로그 점수 높이고 싶다면? 와우로그.kr</div>
-      </div>
+    <div class="home-banner-slot">
+      <span class="home-banner-bubble hj-sawang-badge">📊 로그 점수 높이고 싶다면?</span>
       <a href="https://와우로그.kr/go/hooje" target="_blank" rel="noopener" class="block w-full overflow-hidden rounded-xl md:rounded-2xl transition-all group aspect-[3/1] sawang-pulse">
         <img src="assets/sawang.jpg" alt="사왕이님의 와우 로그분석 사이트" class="w-full h-full object-cover">
       </a>
     </div>
 
-    <!-- 후제공방 — 흑마법사 퍼플 glow -->
-    <a href="https://hooje.pro/" class="block w-full overflow-hidden rounded-xl md:rounded-2xl transition-all group aspect-[3/1] hooje-pulse" style="border: 1px solid rgba(160,100,50,0.4);">
-      <img src="assets/hooje_banner.webp?v=260712" alt="후제공방" class="w-full h-full object-cover">
-    </a>
+    <!-- WANION — 오픈 준비 중 -->
+    <div class="home-banner-slot">
+      <span class="home-banner-bubble home-banner-coming-soon">오픈 준비 중</span>
+      <div class="home-banner-disabled block w-full overflow-hidden rounded-xl md:rounded-2xl aspect-[3/1]" aria-label="WANION 오픈 준비 중">
+        <img src="assets/wanion_banner_preview.png?v=260809" alt="WANION 오픈 준비 중" class="w-full h-full object-cover">
+      </div>
+    </div>
 
     </div><!-- /grid -->
   </div><!-- /relative wrapper -->
 
+  <section id="chzzk-live-section" class="home-live-section hidden" aria-live="polite">
+    <a id="chzzk-live-link" href="#" target="_blank" rel="noopener" class="home-live-card group">
+      <div class="home-live-thumb">
+        <img id="chzzk-live-thumbnail" src="" alt="치지직 방송 미리보기" loading="lazy" decoding="async">
+        <span class="home-live-badge"><i aria-hidden="true"></i> ON AIR</span>
+      </div>
+      <div class="home-live-copy">
+        <span class="home-live-eyebrow">후제공방 치지직 라이브</span>
+        <strong id="chzzk-live-title">지금 방송 중입니다</strong>
+        <span>실시간 방송 보러 가기 <b aria-hidden="true">→</b></span>
+      </div>
+    </a>
+  </section>
+
   <div id="youtube-section" class="w-full mt-2 mb-2 hidden z-10 relative">
     <div class="flex items-center justify-between mb-3">
       <h3 class="text-[11px] md:text-[13px] font-black text-gray-300 font-kr-title flex items-center gap-2">
-        <svg class="w-4 h-4 md:w-5 md:h-5 shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#d35050" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path fill="#ffffff" d="M9.545 15.568V8.432L15.818 12z"/></svg> 흑마법사 후제 최신 영상
+        <svg class="w-4 h-4 md:w-5 md:h-5 shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#d35050" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path fill="#ffffff" d="M9.545 15.568V8.432L15.818 12z"/></svg> 후제의 영상
       </h3>
     </div>
-    <div id="youtube-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 md:gap-3"></div>
+    <div id="youtube-list" class="home-video-grid"></div>
   </div>
+  </aside>
 
-  <div class="p-5 md:p-7 relative">
+  <div class="home-guide-shell home-guide-column p-5 md:p-7 relative">
+          <section id="home-quick-guide" class="home-quick-guide" aria-labelledby="home-guide-title">
+            <header class="home-guide-header">
+              <span class="home-guide-kicker">FIRST ORDER</span>
+              <h2 id="home-guide-title">처음이어도, 이 순서만 따라오세요</h2>
+              <p>품목을 고르고 게임에서 주문한 뒤, 사이트의 알림 버튼을 누르면 됩니다.</p>
+            </header>
+
+            <div class="home-addon-spotlight">
+              <div class="home-addon-mark" aria-hidden="true">
+                <img src="assets/hmark.png" alt="">
+              </div>
+              <div class="home-addon-copy">
+                <span>가장 편한 방법</span>
+                <strong>후제공방 애드온을 설치해보세요</strong>
+                <p>게임 안에서 품목과 재료를 바로 확인하고 주문할 수 있습니다.</p>
+              </div>
+              <div class="home-addon-actions">
+                <a href="https://www.curseforge.com/wow/addons/hoojestudio" target="_blank" rel="noopener">CurseForge</a>
+                <a href="guide.html#addon-install">설치 방법</a>
+              </div>
+            </div>
+
+            <div class="home-order-journey">
+              <article class="home-journey-step">
+                <div class="home-step-number">01</div>
+                <div class="home-step-visual home-step-search" aria-hidden="true">
+                  <div class="mini-search"><span></span> 제작할 품목 검색</div>
+                  <div class="mini-item"><i></i><span><b>[망토]</b> 원하는 장비</span><em>›</em></div>
+                </div>
+                <div class="home-step-copy">
+                  <h3>품목과 제작자를 확인</h3>
+                  <p>검색이나 좌측 메뉴에서 원하는 장비를 선택하세요.</p>
+                </div>
+              </article>
+
+              <article class="home-journey-step home-journey-critical">
+                <div class="home-step-number">02</div>
+                <div class="home-step-visual home-step-materials" aria-hidden="true">
+                  <span><i>★</i> 금성</span><span><i>★</i> 금성</span><span><i>★</i> 금성</span>
+                  <strong>모든 재료를 금성으로</strong>
+                </div>
+                <div class="home-step-copy">
+                  <h3>재료는 모두 금성으로 준비</h3>
+                  <p>은성 재료가 섞이거나 재료가 비어 있으면 반송될 수 있습니다.</p>
+                </div>
+              </article>
+
+              <article class="home-journey-step home-journey-critical">
+                <div class="home-step-number">03</div>
+                <div class="home-step-visual home-step-order" aria-hidden="true">
+                  <div><span>주문 제작</span><b>제작자에게 보내기</b></div>
+                  <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  <div class="mini-game-badge">IN GAME</div>
+                </div>
+                <div class="home-step-copy">
+                  <h3>게임 안에서 먼저 주문</h3>
+                  <p>사이트만 보고 끝내지 말고, 게임의 주문 제작 창에서 의뢰를 보내세요.</p>
+                </div>
+              </article>
+
+              <article class="home-journey-step home-journey-final">
+                <div class="home-step-number">04</div>
+                <div class="home-step-visual home-step-notify" aria-hidden="true">
+                  <span class="mini-bell"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></span>
+                  <div><small>인게임 주문을 완료했다면</small><b>제작자에게 주문 알림 보내기</b></div>
+                </div>
+                <div class="home-step-copy">
+                  <h3>마지막으로 알림 버튼 누르기</h3>
+                  <p>제작자가 주문을 놓치지 않도록 사이트의 주문 알림을 꼭 보내주세요.</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="home-guide-warning" role="note">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z"/><path d="M12 9v5M12 18h.01"/></svg>
+              <div><strong>반송을 막는 가장 중요한 확인</strong><span>필수 재료 누락·은성 재료 혼입 여부를 주문 전에 다시 확인해주세요.</span></div>
+            </div>
+
+            <section class="home-guide-chapter" aria-labelledby="home-tools-title">
+              <div class="home-chapter-heading">
+                <span>SMART WORKFLOW</span>
+                <h3 id="home-tools-title">찾고, 모으고, 확인하는 일도 간단하게</h3>
+                <p>주문 순서를 익혔다면 후제공방의 도구를 함께 활용해보세요.</p>
+              </div>
+              <div class="home-feature-board">
+                <article class="home-feature-tile home-feature-wide">
+                  <span class="home-feature-icon" aria-hidden="true">⌕</span>
+                  <div><strong>검색과 즐겨찾기</strong><p>원하는 품목을 빠르게 찾고, 자주 의뢰하는 장비는 별표로 보관할 수 있습니다.</p></div>
+                </article>
+                <article class="home-feature-tile">
+                  <span class="home-feature-icon" aria-hidden="true">▣</span>
+                  <div><strong>재료 즉시 복사</strong><p>재료 하나 또는 필수 재료 전체를 한 번에 복사합니다.</p></div>
+                </article>
+                <article class="home-feature-tile">
+                  <span class="home-feature-icon" aria-hidden="true">＋</span>
+                  <div><strong>장바구니 정리</strong><p>여러 품목의 재료와 수량을 한 번에 합쳐 확인합니다.</p></div>
+                </article>
+                <article class="home-feature-tile">
+                  <span class="home-feature-icon" aria-hidden="true">◉</span>
+                  <div><strong>내 주문 현황</strong><p>대기·접수·완료·반려 상태를 헤더에서 실시간으로 확인합니다.</p></div>
+                </article>
+                <article class="home-feature-tile">
+                  <span class="home-feature-icon" aria-hidden="true">⌁</span>
+                  <div><strong>현재 제작 상태</strong><p>온라인 여부와 제작 가능 시간, 지연 안내를 주문 전에 확인합니다.</p></div>
+                </article>
+              </div>
+            </section>
+
+            <a class="home-full-guide" href="guide.html">
+              <span class="home-full-guide-mark" aria-hidden="true">?</span>
+              <span><strong>주문이 아직 낯설다면</strong><small>품목 찾기부터 완료 확인까지 상세 이용 가이드에서 차근차근 안내합니다.</small></span>
+              <b>전체 가이드 보기</b>
+            </a>
+
+            <section class="home-guide-chapter home-service-chapter" aria-labelledby="home-service-title">
+              <div class="home-chapter-heading">
+                <span>STUDIO POLICY</span>
+                <h3 id="home-service-title">부담 없이 맡길 수 있도록</h3>
+                <p>후제공방이 제작을 이어가는 세 가지 원칙입니다.</p>
+              </div>
+              <div class="home-policy-grid">
+                <article class="home-policy-card">
+                  <span>01</span><h4>수수료는 자율</h4>
+                  <p>최소 주문 단위인 1실버만 보내도 괜찮습니다. 보내주시는 골드는 감사히 받지만, 정해진 수수료를 요구하지 않습니다.</p>
+                </article>
+                <article class="home-policy-card">
+                  <span>02</span><h4>모든 품목 최고 품질</h4>
+                  <p>사이트에 등록된 일반·PVP 품목 모두 제작 가능하며, 최고 품질로 제작해드립니다.</p>
+                </article>
+                <article class="home-policy-card">
+                  <span>03</span><h4>재제작도 편안하게</h4>
+                  <p>제가 만든 장비의 재제작은 언제든 무료입니다. 다른 제작자의 장비는 기존 상태와 재료에 따라 가능 여부를 먼저 확인합니다.</p>
+                </article>
+              </div>
+              <div class="home-time-note">
+                <span aria-hidden="true">◷</span>
+                <div><strong>제작이 조금 늦어질 수도 있습니다</strong><p>한 사람의 플레이어가 개인 일정과 게임을 병행하며 운영합니다. 급한 주문은 다른 제작자에게 문의해 주세요.</p></div>
+              </div>
+              <div class="home-operation-note">
+                <span class="home-operation-monogram" aria-hidden="true"><img src="assets/makers/common/hooje-auth-seal-v2.webp" alt=""></span>
+                <div>
+                  <strong>개인이 직접 운영하는 작은 공방입니다</strong>
+                  <p>사이트 운영과 제작은 별도의 기업이나 팀이 아닌 한 명의 플레이어가 맡고 있습니다. 방문만으로도 충분히 감사하며, 자발적인 후원은 서버와 서비스를 유지하는 데 사용됩니다.</p>
+                </div>
+                <button type="button" onclick="showDonationPopup()">공방 후원 안내</button>
+              </div>
+            </section>
+          </section>
           
           
           <!-- 제작자의 한마디 -->
@@ -570,12 +735,12 @@
             </div>
           </section>
 
-          <div class="w-full h-px bg-gradient-to-r from-transparent via-gray-700/45 to-transparent mt-7 md:mt-9 mb-7 md:mb-9"></div>
+          <div class="hidden w-full h-px bg-gradient-to-r from-transparent via-gray-700/45 to-transparent mt-7 md:mt-9 mb-7 md:mb-9"></div>
 
-          <h2 id="tmi-heading" class="text-2xl md:text-3xl font-black text-white font-kr-title mb-6 md:mb-8 text-center relative z-10">
+          <h2 id="tmi-heading" class="hidden text-2xl md:text-3xl font-black text-white font-kr-title mb-6 md:mb-8 text-center relative z-10">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#a9aaf7" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-5px;margin-right:4px"><path d="M8 21h11a2 2 0 0 0 2-2v-1H10v1a2 2 0 1 1-4 0V5a2 2 0 0 0-4 0v3h4"/><path d="M19 18V5a2 2 0 0 0-2-2H5"/><path d="M15 8h-5M15 12h-5"/></svg>&nbsp;후제공방 TMI
           </h2>
-          <div class="space-y-4 md:space-y-5 text-white text-[15px] md:text-base leading-relaxed">
+          <div class="hidden space-y-4 md:space-y-5 text-white text-[15px] md:text-base leading-relaxed">
 
             <div class="p-5 md:p-6 bg-[#8788EE]/15 rounded-2xl border-2 border-[#8788EE]/55 shadow-[0_0_26px_rgba(135,136,238,0.16)]">
               <h3 class="text-base md:text-lg font-bold text-white mb-3 flex items-center gap-2"><svg class="w-5 h-5 shrink-0" style="color:#a9aaf7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg> 애드온으로 더 편하게</h3>
@@ -649,6 +814,7 @@
 
             
           </div>
+        </div>
         </div>
       </div>
       
@@ -1026,6 +1192,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     })();
 
     const FIXED_VIDEO_ID = 'pwBkyutXkIE'; 
+    const CHZZK_CHANNEL_ID = '';
+    const CHZZK_STATUS_ENDPOINT = '';
 
     
     // 사용자 입력/외부 데이터 HTML 이스케이프 (XSS 방지)
@@ -1673,6 +1841,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     window.showNotice = function() {
       document.getElementById('notice-state').classList.remove('hidden');
       document.getElementById('content-state').classList.add('hidden');
+      updateCartUI();
       const detailPanel = document.getElementById('detail-panel');
       if (detailPanel) {
         detailPanel.scrollTop = 0;
@@ -1725,7 +1894,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const cartFloat = document.getElementById('cart-float-btn');
       const cartFloatCount = document.getElementById('cart-float-count');
 
-      cartFloat.classList.remove('hidden');
+      const onHome = !document.getElementById('notice-state').classList.contains('hidden');
+      cartFloat.classList.toggle('hidden', onHome);
       if(shoppingCart.length > 0) {
         cartBtn.classList.remove('hidden');
         cartCount.innerText = shoppingCart.length;
@@ -1849,6 +2019,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       currentDetailItem = item;
       document.getElementById('notice-state').classList.add('hidden');
       document.getElementById('content-state').classList.remove('hidden');
+      updateCartUI();
       document.getElementById('detail-panel').scrollTop = 0;
 
       const color = CLS_COLOR[item.crafter] || "#8788EE";
@@ -2168,7 +2339,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         if (FIXED_VIDEO_ID && FIXED_VIDEO_ID.trim() !== '') {
           latestVideos = latestVideos.filter(v => v.snippet.resourceId.videoId !== FIXED_VIDEO_ID);
         }
-        while (finalVideos.length < 5 && latestVideos.length > 0) {
+        while (finalVideos.length < 4 && latestVideos.length > 0) {
           finalVideos.push(latestVideos.shift());
         }
 
@@ -2181,22 +2352,45 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
             
             const isFixed = (FIXED_VIDEO_ID && FIXED_VIDEO_ID.trim() !== '' && index === 0);
             const fixedClass = isFixed ? "hj-fixed" : "";
-            const badgeHtml = isFixed ? `<div class="absolute top-1 right-1 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded z-10 shadow-md whitespace-nowrap">가이드 영상</div>` : '';
+            const layoutClass = index === 0 ? 'home-video-featured' : 'home-video-latest';
+            const badgeHtml = isFixed ? `<div class="absolute top-2 right-2 bg-[#b79a55]/90 text-[#080b12] text-[9px] font-black px-2 py-1 rounded-md z-10 shadow-md whitespace-nowrap">고정 영상</div>` : '';
             
             return `
-              <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="group relative bg-gray-950 rounded-lg md:rounded-xl overflow-hidden ${fixedClass} transition-all shadow-md flex flex-col">
+              <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" rel="noopener" class="home-video-card ${layoutClass} group relative ${fixedClass} transition-all flex flex-col">
                 ${badgeHtml}
                 <div class="hj-thumb relative aspect-video overflow-hidden bg-[#030712]">
-                  <img src="${thumb}" alt="${escapeHTML(v.title)} 영상 미리보기" loading="lazy" decoding="async" class="w-full h-full object-cover">
+                  <img src="${thumb}" alt="${escapeHTML(title)} 영상 미리보기" loading="lazy" decoding="async" class="w-full h-full object-cover">
                 </div>
                 <div class="p-2 md:p-2.5">
-                  <p class="text-[9px] md:text-[11px] font-bold text-gray-400 line-clamp-1 group-hover:text-white transition-colors leading-snug">${title}</p>
+                  <p class="font-bold line-clamp-3 group-hover:text-white transition-colors leading-snug">${escapeHTML(title)}</p>
                 </div>
               </a>
             `;
           }).join('');
         }
       } catch (e) { console.error("유튜브 로딩 에러:", e); }
+    }
+
+    async function loadChzzkLive() {
+      const section = document.getElementById('chzzk-live-section');
+      if (!section || !CHZZK_CHANNEL_ID || !CHZZK_STATUS_ENDPOINT) return;
+
+      try {
+        const response = await fetch(`${CHZZK_STATUS_ENDPOINT}?channelId=${encodeURIComponent(CHZZK_CHANNEL_ID)}`, {
+          headers: { 'Accept': 'application/json' },
+          cache: 'no-store'
+        });
+        if (!response.ok) throw new Error(`CHZZK status ${response.status}`);
+        const live = await response.json();
+        if (!live || live.openLive !== true || !live.liveUrl || !live.thumbnailUrl) return;
+
+        document.getElementById('chzzk-live-link').href = live.liveUrl;
+        document.getElementById('chzzk-live-thumbnail').src = live.thumbnailUrl;
+        document.getElementById('chzzk-live-title').textContent = live.title || '지금 방송 중입니다';
+        section.classList.remove('hidden');
+      } catch (error) {
+        console.warn('[CHZZK] 라이브 상태 확인 실패:', error);
+      }
     }
 
     // ── 플로팅 시스템 ────────────────────────────────────────────────────
@@ -2578,6 +2772,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       });
 
       renderSidebar();
+      loadChzzkLive();
       loadYouTubeVideos();
     }
     
