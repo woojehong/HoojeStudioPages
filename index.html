@@ -370,7 +370,7 @@
       #sidebar.m-collapsed #category-list{ display: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="design-refresh.css?v=260805e">
+  <link rel="stylesheet" href="design-refresh.css?v=260809a">
 </head>
 <body>
 <div id="app-container" class="text-gray-200 relative">
@@ -384,10 +384,10 @@
           <span id="status-label">연결 중</span><span class="status-colon" aria-hidden="true">:</span><span id="status-message">상태를 확인하고 있습니다.</span>
         </span>
       </div>
-      <div id="my-order-summary" class="hidden self-start items-center gap-2 min-w-0 max-w-full pb-0.5">
+      <div id="my-order-summary" class="hidden self-start items-center gap-1.5 min-w-0 max-w-full pb-0.5">
         <span id="my-order-dot" class="w-1.5 h-1.5 rounded-full bg-gray-600 shrink-0"></span>
-        <span class="text-[9px] md:text-[10px] font-black tracking-[0.14em] text-gray-400 shrink-0">내 주문</span>
-        <span id="my-order-text" class="text-[10px] md:text-[11px] font-bold text-gray-200 truncate"></span>
+        <span class="text-[8px] md:text-[9px] font-black tracking-[0.12em] text-gray-400 shrink-0">내 주문</span>
+        <span id="my-order-text" class="text-[9px] md:text-[10px] font-bold text-gray-200 truncate"></span>
       </div>
     </div>
 
@@ -396,18 +396,6 @@
         <h1 id="hj-title" class="text-2xl md:text-4xl text-white" style="font-family:'Noto Serif KR',serif; font-weight:500; letter-spacing:0.36em; text-indent:0.36em;">후제공방</h1>
         <div id="hj-goldline" style="height:2px; width:92px; margin:9px auto 2px; background:linear-gradient(to right,rgba(201,162,39,0),#d8b13a,rgba(201,162,39,0)); border-radius:2px;"></div>
         <div class="mt-1 text-[10px] md:text-xs text-white/50 font-bold uppercase tracking-[0.2em]">World of Warcraft KR · Azshara</div>
-      </div>
-      <div class="header-addon-actions mt-3 w-[380px] max-w-none mx-auto hidden md:flex gap-2">
-        <a href="https://www.curseforge.com/wow/addons/hoojestudio" target="_blank" rel="noopener"
-           class="min-w-0 flex-1 inline-flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl font-black text-[11px] md:text-xs tracking-tight transition-all bg-gray-950 border border-orange-500/55 text-orange-300 hover:text-white hover:border-orange-400 hover:bg-orange-500/10">
-          <img src="assets/curseforge.png" alt="CurseForge" class="w-4 h-4 shrink-0 object-contain">
-          <span class="whitespace-nowrap">커스포지에서 애드온 다운로드</span>
-        </a>
-        <a id="addon-download-link" href="https://github.com/woojehong/hoojestudio/releases/download/hoojestudio1.4/HoojeStudio.zip"
-           class="min-w-0 flex-1 inline-flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl font-black text-[11px] md:text-xs tracking-tight transition-all bg-gradient-to-r from-amber-500/20 to-yellow-400/10 border border-amber-400/50 hover:border-amber-300/80 text-amber-200 hover:text-white">
-          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
-          <span id="addon-btn-label" class="whitespace-nowrap">애드온 직접 다운로드</span>
-        </a>
       </div>
     </div>
 
@@ -585,8 +573,17 @@
                 <p>게임 안에서 품목과 재료를 바로 확인하고 주문할 수 있습니다.</p>
               </div>
               <div class="home-addon-actions">
-                <a href="https://www.curseforge.com/wow/addons/hoojestudio" target="_blank" rel="noopener">CurseForge</a>
-                <a href="guide.html#addon-install">설치 방법</a>
+                <a class="home-addon-action-curseforge" href="https://www.curseforge.com/wow/addons/hoojestudio" target="_blank" rel="noopener">
+                  <img src="assets/curseforge.png" alt="" aria-hidden="true">CurseForge
+                </a>
+                <a class="home-addon-action-direct" href="https://github.com/woojehong/hoojestudio/releases/download/hoojestudio1.4/HoojeStudio.zip">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+                  <span>직접 다운로드</span>
+                </a>
+                <a class="home-addon-action-guide" href="guide.html#addon-install">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                  설치 방법
+                </a>
               </div>
             </div>
 
@@ -1337,7 +1334,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
           const headerState = HEADER_ORDER_STATUS[latestOrder.status] || HEADER_ORDER_STATUS.pending;
           const shortItemName = String(latestOrder.itemName || '').replace(/^\[[^\]]*\]\s*/, '');
           myOrderText.textContent = `${headerState.label} · ${shortItemName}`;
-          myOrderText.className = 'text-[10px] md:text-[11px] font-bold text-gray-200 truncate';
+          myOrderText.className = 'text-[9px] md:text-[10px] font-bold text-gray-200 truncate';
           myOrderDot.style.background = headerState.color;
           myOrderDot.style.boxShadow = `0 0 6px ${headerState.color}88`;
         }
@@ -1676,8 +1673,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     onValue(ref(db, 'addon_label'), (snap) => {
       const label = snap.val();
       if (label) {
-        const el = document.getElementById('addon-btn-label');
-        if (el) el.textContent = label;
         const el2 = document.getElementById('addon-btn-label-2');
         if (el2) el2.textContent = label;
       }
@@ -1686,7 +1681,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     // 애드온 다운로드 링크 동기화
     onValue(ref(db, 'addon_url'), (snap) => {
       const url = snap.val();
-      const el = document.getElementById('addon-download-link');
+      const el = document.querySelector('.home-addon-action-direct');
       if (el && url) el.href = url; var el2=document.getElementById('addon-download-link-2'); if(el2 && url) el2.href = url;
     }, { onlyOnce: true });
 

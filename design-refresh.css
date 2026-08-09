@@ -2358,3 +2358,134 @@ body {
     animation: none;
   }
 }
+
+/* 2026-08 compact masthead: move download actions into the home guide. */
+@media (min-width: 768px) {
+  #app-container > header {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    gap: 4px !important;
+  }
+
+  #hj-title {
+    font-size: 27px !important;
+  }
+
+  #hj-goldline {
+    height: 8px !important;
+    margin-top: 0 !important;
+    background-size: 142px 8px !important;
+  }
+
+  #app-container > header #hj-title + #hj-goldline + div {
+    margin-top: 0 !important;
+    font-size: 9px !important;
+  }
+
+  #live-status {
+    min-height: 30px;
+    height: auto;
+    padding: 5px 10px !important;
+    gap: 7px !important;
+  }
+
+  #live-status #status-dot {
+    width: 9px !important;
+    height: 9px !important;
+  }
+
+  .hj-status-message {
+    font-size: 11px !important;
+    line-height: 1.28;
+    max-height: 2.56em;
+  }
+
+  #my-order-summary {
+    min-height: 12px;
+    line-height: 1.15;
+  }
+
+  #my-order-text {
+    font-size: 9px !important;
+  }
+
+  .header-utility-stack {
+    width: 170px;
+    gap: 4px !important;
+  }
+
+  .header-utility-stack > a,
+  .header-utility-stack > div {
+    width: 170px;
+    flex: 0 0 29px !important;
+    height: 29px !important;
+    padding: 3px 10px !important;
+    border-width: 1px !important;
+    border-radius: 8px !important;
+    gap: 6px !important;
+  }
+
+  .header-utility-stack svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .header-utility-stack span {
+    font-size: 10px !important;
+    letter-spacing: 0.08em !important;
+  }
+}
+
+.home-addon-actions {
+  display: grid;
+  grid-template-columns: 138px;
+  gap: 6px;
+  justify-self: end;
+}
+
+.home-addon-actions a {
+  gap: 5px;
+  min-height: 31px;
+  padding: 0 9px;
+  border: 1px solid rgba(135, 136, 238, .42) !important;
+  border-radius: 7px !important;
+  background: rgba(7, 10, 16, .72) !important;
+  box-shadow: none !important;
+}
+
+.home-addon-actions img,
+.home-addon-actions svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  object-fit: contain;
+}
+
+.home-addon-action-curseforge {
+  border-color: rgba(249, 115, 22, .42) !important;
+  color: #fdba74 !important;
+}
+
+.home-addon-action-direct {
+  border-color: rgba(201, 162, 57, .40) !important;
+  color: #e7d09a !important;
+}
+
+@media (max-width: 1020px) {
+  .home-addon-spotlight {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .home-addon-actions {
+    grid-column: 2;
+    justify-self: end;
+  }
+}
+
+@media (max-width: 520px) {
+  .home-addon-actions {
+    grid-template-columns: 1fr;
+    width: min(220px, 100%);
+    justify-self: stretch;
+  }
+}
