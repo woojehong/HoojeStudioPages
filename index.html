@@ -370,7 +370,7 @@
       #sidebar.m-collapsed #category-list{ display: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="design-refresh.css?v=260809a">
+  <link rel="stylesheet" href="design-refresh.css?v=260809e">
 </head>
 <body>
 <div id="app-container" class="text-gray-200 relative">
@@ -556,6 +556,15 @@
   </aside>
 
   <div class="home-guide-shell home-guide-column p-5 md:p-7 relative">
+          <div class="home-status-stage">
+            <div id="home-live-status" class="home-main-status" aria-live="polite">
+              <div class="home-main-status-heading">
+                <span id="home-status-dot" class="home-main-status-dot" aria-hidden="true"></span>
+                <strong id="home-status-label">연결 중</strong>
+              </div>
+              <div id="home-status-message" class="home-main-status-message">상태를 확인하고 있습니다.</div>
+            </div>
+          </div>
           <section id="home-quick-guide" class="home-quick-guide" aria-labelledby="home-guide-title">
             <header class="home-guide-header">
               <span class="home-guide-kicker">FIRST ORDER</span>
@@ -1266,6 +1275,18 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         const liveStatus = document.getElementById('live-status');
         liveStatus.style.borderColor = `rgb(${rgb})`;
         liveStatus.style.boxShadow = `0 0 12px rgba(${rgb},0.28)`;
+        const homeStatus = document.getElementById('home-live-status');
+        const homeDot = document.getElementById('home-status-dot');
+        const homeLabel = document.getElementById('home-status-label');
+        const homeMessage = document.getElementById('home-status-message');
+        if (homeStatus && homeDot && homeLabel && homeMessage) {
+          homeLabel.textContent = data.type;
+          homeMessage.textContent = data.message;
+          homeLabel.style.color = `rgb(${rgb})`;
+          homeDot.style.background = `rgb(${rgb})`;
+          homeDot.style.boxShadow = `0 0 8px rgba(${rgb},0.48)`;
+          homeStatus.style.setProperty('--home-status-rgb', rgb);
+        }
         refreshStatusNotices();
         refreshOrderButtonColors();
       }

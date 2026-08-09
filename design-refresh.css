@@ -42,7 +42,7 @@ body {
   width: 180px !important;
   height: 18px !important;
   margin: 3px auto -1px !important;
-  background: url("assets/ornaments/hooje-header-divider-v1.svg") center / 180px 18px no-repeat !important;
+  background: url("assets/ornaments/hooje-header-divider-v2.svg") center / 180px 12px no-repeat !important;
   opacity: 0.88;
 }
 
@@ -2360,10 +2360,81 @@ body {
 }
 
 /* 2026-08 compact masthead: move download actions into the home guide. */
+.home-status-stage {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  padding: 8px 20px 22px;
+}
+
+.home-main-status {
+  --home-status-rgb: 75, 85, 99;
+  position: relative;
+  display: grid;
+  justify-items: center;
+  width: min(620px, 100%);
+  min-height: 78px;
+  padding: 11px 42px 14px;
+  border-top: 1px solid rgba(var(--home-status-rgb), .34);
+  border-bottom: 1px solid rgba(var(--home-status-rgb), .22);
+  background: radial-gradient(ellipse 58% 90% at 50% 0, rgba(var(--home-status-rgb), .11), transparent 72%);
+}
+
+.home-main-status::before,
+.home-main-status::after {
+  content: "";
+  position: absolute;
+  top: 17px;
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--home-status-rgb), .62));
+}
+
+.home-main-status::before { left: 8px; }
+.home-main-status::after { right: 8px; transform: scaleX(-1); }
+
+.home-main-status-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: #f2f3f6;
+  font-family: "S-CoreDream-9Black", sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.home-main-status-heading strong {
+  text-shadow: 0 0 12px rgba(var(--home-status-rgb), .26);
+}
+
+.home-main-status-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: #4b5563;
+}
+
+.home-main-status-message {
+  width: 100%;
+  max-height: 2.8em;
+  margin-top: 11px;
+  overflow: hidden;
+  color: #c9ced8;
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: center;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+
 @media (min-width: 768px) {
   #app-container > header {
     padding-top: 8px !important;
     padding-bottom: 8px !important;
+    padding-left: 16px !important;
     gap: 4px !important;
   }
 
@@ -2483,6 +2554,19 @@ body {
 }
 
 @media (max-width: 520px) {
+  .home-status-stage {
+    padding-inline: 12px;
+  }
+
+  .home-main-status {
+    padding-inline: 24px;
+  }
+
+  .home-main-status::before,
+  .home-main-status::after {
+    width: 28px;
+  }
+
   .home-addon-actions {
     grid-template-columns: 1fr;
     width: min(220px, 100%);
