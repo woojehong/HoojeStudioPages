@@ -828,6 +828,18 @@ span[style*="Great Vibes"] {
   transform: none;
 }
 
+.home-media-rail .wanion-banner-link {
+  border: 1px solid rgba(139, 112, 255, .48);
+  background: #09090d;
+  box-shadow: inset 0 0 0 1px rgba(235, 231, 255, .035), 0 4px 12px rgba(0, 0, 0, .2);
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.home-media-rail .wanion-banner-link:hover {
+  border-color: rgba(160, 139, 255, .72);
+  box-shadow: inset 0 0 0 1px rgba(235, 231, 255, .055), 0 5px 15px rgba(34, 23, 78, .28);
+}
+
 .home-media-rail .home-banner-grid a {
   border-radius: 11px !important;
 }
