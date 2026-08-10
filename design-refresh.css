@@ -746,6 +746,62 @@ span[style*="Great Vibes"] {
   box-shadow: 0 4px 12px rgba(0, 0, 0, .32);
 }
 
+.wanion-banner-caption {
+  width: calc(100% - 18px);
+  max-width: none;
+  min-height: 32px;
+  padding: 4px 8px 5px;
+  flex-direction: column;
+  gap: 1px;
+  overflow: visible;
+  border-radius: 8px;
+  text-align: center;
+  white-space: normal;
+  background: linear-gradient(180deg, rgba(29, 23, 49, .98), rgba(16, 13, 28, .98));
+  box-shadow: 0 5px 14px rgba(0, 0, 0, .38), inset 0 1px rgba(255, 255, 255, .04);
+}
+
+.wanion-banner-caption__eyebrow,
+.wanion-banner-caption__status {
+  display: block;
+  width: 100%;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.wanion-banner-caption__eyebrow {
+  color: #c8c3d8;
+  font-size: clamp(7px, .56vw, 8.5px);
+  font-weight: 700;
+  letter-spacing: -.025em;
+  white-space: nowrap;
+}
+
+.wanion-banner-caption__status {
+  color: #e4c987;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: .01em;
+  white-space: nowrap;
+}
+
+.wanion-banner-caption__status strong {
+  color: #eeeaff;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.wanion-banner-caption__status i {
+  display: inline-block;
+  width: 2px;
+  height: 2px;
+  margin: 0 5px 2px;
+  border-radius: 50%;
+  background: #8b70ff;
+  box-shadow: 0 0 6px rgba(139, 112, 255, .7);
+}
+
 .home-banner-disabled {
   border: 1px solid rgba(118, 87, 246, .42);
   background: #09090d;
@@ -758,6 +814,18 @@ span[style*="Great Vibes"] {
   right: auto;
   left: 50%;
   transform: translateX(-50%);
+}
+
+.home-media-rail .home-banner-slot:has(.wanion-banner-caption) {
+  padding-top: 0;
+}
+
+.home-media-rail .home-banner-slot > .wanion-banner-caption {
+  position: static;
+  left: auto;
+  width: 100%;
+  margin: 0 0 6px;
+  transform: none;
 }
 
 .home-media-rail .home-banner-grid a {
