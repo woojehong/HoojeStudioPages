@@ -177,7 +177,17 @@
     .urgent-notice-state::before { content: ""; width: 7px; height: 7px; border-radius: 999px; background: #68707d; }
     .urgent-notice-state.is-active { border-color: rgba(239,68,68,.58); color: #fecaca; background: rgba(127,29,29,.2); }
     .urgent-notice-state.is-active::before { background: #ef4444; box-shadow: 0 0 9px rgba(239,68,68,.8); }
-    #urgent-notice-input { min-height: 88px; background: #0d0f13 !important; border-color: var(--adm-line) !important; }
+    .urgent-editor-toolbar { display:flex; flex-wrap:wrap; gap:6px; padding:9px; border:1px solid var(--adm-line); border-bottom:0; border-radius:12px 12px 0 0; background:#0b0d12; }
+    .urgent-editor-toolbar button, .urgent-editor-toolbar select { min-height:34px; border:1px solid #343946; border-radius:8px; background:#151821; color:#d8dbe2; padding:0 10px; font-size:.72rem; font-weight:800; }
+    .urgent-editor-toolbar button:hover, .urgent-editor-toolbar select:hover { border-color:#8d6570; color:#fff; }
+    #urgent-notice-editor { min-height:150px; max-height:360px; overflow:auto; padding:16px; border:1px solid var(--adm-line); border-radius:0 0 12px 12px; background:#0d0f13; color:#f3f4f6; font-size:1rem; line-height:1.75; outline:none; word-break:keep-all; overflow-wrap:break-word; }
+    #urgent-notice-editor:focus { border-color:#ef4444; box-shadow:0 0 0 2px rgba(239,68,68,.08); }
+    #urgent-notice-editor:empty::before { content:attr(data-placeholder); color:#626a78; pointer-events:none; }
+    #urgent-notice-editor img { display:block; max-width:100%; height:auto; margin:.75rem auto; border-radius:12px; cursor:pointer; outline:2px solid transparent; }
+    #urgent-notice-editor img.is-selected { outline-color:#ef4444; }
+    .urgent-color-dot { width:18px; min-width:18px!important; height:18px; min-height:18px!important; padding:0!important; border-radius:999px!important; }
+    #urgent-notice-preview { max-height:260px; overflow:auto; line-height:1.75; word-break:keep-all; overflow-wrap:break-word; }
+    #urgent-notice-preview img { display:block; max-width:100%; height:auto; margin:.75rem auto; border-radius:12px; }
     .admin-orders-panel { border-color: #3b4050 !important; }
     .admin-orders-header { align-items: flex-start !important; }
     .admin-orders-title h3 { color: var(--adm-text) !important; font-size: 1.08rem; }
@@ -414,7 +424,23 @@
       </div>
       <span id="urgent-notice-state" class="urgent-notice-state">비활성화</span>
     </div>
-    <textarea id="urgent-notice-input" rows="3" maxlength="500" placeholder="팝업으로 알릴 내용을 입력하세요." class="w-full rounded-xl p-4 text-sm text-white outline-none focus:border-red-500 font-bold shadow-inner custom-scrollbar resize-y"></textarea>
+    <div class="urgent-editor-toolbar" aria-label="긴급 공지 서식 도구">
+      <button type="button" onclick="formatUrgent('bold')" title="굵게"><strong>B</strong></button>
+      <button type="button" onclick="formatUrgent('italic')" title="기울임"><em>I</em></button>
+      <button type="button" onclick="formatUrgent('underline')" title="밑줄"><u>U</u></button>
+      <select onchange="formatUrgentBlock(this.value);this.selectedIndex=0" aria-label="문단 종류"><option value="">문단</option><option value="p">본문</option><option value="h2">큰 제목</option><option value="h3">작은 제목</option><option value="blockquote">인용</option></select>
+      <select onchange="formatUrgentSize(this.value);this.selectedIndex=0" aria-label="글자 크기"><option value="">크기</option><option value="0.82rem">작게</option><option value="1rem">기본</option><option value="1.2rem">크게</option><option value="1.5rem">강조</option></select>
+      <select onchange="formatUrgentFont(this.value);this.selectedIndex=0" aria-label="글꼴"><option value="">글꼴</option><option value="Pretendard, sans-serif">고딕</option><option value="Georgia, serif">명조</option></select>
+      <button type="button" onclick="formatUrgent('justifyLeft')" title="왼쪽 정렬">좌</button><button type="button" onclick="formatUrgent('justifyCenter')" title="가운데 정렬">중</button><button type="button" onclick="formatUrgent('justifyRight')" title="오른쪽 정렬">우</button>
+      <button type="button" class="urgent-color-dot" style="background:#f3f4f6" onclick="formatUrgentColor('#f3f4f6')" aria-label="흰색"></button><button type="button" class="urgent-color-dot" style="background:#fca5a5" onclick="formatUrgentColor('#fca5a5')" aria-label="빨간색"></button><button type="button" class="urgent-color-dot" style="background:#fbbf24" onclick="formatUrgentColor('#fbbf24')" aria-label="금색"></button><button type="button" class="urgent-color-dot" style="background:#c4b5fd" onclick="formatUrgentColor('#c4b5fd')" aria-label="보라색"></button><button type="button" class="urgent-color-dot" style="background:#9ca3af" onclick="formatUrgentColor('#9ca3af')" aria-label="회색"></button>
+      <button type="button" onclick="formatUrgent('insertUnorderedList')">목록</button>
+      <button type="button" onclick="document.getElementById('urgent-image-input').click()">이미지</button>
+      <button type="button" onclick="resizeUrgentImage(50)">사진 50%</button><button type="button" onclick="resizeUrgentImage(100)">사진 100%</button><button type="button" onclick="alignUrgentImage('left')">사진 좌</button><button type="button" onclick="alignUrgentImage('center')">사진 중</button><button type="button" onclick="alignUrgentImage('right')">사진 우</button>
+      <input id="urgent-image-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden" onchange="uploadUrgentImage(this.files[0]);this.value=''">
+    </div>
+    <div id="urgent-notice-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="팝업으로 알릴 내용을 입력하세요. 이미지와 강조 서식을 함께 사용할 수 있습니다."></div>
+    <p id="urgent-upload-status" class="mt-2 text-[10px] text-gray-500 font-bold">이미지는 최대 6장 · 원본 10MB 이하 · 자동 압축</p>
+    <details class="mt-3 rounded-xl border border-gray-800 bg-black/20 p-3"><summary class="cursor-pointer text-xs font-black text-gray-400">실제 팝업 미리보기</summary><div id="urgent-notice-preview" class="mt-3 rounded-xl border border-red-500/20 bg-[#0b0d13] p-4 text-center text-gray-100"></div></details>
     <div class="mt-3 grid grid-cols-2 gap-2">
       <button onclick="publishUrgentNotice()" class="min-h-[44px] px-4 bg-red-600 text-white font-black rounded-xl hover:bg-red-500 transition-all text-sm">새 버전으로 송출</button>
       <button onclick="disableUrgentNotice()" class="min-h-[44px] px-4 bg-gray-900 text-red-300 border border-red-500/40 font-black rounded-xl hover:bg-red-950/40 transition-all text-sm">팝업 비활성화</button>
@@ -768,12 +794,15 @@
     import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app-check.js";
     import { getDatabase, ref, set as firebaseSet, onValue, update as firebaseUpdate, push as firebasePush, remove as firebaseRemove } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
+    import { sanitizeUrgentHTML, urgentPlainText, urgentImageUrls } from "./assets/js/urgent-notice-rich.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDXH0-y0vUQ9K29XbtRXDEuIokTqDLmo_I",
       authDomain: "rougetsblendingroom.firebaseapp.com",
       databaseURL: "https://rougetsblendingroom-default-rtdb.firebaseio.com/",
       projectId: "rougetsblendingroom",
+      storageBucket: "rougetsblendingroom.firebasestorage.app",
       appId: "1:1073459942609:web:ea6fb2595766ea7af021f0"
     };
 
@@ -786,6 +815,7 @@
       });
     }
     const db = getDatabase(app);
+    const storage = getStorage(app);
     const previewGuard = window.HoojePreviewGuard;
     const set = (...args) => previewGuard.runWrite('관리자 Firebase set', () => firebaseSet(...args));
     const update = (...args) => previewGuard.runWrite('관리자 Firebase update', () => firebaseUpdate(...args));
@@ -847,12 +877,75 @@
       document.getElementById('notice-input').value = txt || "";
     });
 
+    let currentUrgentNoticeAdmin = null;
+    let selectedUrgentImage = null;
+    const urgentEditor = document.getElementById('urgent-notice-editor');
+    const urgentPreview = document.getElementById('urgent-notice-preview');
+    function refreshUrgentPreview() { urgentPreview.innerHTML = sanitizeUrgentHTML(urgentEditor.innerHTML); }
+    urgentEditor.addEventListener('input', refreshUrgentPreview);
+    urgentEditor.addEventListener('click', (event) => {
+      urgentEditor.querySelectorAll('img').forEach(img => img.classList.remove('is-selected'));
+      selectedUrgentImage = event.target.closest('img');
+      if (selectedUrgentImage) selectedUrgentImage.classList.add('is-selected');
+    });
+
+    window.formatUrgent = (command) => { urgentEditor.focus(); document.execCommand(command, false); refreshUrgentPreview(); };
+    window.formatUrgentBlock = (tag) => { if (tag) { urgentEditor.focus(); document.execCommand('formatBlock', false, tag); refreshUrgentPreview(); } };
+    function wrapUrgentSelection(styleName, value) {
+      urgentEditor.focus();
+      const selection = window.getSelection();
+      if (!selection || !selection.rangeCount || !urgentEditor.contains(selection.anchorNode)) return;
+      const span = document.createElement('span'); span.style[styleName] = value;
+      const range = selection.getRangeAt(0); span.appendChild(range.extractContents()); range.insertNode(span);
+      selection.removeAllRanges(); const next = document.createRange(); next.selectNodeContents(span); selection.addRange(next);
+      refreshUrgentPreview();
+    }
+    window.formatUrgentSize = value => { if (value) wrapUrgentSelection('fontSize', value); };
+    window.formatUrgentFont = value => { if (value) wrapUrgentSelection('fontFamily', value); };
+    window.formatUrgentColor = value => wrapUrgentSelection('color', value);
+    window.resizeUrgentImage = width => { if (!selectedUrgentImage) return; selectedUrgentImage.style.width = `${width}%`; selectedUrgentImage.style.margin = '.75rem auto'; refreshUrgentPreview(); };
+    window.alignUrgentImage = align => {
+      if (!selectedUrgentImage) return;
+      selectedUrgentImage.style.float = align === 'center' ? 'none' : align;
+      selectedUrgentImage.style.margin = align === 'left' ? '.75rem 1rem .75rem 0' : align === 'right' ? '.75rem 0 .75rem 1rem' : '.75rem auto';
+      refreshUrgentPreview();
+    };
+
+    async function compressUrgentImage(file) {
+      if (!file || !/^image\/(png|jpeg|webp|gif)$/.test(file.type)) throw new Error('PNG, JPG, WEBP, GIF만 사용할 수 있습니다.');
+      if (file.size > 10 * 1024 * 1024) throw new Error('원본 이미지는 10MB 이하여야 합니다.');
+      if (file.type === 'image/gif') { if (file.size > 4 * 1024 * 1024) throw new Error('GIF는 4MB 이하여야 합니다.'); return file; }
+      const bitmap = await createImageBitmap(file);
+      const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas'); canvas.width = Math.round(bitmap.width * scale); canvas.height = Math.round(bitmap.height * scale);
+      canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height); bitmap.close();
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', .84));
+      if (!blob || blob.size > 4 * 1024 * 1024) throw new Error('압축 후에도 4MB를 넘습니다. 더 작은 이미지를 사용해 주세요.');
+      return blob;
+    }
+    window.uploadUrgentImage = async file => {
+      const status = document.getElementById('urgent-upload-status');
+      if (!file) return;
+      if (urgentEditor.querySelectorAll('img').length >= 6) { status.textContent = '이미지는 공지당 최대 6장입니다.'; return; }
+      try {
+        status.textContent = '이미지를 압축하고 업로드하는 중입니다…';
+        const blob = await compressUrgentImage(file);
+        const ext = blob.type === 'image/gif' ? 'gif' : 'webp';
+        const objectRef = storageRef(storage, `urgent-notices/${Date.now()}-${crypto.randomUUID()}.${ext}`);
+        await uploadBytes(objectRef, blob, { contentType: blob.type, cacheControl: 'public,max-age=31536000,immutable' });
+        const url = await getDownloadURL(objectRef);
+        urgentEditor.focus(); document.execCommand('insertHTML', false, `<img src="${url}" alt="긴급 공지 이미지" style="width:100%;max-width:100%;height:auto;display:block;margin:.75rem auto;border-radius:.75rem">`);
+        refreshUrgentPreview(); status.textContent = '이미지를 추가했습니다. 이미지를 누르면 크기를 조절할 수 있습니다.';
+      } catch (error) { status.textContent = error?.message || '이미지 업로드에 실패했습니다.'; }
+    };
+
     onValue(ref(db, 'urgentNotice'), (snap) => {
       const data = snap.val() || {};
+      currentUrgentNoticeAdmin = data;
       const state = document.getElementById('urgent-notice-state');
-      const input = document.getElementById('urgent-notice-input');
       const updated = document.getElementById('urgent-notice-updated');
-      input.value = data.message || '';
+      urgentEditor.innerHTML = data.html ? sanitizeUrgentHTML(data.html) : escapeHTML(data.message || '').replace(/\n/g, '<br>');
+      refreshUrgentPreview();
       state.textContent = data.enabled ? '송출 중' : '비활성화';
       state.classList.toggle('is-active', Boolean(data.enabled));
       updated.textContent = data.updatedAt
@@ -1189,11 +1282,14 @@
     window.updateNotice = () => { const input = document.getElementById('notice-input'); if(input.value.trim()) set(ref(db, 'notice'), input.value); };
     window.clearNotice = () => set(ref(db, 'notice'), "");
     window.publishUrgentNotice = () => {
-      const input = document.getElementById('urgent-notice-input');
-      const message = input.value.trim();
-      if (!message) { input.focus(); return; }
+      const html = sanitizeUrgentHTML(urgentEditor.innerHTML);
+      const message = urgentPlainText(html);
+      if (!message && !urgentImageUrls(html).length) { urgentEditor.focus(); return; }
       const now = Date.now();
-      set(ref(db, 'urgentNotice'), { enabled: true, message, version: String(now), updatedAt: now });
+      const previousUrls = urgentImageUrls(currentUrgentNoticeAdmin?.html || '');
+      const nextUrls = urgentImageUrls(html);
+      set(ref(db, 'urgentNotice'), { enabled: true, message: message || '이미지 공지', html, version: String(now), updatedAt: now })
+        .then(() => Promise.allSettled(previousUrls.filter(url => !nextUrls.includes(url)).map(url => deleteObject(storageRef(storage, url)))));
     };
     window.disableUrgentNotice = () => update(ref(db, 'urgentNotice'), { enabled: false });
     window.acceptOrder = (id) => update(ref(db, `orders/${id}`), { status: 'accepted', acceptedAt: Date.now() });
