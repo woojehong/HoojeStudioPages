@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://hooje.pro/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://hooje.pro/knowledge.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hooje.pro/order-guide.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hooje.pro/materials.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hooje.pro/recrafting.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://hooje.pro/addon.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://hooje.pro/faq.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://hooje.pro/updates.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://hooje.pro/about.html</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://hooje.pro/guide.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://hooje.pro/privacy.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+</urlset>
