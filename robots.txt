@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /rouget_admin.html
+Disallow: /notify/
 
 Sitemap: https://hooje.pro/sitemap.xml

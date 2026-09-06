@@ -14,4 +14,5 @@
 .update-list{display:grid;gap:10px;margin:18px 0}.update-entry{display:grid;grid-template-columns:112px 1fr;gap:18px;padding:17px 0;border-bottom:1px solid rgba(196,203,216,.16)}
 .update-entry time{color:#c8aa70;font-size:11px;font-weight:900}.update-entry strong{display:block}.update-entry p{margin:4px 0 0;font-size:13px}
 .status-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid rgba(178,179,242,.25);border-radius:999px;color:#c8c9f8;font-size:10px;font-weight:800}.status-chip:before{content:"";width:5px;height:5px;border-radius:50%;background:#9fa1ed;box-shadow:0 0 8px rgba(159,161,237,.65)}
-@media(max-width:760px){.trust-panel,.related__links{grid-template-columns:1fr}.check-table th{width:34%}.update-entry{grid-template-columns:1fr;gap:5px}}
+.step{min-width:0}.step code{overflow-wrap:anywhere;word-break:break-all}
+@media(max-width:760px){.article-layout{grid-template-columns:minmax(0,1fr)}.article,.toc{min-width:0}.trust-panel,.related__links{grid-template-columns:1fr}.check-table{table-layout:fixed}.check-table th{width:34%}.update-entry{grid-template-columns:1fr;gap:5px}}
