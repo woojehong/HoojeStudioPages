@@ -956,9 +956,11 @@
 
     const PRIORITY_ORDER = ['포므리','돔페리뇽','오베르','메오','라피트','디켐','뒤작','아르망','크뤼그','르루아','앙리자이에','그로','무통','후제'];
 
-    // ── 새 주문 효과음: Web Audio로 차임을 직접 생성 (외부 파일 의존 없음) ──
+    // ── 주문 알림 효과음 ──
     // 크롬 자동재생 정책: 첫 사용자 입력(클릭/키) 이후부터 재생 허용 → 입력 1회로 언락
     let _sndCtx = null;
+    const _orderAlertAudio = new Audio('assets/order_alert.mp3');
+    _orderAlertAudio.preload = 'auto';
     window.__seenOrderIds = null;
     function _sndEnabled() { return localStorage.getItem('hj_order_sound') !== 'off'; }
     function _sndUnlock() {
@@ -1012,10 +1014,14 @@
         });
       } catch (e) {}
     }
-    // ① 신규 주문: 짧고 또렷한 하향 2음 도어 차임(후제공방 독자 합성음)
+    // ① 신규 주문: 후제공방 주문 알림 음원
     function playOrderChime() {
-      _playBellStrike(1318.51, 0, 0.66, 0.34);
-      _playBellStrike(880, 0.29, 0.82, 0.38);
+      if (!_sndEnabled()) return;
+      try {
+        _orderAlertAudio.currentTime = 0;
+        const playback = _orderAlertAudio.play();
+        if (playback && typeof playback.catch === 'function') playback.catch(() => {});
+      } catch (e) {}
     }
     // ② 10분 미수락: 긴급 삼연타 + 상향 마무리 (두드러지게)
     function playStaleChime() {
