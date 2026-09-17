@@ -377,7 +377,7 @@
       #sidebar.m-collapsed #category-list{ display: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="design-refresh.css?v=260809e">
+  <link rel="stylesheet" href="design-refresh.css?v=260917a">
   <link rel="stylesheet" href="adsense-preview.css">
 </head>
 <body>
@@ -522,14 +522,14 @@
 
     <div class="home-banner-grid grid grid-cols-2 md:grid-cols-4 gap-x-2 gap-y-7 md:gap-3 w-full">
 
-    <!-- WANION — 오픈 준비 중 -->
+    <!-- WANION — 운영 중 -->
     <div class="home-banner-slot">
       <span class="home-banner-bubble home-banner-coming-soon wanion-banner-caption">
         <span class="wanion-banner-caption__eyebrow">글로벌 파티·길드·정공 통합 레이드 플랫폼</span>
-        <span class="wanion-banner-caption__status"><strong>WANION</strong><i aria-hidden="true"></i>오픈 준비 중</span>
+        <span class="wanion-banner-caption__status"><strong>WANION</strong><i aria-hidden="true"></i>운영 중</span>
       </span>
       <a href="https://wanion.website/" target="_blank" rel="noopener noreferrer" class="wanion-banner-link block w-full overflow-hidden rounded-xl md:rounded-2xl aspect-[3/1]" aria-label="WANION 웹사이트 새 창에서 열기">
-        <img src="assets/wanion_banner_preview.png?v=260810" alt="WANION 오픈 준비 중" class="w-full h-full object-contain">
+        <img src="assets/wanion_banner_preview.png?v=260810" alt="운영 중인 글로벌 레이드 플랫폼 WANION" class="w-full h-full object-contain">
       </a>
     </div>
 
@@ -589,7 +589,7 @@
             <div id="home-live-status" class="home-main-status" aria-live="polite">
               <div class="home-main-status-heading">
                 <span id="home-status-dot" class="home-main-status-dot" aria-hidden="true"></span>
-                <strong id="home-status-label">연결 중</strong>
+                <strong id="home-status-label">CONNECTING</strong>
               </div>
               <div id="home-status-message" class="home-main-status-message">상태를 확인하고 있습니다.</div>
             </div>
@@ -1277,6 +1277,22 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     const STATUS_RGB = {
       '온라인':'34,197,94','쐐기 중':'59,130,246','레이드 중':'168,85,247','자리 비움':'234,179,8','외출 중':'249,115,22','오프라인':'107,114,128'
     };
+    const HOME_STATUS_SIGN = {
+      '온라인': 'NOW OPEN',
+      '쐐기 중': 'BACK SOON',
+      '레이드 중': 'BACK SOON',
+      '자리 비움': 'BACK SOON',
+      '외출 중': 'BACK SOON',
+      '오프라인': 'CURRENTLY AWAY'
+    };
+    const HOME_STATUS_FALLBACK = {
+      '온라인': '지금 바로 제작할 수 있습니다',
+      '쐐기 중': '쐐기 종료 후 주문을 확인합니다',
+      '레이드 중': '레이드 종료 후 주문을 확인합니다',
+      '자리 비움': '잠시 자리를 비웠습니다',
+      '외출 중': '돌아오는 대로 주문을 확인합니다',
+      '오프라인': '주문을 남겨주시면 다음 접속 때 확인합니다'
+    };
     function statusRGB(){ return STATUS_RGB[currentStatusType] || '135,136,238'; }
     function refreshOrderButtonColors(){
       const rgb = statusRGB();
@@ -1314,8 +1330,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         const homeLabel = document.getElementById('home-status-label');
         const homeMessage = document.getElementById('home-status-message');
         if (homeStatus && homeDot && homeLabel && homeMessage) {
-          homeLabel.textContent = data.type;
-          homeMessage.textContent = data.message;
+          homeLabel.textContent = HOME_STATUS_SIGN[data.type] || 'CURRENT STATUS';
+          homeMessage.textContent = String(data.message || '').trim() || HOME_STATUS_FALLBACK[data.type] || '상태를 확인하고 있습니다.';
           homeLabel.style.color = `rgb(${rgb})`;
           homeDot.style.background = `rgb(${rgb})`;
           homeDot.style.boxShadow = `0 0 8px rgba(${rgb},0.48)`;

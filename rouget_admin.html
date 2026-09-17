@@ -959,7 +959,7 @@
     // ── 주문 알림 효과음 ──
     // 크롬 자동재생 정책: 첫 사용자 입력(클릭/키) 이후부터 재생 허용 → 입력 1회로 언락
     let _sndCtx = null;
-    const _orderAlertAudio = new Audio('assets/order_alert.mp3');
+    const _orderAlertAudio = new Audio('assets/order_alert.mp3?v=260917a');
     _orderAlertAudio.preload = 'auto';
     window.__seenOrderIds = null;
     function _sndEnabled() { return localStorage.getItem('hj_order_sound') !== 'off'; }

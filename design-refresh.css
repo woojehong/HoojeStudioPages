@@ -2450,49 +2450,38 @@ body {
 .home-main-status {
   --home-status-rgb: 75, 85, 99;
   position: relative;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   justify-items: center;
   width: min(620px, 100%);
-  min-height: 78px;
-  padding: 11px 42px 14px;
-  border-top: 1px solid rgba(var(--home-status-rgb), .34);
-  border-bottom: 1px solid rgba(var(--home-status-rgb), .22);
-  background: radial-gradient(ellipse 58% 90% at 50% 0, rgba(var(--home-status-rgb), .11), transparent 72%);
+  aspect-ratio: 1400 / 412;
+  min-height: 0;
+  padding: clamp(22px, 4.3vw, 34px) clamp(28px, 9vw, 72px) clamp(16px, 3vw, 24px);
+  background: url("assets/hooje-status-sign.webp") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .34));
 }
-
-.home-main-status::before,
-.home-main-status::after {
-  content: "";
-  position: absolute;
-  top: 17px;
-  width: 48px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(var(--home-status-rgb), .62));
-}
-
-.home-main-status::before { left: 8px; }
-.home-main-status::after { right: 8px; transform: scaleX(-1); }
 
 .home-main-status-heading {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
-  color: #f2f3f6;
-  font-family: "S-CoreDream-9Black", sans-serif;
-  font-size: 11px;
+  color: #f4e5c3;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(15px, 2vw, 24px);
   font-weight: 800;
-  letter-spacing: .08em;
+  letter-spacing: .12em;
 }
 
 .home-main-status-heading strong {
-  text-shadow: 0 0 12px rgba(var(--home-status-rgb), .26);
+  text-shadow: 0 1px 0 #2a160a, 0 0 12px rgba(var(--home-status-rgb), .22);
 }
 
 .home-main-status-dot {
-  width: 7px;
-  height: 7px;
-  flex: 0 0 7px;
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
   border-radius: 50%;
   background: #4b5563;
 }
@@ -2500,10 +2489,10 @@ body {
 .home-main-status-message {
   width: 100%;
   max-height: 2.8em;
-  margin-top: 11px;
+  margin-top: clamp(4px, .8vw, 8px);
   overflow: hidden;
-  color: #c9ced8;
-  font-size: 11px;
+  color: #dfd5c4;
+  font-size: clamp(9.5px, 1.15vw, 12px);
   line-height: 1.4;
   text-align: center;
   white-space: pre-line;
@@ -2639,12 +2628,8 @@ body {
   }
 
   .home-main-status {
-    padding-inline: 24px;
-  }
-
-  .home-main-status::before,
-  .home-main-status::after {
-    width: 28px;
+    width: min(100%, 430px);
+    padding-inline: 34px;
   }
 
   .home-addon-actions {
