@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>후제공방 관제탑</title>
-  <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <script src="preview-safety.js"></script>
   <link rel="icon" href="assets/favicon.png?v=20260622" type="image/png">
@@ -211,6 +210,7 @@
     .admin-order-actions .order-complete { background: #27845f !important; }
     .admin-order-actions .order-secondary { background: #252933 !important; color: #c4c8cf !important; border: 1px solid #343945 !important; }
     .admin-order-actions .order-reject { background: transparent !important; color: #d2ae68 !important; border: 1px solid #665537 !important; }
+    .admin-order-message { flex: 0 1 210px; min-height: 34px; }
     .pending-summary-panel { width: 9rem !important; }
     #pending-summary { min-height: 42px; }
     #pending-summary > button { min-height: 42px; }
@@ -322,6 +322,7 @@
         padding: 0 7px !important;
         font-size: 0.68rem !important;
       }
+      .admin-order-message { max-width: 112px !important; padding-left: 7px !important; padding-right: 7px !important; }
     }
     @media (max-width: 390px) {
       .admin-header-actions button { padding-left: 9px !important; padding-right: 9px !important; }
@@ -1176,6 +1177,14 @@
         if (o.source === 'web') viaHtml = '<span class="text-gray-500 font-bold text-[10px] shrink-0 ml-0.5">🌐 via Web</span>';
         else if (o.source === 'addon') viaHtml = '<span class="text-gray-500 font-bold text-[10px] shrink-0 ml-0.5">⚙️ via AddOn</span>';
 
+        const note = o.customerNote && typeof o.customerNote === 'object' ? o.customerNote : null;
+        const noteName = note && typeof note.name === 'string' ? note.name.trim() : '';
+        const noteMessage = note && typeof note.message === 'string' ? note.message.trim() : '';
+        const noteLabel = noteName ? `${noteName}: ${noteMessage}` : noteMessage;
+        const messageHtml = noteMessage
+          ? `<button type="button" onclick="showCustomerNote(this)" data-note-name="${escapeHTML(noteName)}" data-note-message="${escapeHTML(noteMessage)}" title="${escapeHTML(noteLabel)}" class="admin-order-message max-w-[210px] min-w-0 px-2.5 py-1.5 rounded-lg border border-[#8788EE]/30 bg-[#8788EE]/[0.07] text-[10px] font-bold text-[#c7c8f5] truncate text-left hover:border-[#8788EE]/60 transition-colors">💬 ${escapeHTML(noteLabel)}</button>`
+          : '';
+
         // 버튼 (onclick / id 핸들러 보존)
         let buttons = '';
         if (status === 'done') {
@@ -1208,12 +1217,38 @@
                         ${viaHtml}
                       </div>
                     </div>
+                    ${messageHtml}
                     <div class="admin-order-actions flex items-center justify-end flex-wrap gap-1 shrink-0 w-full sm:w-auto">${buttons}</div>
                   </div>
                 </div>`;
       }).join('');
       requestAnimationFrame(() => fitOrderListToEightRows());
     }
+
+    window.showCustomerNote = function(button) {
+      document.getElementById('customer-note-popup')?.remove();
+      const popup = document.createElement('div');
+      popup.id = 'customer-note-popup';
+      popup.className = 'fixed inset-0 z-[999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4';
+      const card = document.createElement('div');
+      card.className = 'w-full max-w-md rounded-2xl border border-[#8788EE]/45 bg-[#0b0e14] p-5 shadow-2xl';
+      const name = button.dataset.noteName || '';
+      const heading = document.createElement('div');
+      heading.className = 'mb-3 text-xs font-black text-[#c7c8f5]';
+      heading.textContent = name || '고객 한마디';
+      const message = document.createElement('p');
+      message.className = 'whitespace-pre-wrap break-words text-sm font-bold leading-relaxed text-gray-200';
+      message.textContent = button.dataset.noteMessage || '';
+      const close = document.createElement('button');
+      close.type = 'button';
+      close.className = 'mt-5 w-full rounded-xl border border-white/10 py-2.5 text-xs font-black text-gray-300 hover:text-white';
+      close.textContent = '닫기';
+      close.onclick = () => popup.remove();
+      card.append(heading, message, close);
+      popup.appendChild(card);
+      popup.onclick = event => { if (event.target === popup) popup.remove(); };
+      document.body.appendChild(popup);
+    };
 
     function fitOrderListToEightRows() {
       const list = document.getElementById('admin-order-list');
@@ -1239,7 +1274,10 @@
       const prune = {};
       Object.keys(data).forEach(k => {
         const ts = data[k] && data[k].timestamp;
-        if (ts && (now - ts) > D7) prune[`/orders/${k}`] = null;
+        if (ts && (now - ts) > D7) {
+          prune[`/orders/${k}`] = null;
+          prune[`/staging/orderMessages/${k}`] = null;
+        }
       });
       if (Object.keys(prune).length) update(ref(db), prune).catch(() => {});
     }

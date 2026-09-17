@@ -12,6 +12,11 @@
     h1 { margin:0 0 12px; font-size:22px; } p { margin:8px 0; color:#9ca3af; line-height:1.65; }
     .dot { width:12px; height:12px; margin:0 auto 18px; border-radius:50%; background:#8788ee; box-shadow:0 0 18px #8788ee; animation:pulse 1.2s infinite; }
     .error { color:#fecaca; } a { color:#c7c8f5; font-weight:800; }
+    .hidden { display:none !important; }
+    .actions { display:grid; gap:10px; margin-top:22px; }
+    button { width:100%; padding:13px 16px; border:1px solid rgba(135,136,238,.55); border-radius:12px; background:rgba(135,136,238,.13); color:#eef; font:800 14px system-ui,-apple-system,sans-serif; cursor:pointer; }
+    button:hover { background:rgba(135,136,238,.22); }
+    .optional { color:#74798a; font-weight:700; }
     @keyframes pulse { 50% { opacity:.35; transform:scale(.8); } }
   </style>
 </head>
@@ -20,7 +25,11 @@
     <div class="dot" aria-hidden="true"></div>
     <h1 id="title">제작자에게 알림을 전송하고 있습니다</h1>
     <p id="message">잠시만 기다려 주세요. 완료되면 후제공방으로 자동 이동합니다.</p>
-    <p><a href="/">후제공방 메인으로</a></p>
+    <div id="success-actions" class="actions hidden">
+      <button id="message-choice" type="button">제작자에게 전할 말이 있으신가요? <span class="optional">(선택)</span></button>
+      <p id="redirect-countdown"></p>
+    </div>
+    <p><a id="home-link" href="/">후제공방 메인으로</a></p>
   </main>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
@@ -65,12 +74,45 @@
         if (!response.ok || result.ok !== true || !result.orderKey) {
           throw new Error(result.error || `notification_http_${response.status}`);
         }
+        const expiresAt = Number(result.messageExpiresAt) || (Date.now() + 10 * 60 * 1000);
+        const orderListKey = 'hooje_my_orders';
+        const orderList = JSON.parse(localStorage.getItem(orderListKey) || '[]');
+        const existing = orderList.find(order => order.key === result.orderKey);
+        const saved = { key: result.orderKey, timestamp: Date.now(), messageToken: result.messageToken || '', messageExpiresAt: expiresAt, itemName: item };
+        if (existing) Object.assign(existing, saved);
+        else orderList.push(saved);
+        localStorage.setItem(orderListKey, JSON.stringify(orderList));
+
         const next = new URL('/', location.origin);
         next.searchParams.set('notified', '1');
         next.searchParams.set('c', result.crafter || '');
         next.searchParams.set('i', item);
         next.searchParams.set('o', result.orderKey);
-        location.replace(next.href);
+        title.textContent = '주문 알림이 정상적으로 전달되었습니다';
+        message.textContent = '메시지를 작성하지 않아도 주문은 이미 정상 접수되었습니다.';
+        document.querySelector('.dot').style.background = '#10b981';
+        document.querySelector('.dot').style.boxShadow = '0 0 18px #10b981';
+        const successActions = document.getElementById('success-actions');
+        const countdown = document.getElementById('redirect-countdown');
+        const choice = document.getElementById('message-choice');
+        const homeLink = document.getElementById('home-link');
+        successActions.classList.remove('hidden');
+        homeLink.href = next.href;
+        let seconds = 7;
+        const drawCountdown = () => { countdown.textContent = `${seconds}초 후 후제공방 메인으로 이동합니다.`; };
+        drawCountdown();
+        const timer = setInterval(() => {
+          seconds -= 1;
+          if (seconds <= 0) {
+            clearInterval(timer);
+            location.replace(next.href);
+          } else drawCountdown();
+        }, 1000);
+        choice.addEventListener('click', () => {
+          clearInterval(timer);
+          sessionStorage.setItem('hooje_open_message_order', result.orderKey);
+          location.replace(next.href);
+        });
       } catch (error) {
         console.error('[HoojeStudio notify]', error);
         fail('주문은 게임에 남아 있습니다. 잠시 후 애드온의 알림 버튼을 다시 눌러주세요.');

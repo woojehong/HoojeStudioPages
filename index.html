@@ -377,7 +377,7 @@
       #sidebar.m-collapsed #category-list{ display: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="design-refresh.css?v=260917c">
+  <link rel="stylesheet" href="design-refresh.css?v=260917d">
   <link rel="stylesheet" href="adsense-preview.css">
 </head>
 <body>
@@ -392,7 +392,7 @@
           <span id="status-label">연결 중</span><span class="status-colon" aria-hidden="true">:</span><span id="status-message">상태를 확인하고 있습니다.</span>
         </span>
       </div>
-      <div id="my-order-summary" class="hidden self-start items-center gap-1.5 min-w-0 max-w-full pb-0.5">
+      <div id="my-order-summary" class="hidden self-start items-center gap-1.5 min-w-0 max-w-full pb-0.5 cursor-pointer" role="button" tabindex="0" aria-label="내 주문과 메시지 확인" onclick="openMyOrdersPanel()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openMyOrdersPanel();}">
         <span id="my-order-dot" class="w-1.5 h-1.5 rounded-full bg-gray-600 shrink-0"></span>
         <span class="text-[8px] md:text-[9px] font-black tracking-[0.12em] text-gray-400 shrink-0">내 주문</span>
         <span id="my-order-text" class="text-[9px] md:text-[10px] font-bold text-gray-200 truncate"></span>
@@ -461,6 +461,15 @@
     </div>
     <span class="text-gray-300 font-bold text-base md:text-2xl mt-1 md:mt-2"><kbd class="bg-gray-800 px-3 py-1 md:px-4 md:py-1.5 rounded-lg md:rounded-xl text-yellow-400 font-black border-2 border-gray-700 mx-1 md:mx-2">Ctrl + D</kbd> 를 누르시면 추가됩니다.</span>
   </div>
+
+  <div id="order-message-overlay" class="hidden fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm" onclick="closeOrderMessageModal()"></div>
+  <section id="order-message-modal" class="hidden fixed z-[81] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-lg rounded-2xl border border-[#8788EE]/45 bg-[#0b0e14] shadow-2xl" style="width:calc(100% - 28px)" role="dialog" aria-modal="true" aria-labelledby="order-message-title">
+    <div class="flex items-center justify-between gap-3 px-5 py-4 border-b border-white/10">
+      <h2 id="order-message-title" class="text-base md:text-lg font-black text-white">내 주문</h2>
+      <button type="button" onclick="closeOrderMessageModal()" class="w-8 h-8 rounded-lg border border-white/10 text-gray-400 hover:text-white" aria-label="닫기">✕</button>
+    </div>
+    <div id="order-message-modal-body" class="p-5"></div>
+  </section>
 
   <div id="urgent-notice-modal" class="hidden fixed inset-0 z-[90] items-center justify-center px-4" role="dialog" aria-modal="true" aria-labelledby="urgent-notice-title">
     <div class="absolute inset-0" style="background:rgba(1,3,9,.82);backdrop-filter:blur(5px);"></div>
@@ -1152,6 +1161,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     const db = getDatabase(app);
     // Firebase staging 배포 후에만 실제 URL을 입력한다. 빈 값이면 기존 Netlify 알림 경로를 유지한다.
     const FIREBASE_NOTIFY_ENDPOINT = "https://notifyorder-znq5mv362a-du.a.run.app";
+    const ORDER_MESSAGE_ENDPOINT = "https://asia-northeast3-rougetsblendingroom.cloudfunctions.net/attachOrderMessage";
+    const ORDER_MESSAGE_TTL_MS = 10 * 60 * 1000;
+    const orderMessageOffers = Object.create(null);
 
     async function sendOrderNotification(itemName, category) {
       if (!FIREBASE_NOTIFY_ENDPOINT) {
@@ -2116,6 +2128,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
 
     function generateOrderButtonHTML(crafter, itemName, showNotice=false) {
       if (itemCooldowns[itemName]) {
+        const offer = orderMessageOffers[itemName];
+        const messageAction = offer && offer.orderKey && offer.expiresAt > Date.now()
+          ? `<button type="button" onclick="openOrderMessagePrompt('${offer.orderKey}')" class="order-message-offer detail-compact-action mt-2 px-3 py-2 border border-[#8788EE]/35 rounded-lg text-xs font-black text-[#c7c8f5] hover:border-[#8788EE]/70 hover:bg-[#8788EE]/10 transition-colors">제작자에게 전할 말이 있으신가요? <span class="text-gray-500">(선택)</span></button>`
+          : '';
         return `
           <button class="order-action-btn order-action-complete detail-compact-action hj-primary-action px-3 py-1.5 bg-gradient-to-r from-green-600/20 to-green-900/20 border border-green-500/50 rounded-xl font-black text-white cursor-not-allowed opacity-80 flex items-center justify-center gap-2.5 relative overflow-hidden">
             <span class="order-action-icon order-action-complete-icon relative z-10 shrink-0" aria-hidden="true">
@@ -2126,6 +2142,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
               <span class="order-action-label">주문 접수 완료 · 잠시만 기다려주세요</span>
             </div>
           </button>
+          ${messageAction}
           ${showNotice ? generateStatusNoticeHTML() : ''}
         `;
       }
@@ -2530,13 +2547,28 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     const FLOAT_24H = 24 * 60 * 60 * 1000;
 
     // 주문 버튼 클릭 시 key 저장 (sendOrder 호출 직후 연동 / notify 리디렉션 &o= 파라미터에서도 사용)
-    function saveMyOrderKey(key, timestamp) {
+    function saveMyOrderKey(key, timestamp, messageToken='', messageExpiresAt=0, itemName='') {
       if (!key) return;
       const list = JSON.parse(localStorage.getItem(FLOAT_LS_KEY) || '[]');
-      if (list.some(o => o.key === key)) return; // 중복 저장 방지 (새로고침 등)
-      list.push({ key, timestamp });
+      const existing = list.find(o => o.key === key);
+      if (existing) {
+        existing.timestamp = existing.timestamp || timestamp;
+        if (messageToken) existing.messageToken = messageToken;
+        if (messageExpiresAt) existing.messageExpiresAt = Number(messageExpiresAt);
+        if (itemName) existing.itemName = itemName;
+      } else {
+        list.push({ key, timestamp, messageToken, messageExpiresAt: Number(messageExpiresAt) || 0, itemName });
+      }
       localStorage.setItem(FLOAT_LS_KEY, JSON.stringify(list));
       syncMyOrderSubscriptions();
+    }
+
+    function updateMyOrderEntry(key, patch) {
+      const list = JSON.parse(localStorage.getItem(FLOAT_LS_KEY) || '[]');
+      const entry = list.find(o => o.key === key);
+      if (!entry) return;
+      Object.assign(entry, patch);
+      localStorage.setItem(FLOAT_LS_KEY, JSON.stringify(list));
     }
 
     // 24시간 초과 항목 정리
@@ -2547,6 +2579,125 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       if (fresh.length !== list.length) localStorage.setItem(FLOAT_LS_KEY, JSON.stringify(fresh));
       return fresh;
     }
+
+    function getMyOrderEntry(key) {
+      return getMyOrders().find(order => order.key === key) || null;
+    }
+
+    function canAddOrderMessage(entry, order) {
+      return Boolean(entry && entry.messageToken && Number(entry.messageExpiresAt) > Date.now() && !entry.messageSent && !(order && order.customerNote));
+    }
+
+    function openOrderMessageShell(title, body) {
+      document.getElementById('order-message-title').textContent = title;
+      document.getElementById('order-message-modal-body').innerHTML = body;
+      document.getElementById('order-message-overlay').classList.remove('hidden');
+      document.getElementById('order-message-modal').classList.remove('hidden');
+    }
+
+    window.closeOrderMessageModal = function() {
+      document.getElementById('order-message-overlay').classList.add('hidden');
+      document.getElementById('order-message-modal').classList.add('hidden');
+    };
+
+    window.updateOrderMessageCount = function() {
+      const field = document.getElementById('order-message-text');
+      const count = document.getElementById('order-message-count');
+      if (field && count) count.textContent = `${field.value.length} / 120`;
+    };
+
+    window.openOrderMessagePrompt = function(orderKey) {
+      const entry = getMyOrderEntry(orderKey);
+      const order = myOrderData[orderKey] || null;
+      if (!canAddOrderMessage(entry, order)) {
+        const text = order && order.customerNote
+          ? '이 주문에는 이미 한마디가 전달되었습니다.'
+          : '이 주문의 한마디 작성 시간이 종료되었습니다.';
+        openOrderMessageShell('제작자에게 전할 말', `<p class="text-sm text-gray-300 text-center py-5">${text}</p>`);
+        return;
+      }
+      const itemName = escapeHTML((order && order.itemName) || entry.itemName || '내 주문');
+      openOrderMessageShell('제작자에게 전할 말', `
+        <div class="space-y-4">
+          <div class="rounded-xl border border-emerald-500/25 bg-emerald-500/[0.07] px-4 py-3">
+            <p class="text-sm font-black text-emerald-200">주문은 이미 정상 접수되었습니다.</p>
+            <p class="mt-1 text-xs text-gray-400 truncate">${itemName}</p>
+          </div>
+          <label class="block">
+            <span class="block mb-1.5 text-xs font-bold text-gray-400">이름 또는 캐릭터명 <span class="font-medium text-gray-600">(선택)</span></span>
+            <input id="order-message-name" maxlength="16" autocomplete="nickname" class="w-full rounded-xl border border-white/10 bg-black/30 px-3.5 py-3 text-sm text-white outline-none focus:border-[#8788EE]" placeholder="">
+          </label>
+          <label class="block">
+            <span class="block mb-1.5 text-xs font-bold text-gray-400">하고 싶은 말</span>
+            <textarea id="order-message-text" maxlength="120" rows="4" oninput="updateOrderMessageCount()" class="w-full resize-none rounded-xl border border-white/10 bg-black/30 px-3.5 py-3 text-sm leading-relaxed text-white outline-none focus:border-[#8788EE]" placeholder=""></textarea>
+            <span id="order-message-count" class="mt-1 block text-right text-[10px] text-gray-600">0 / 120</span>
+          </label>
+          <p id="order-message-error" class="hidden text-xs font-bold text-red-300"></p>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="closeOrderMessageModal()" class="rounded-xl border border-white/10 px-3 py-3 text-xs font-black text-gray-400 hover:text-white">작성하지 않기</button>
+            <button id="order-message-submit" type="button" onclick="submitOrderMessage('${orderKey}')" class="rounded-xl border border-[#8788EE]/60 bg-[#8788EE]/15 px-3 py-3 text-xs font-black text-white hover:bg-[#8788EE]/25">한마디 전송</button>
+          </div>
+        </div>`);
+      setTimeout(() => document.getElementById('order-message-text')?.focus(), 0);
+    };
+
+    window.submitOrderMessage = async function(orderKey) {
+      const entry = getMyOrderEntry(orderKey);
+      const message = (document.getElementById('order-message-text')?.value || '').trim();
+      const name = (document.getElementById('order-message-name')?.value || '').trim();
+      const error = document.getElementById('order-message-error');
+      const submit = document.getElementById('order-message-submit');
+      if (!message) {
+        error.textContent = '하고 싶은 말을 입력해주세요.';
+        error.classList.remove('hidden');
+        return;
+      }
+      if (!canAddOrderMessage(entry, myOrderData[orderKey])) {
+        error.textContent = '한마디를 전송할 수 있는 시간이 종료되었습니다.';
+        error.classList.remove('hidden');
+        return;
+      }
+      submit.disabled = true;
+      submit.textContent = '전송 중…';
+      try {
+        if (!appCheck) throw new Error('app_check_required');
+        const tokenResult = await getAppCheckToken(appCheck, false);
+        const response = await fetch(ORDER_MESSAGE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Firebase-AppCheck': tokenResult.token },
+          body: JSON.stringify({ orderKey, messageToken: entry.messageToken, name, message })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.ok !== true) throw new Error(result.error || `message_http_${response.status}`);
+        updateMyOrderEntry(orderKey, { messageSent: true, messageToken: '' });
+        openOrderMessageShell('한마디 전달 완료', '<div class="py-6 text-center"><div class="text-3xl mb-3">✓</div><p class="font-black text-emerald-300">제작자에게 한마디를 전달했습니다.</p></div>');
+      } catch (sendError) {
+        console.error('[Order message]', sendError);
+        error.textContent = sendError.message === 'message_window_expired' ? '한마디를 전송할 수 있는 시간이 종료되었습니다.' : '전송하지 못했습니다. 잠시 후 다시 시도해주세요.';
+        error.classList.remove('hidden');
+        submit.disabled = false;
+        submit.textContent = '한마디 전송';
+      }
+    };
+
+    window.openMyOrdersPanel = function() {
+      const entries = getMyOrders().slice().sort((a, b) => b.timestamp - a.timestamp).slice(0, 10);
+      if (!entries.length) return;
+      const STATUS = { pending: '대기 중', accepted: '접수 완료', done: '제작 완료', rejected: '반려' };
+      const body = entries.map(entry => {
+        const order = myOrderData[entry.key] || {};
+        const item = escapeHTML(order.itemName || entry.itemName || '주문');
+        const status = STATUS[order.status] || '확인 중';
+        const note = order.customerNote;
+        let action = '<span class="text-[10px] text-gray-600">한마디 작성 종료</span>';
+        if (note) action = `<span class="text-[10px] text-emerald-400">한마디 전달됨</span>`;
+        else if (canAddOrderMessage(entry, order)) action = `<button type="button" onclick="openOrderMessagePrompt('${entry.key}')" class="rounded-lg border border-[#8788EE]/40 px-2.5 py-1.5 text-[10px] font-black text-[#c7c8f5]">한마디 남기기 <span class="text-gray-600">(선택)</span></button>`;
+        return `<div class="flex items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-white/[0.025] px-3 py-3">
+          <div class="min-w-0"><p class="truncate text-xs font-bold text-gray-200">${item}</p><p class="mt-1 text-[10px] text-gray-500">${status}</p></div><div class="shrink-0">${action}</div>
+        </div>`;
+      }).join('');
+      openOrderMessageShell('내 주문', `<div class="space-y-2">${body}</div>`);
+    };
     syncMyOrderSubscriptions();
 
     // 이미 닫은 상태 기록
@@ -2709,7 +2860,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const category = (allItemsFlat.find(i => i.name === itemName) || {}).cat || '기타';
       sendOrderNotification(itemName, category)
         .then(result => {
-          saveMyOrderKey(result.orderKey, Date.now());
+          orderMessageOffers[itemName] = { orderKey: result.orderKey, expiresAt: Number(result.messageExpiresAt) || (Date.now() + ORDER_MESSAGE_TTL_MS) };
+          saveMyOrderKey(result.orderKey, Date.now(), result.messageToken, result.messageExpiresAt, itemName);
           refreshOrderButtons();
         })
         .catch(err => {
@@ -2729,13 +2881,16 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         const _ni = decodeURIComponent(_np.get('i') || '');
         // notify 경유 주문도 '나의 주문'으로 추적 (뱃지 + 접수/완료 팝업)
         const _no = _np.get('o');
-        if (_no) saveMyOrderKey(_no, Date.now());
+        if (_no) saveMyOrderKey(_no, Date.now(), '', 0, _ni);
+        const _openMessageOrder = sessionStorage.getItem('hooje_open_message_order');
+        if (_openMessageOrder) sessionStorage.removeItem('hooje_open_message_order');
         history.replaceState({}, '', location.pathname);
         const t = document.createElement('div');
         t.className = 'fixed top-6 left-1/2 -translate-x-1/2 z-[999] px-6 py-3 rounded-2xl bg-gray-900 border border-emerald-500/60 text-emerald-300 font-black text-sm shadow-2xl toast-animate whitespace-nowrap';
         t.textContent = _nc ? `${_nc}에게 알림 전송 완료` + (_ni ? ` — ${_ni}` : '') : '알림 전송 완료';
         document.body.appendChild(t);
         setTimeout(() => t.remove(), 6000);
+        if (_openMessageOrder) setTimeout(() => openOrderMessagePrompt(_openMessageOrder), 250);
       }
 
       const searchInput = document.getElementById('search-input');

@@ -2494,6 +2494,28 @@ body {
     0 0 7px rgba(196, 128, 42, .16);
 }
 
+#order-message-overlay {
+  background: rgba(0, 0, 0, .72);
+  backdrop-filter: blur(4px);
+}
+
+#order-message-modal {
+  background: #0b0e14;
+  border-color: rgba(135, 136, 238, .45);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .58);
+}
+
+#order-message-modal input,
+#order-message-modal textarea {
+  background: rgba(0, 0, 0, .3);
+  border-color: rgba(255, 255, 255, .1);
+}
+
+#order-message-modal input:focus,
+#order-message-modal textarea:focus {
+  border-color: #8788ee;
+}
+
 .home-main-status[data-sign-state="back-soon"] .home-main-status-heading {
   font-size: clamp(21px, 2.55vw, 30px);
 }
