@@ -377,7 +377,7 @@
       #sidebar.m-collapsed #category-list{ display: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="design-refresh.css?v=260917a">
+  <link rel="stylesheet" href="design-refresh.css?v=260917b">
   <link rel="stylesheet" href="adsense-preview.css">
 </head>
 <body>
@@ -588,10 +588,8 @@
           <div class="home-status-stage">
             <div id="home-live-status" class="home-main-status" aria-live="polite">
               <div class="home-main-status-heading">
-                <span id="home-status-dot" class="home-main-status-dot" aria-hidden="true"></span>
                 <strong id="home-status-label">CONNECTING</strong>
               </div>
-              <div id="home-status-message" class="home-main-status-message">상태를 확인하고 있습니다.</div>
             </div>
           </div>
           <section id="home-quick-guide" class="home-quick-guide" aria-labelledby="home-guide-title">
@@ -1285,13 +1283,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       '외출 중': 'BACK SOON',
       '오프라인': 'CURRENTLY AWAY'
     };
-    const HOME_STATUS_FALLBACK = {
-      '온라인': '지금 바로 제작할 수 있습니다',
-      '쐐기 중': '쐐기 종료 후 주문을 확인합니다',
-      '레이드 중': '레이드 종료 후 주문을 확인합니다',
-      '자리 비움': '잠시 자리를 비웠습니다',
-      '외출 중': '돌아오는 대로 주문을 확인합니다',
-      '오프라인': '주문을 남겨주시면 다음 접속 때 확인합니다'
+    const HOME_STATUS_MOOD = {
+      '온라인': 'open',
+      '쐐기 중': 'back-soon',
+      '레이드 중': 'back-soon',
+      '자리 비움': 'back-soon',
+      '외출 중': 'back-soon',
+      '오프라인': 'away'
     };
     function statusRGB(){ return STATUS_RGB[currentStatusType] || '135,136,238'; }
     function refreshOrderButtonColors(){
@@ -1326,16 +1324,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         liveStatus.style.borderColor = `rgb(${rgb})`;
         liveStatus.style.boxShadow = `0 0 12px rgba(${rgb},0.28)`;
         const homeStatus = document.getElementById('home-live-status');
-        const homeDot = document.getElementById('home-status-dot');
         const homeLabel = document.getElementById('home-status-label');
-        const homeMessage = document.getElementById('home-status-message');
-        if (homeStatus && homeDot && homeLabel && homeMessage) {
+        if (homeStatus && homeLabel) {
           homeLabel.textContent = HOME_STATUS_SIGN[data.type] || 'CURRENT STATUS';
-          homeMessage.textContent = String(data.message || '').trim() || HOME_STATUS_FALLBACK[data.type] || '상태를 확인하고 있습니다.';
-          homeLabel.style.color = `rgb(${rgb})`;
-          homeDot.style.background = `rgb(${rgb})`;
-          homeDot.style.boxShadow = `0 0 8px rgba(${rgb},0.48)`;
-          homeStatus.style.setProperty('--home-status-rgb', rgb);
+          homeStatus.dataset.signState = HOME_STATUS_MOOD[data.type] || 'away';
         }
         refreshStatusNotices();
         refreshOrderButtonColors();
