@@ -2671,6 +2671,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
           body: JSON.stringify({ orderKey, messageToken: entry.messageToken, name, message })
         });
         const result = await response.json().catch(() => ({}));
+        if (response.status === 409 && result.error === 'message_already_sent') {
+          updateMyOrderEntry(orderKey, { messageSent: true, messageToken: '' });
+          openOrderMessageShell('한마디 전달 완료', '<div class="py-6 text-center"><div class="text-3xl mb-3">✓</div><p class="font-black text-emerald-300">이 주문에는 이미 한마디가 전달되었습니다.</p></div>');
+          return;
+        }
         if (!response.ok || result.ok !== true) throw new Error(result.error || `message_http_${response.status}`);
         updateMyOrderEntry(orderKey, { messageSent: true, messageToken: '' });
         openOrderMessageShell('한마디 전달 완료', '<div class="py-6 text-center"><div class="text-3xl mb-3">✓</div><p class="font-black text-emerald-300">제작자에게 한마디를 전달했습니다.</p></div>');
