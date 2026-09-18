@@ -74,7 +74,7 @@
         if (!response.ok || result.ok !== true || !result.orderKey) {
           throw new Error(result.error || `notification_http_${response.status}`);
         }
-        const expiresAt = Number(result.messageExpiresAt) || (Date.now() + 10 * 60 * 1000);
+        const expiresAt = Math.max(Number(result.messageExpiresAt) || 0, Date.now() + 7 * 24 * 60 * 60 * 1000);
         const orderListKey = 'hooje_my_orders';
         const orderList = JSON.parse(localStorage.getItem(orderListKey) || '[]');
         const existing = orderList.find(order => order.key === result.orderKey);

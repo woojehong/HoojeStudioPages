@@ -1162,7 +1162,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     // Firebase staging 배포 후에만 실제 URL을 입력한다. 빈 값이면 기존 Netlify 알림 경로를 유지한다.
     const FIREBASE_NOTIFY_ENDPOINT = "https://notifyorder-znq5mv362a-du.a.run.app";
     const ORDER_MESSAGE_ENDPOINT = "https://asia-northeast3-rougetsblendingroom.cloudfunctions.net/attachOrderMessage";
-    const ORDER_MESSAGE_TTL_MS = 10 * 60 * 1000;
+    const ORDER_MESSAGE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
     const orderMessageOffers = Object.create(null);
 
     async function sendOrderNotification(itemName, category) {
@@ -2544,7 +2544,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     // ── 플로팅 시스템 ────────────────────────────────────────────────────
     const FLOAT_LS_KEY = 'hooje_my_orders';        // 내 주문 key 배열
     const FLOAT_SEEN_KEY = 'hooje_float_seen';     // 이미 닫은 주문 key별 상태
-    const FLOAT_24H = 24 * 60 * 60 * 1000;
+    const FLOAT_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
 
     // 주문 버튼 클릭 시 key 저장 (sendOrder 호출 직후 연동 / notify 리디렉션 &o= 파라미터에서도 사용)
     function saveMyOrderKey(key, timestamp, messageToken='', messageExpiresAt=0, itemName='') {
@@ -2571,11 +2571,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       localStorage.setItem(FLOAT_LS_KEY, JSON.stringify(list));
     }
 
-    // 24시간 초과 항목 정리
+    // 서버의 주문 보관 기간과 동일하게 7일이 지난 항목 정리
     function getMyOrders() {
       const now = Date.now();
       const list = JSON.parse(localStorage.getItem(FLOAT_LS_KEY) || '[]');
-      const fresh = list.filter(o => (now - o.timestamp) < FLOAT_24H);
+      const fresh = list.filter(o => (now - o.timestamp) < FLOAT_RETENTION_MS);
       if (fresh.length !== list.length) localStorage.setItem(FLOAT_LS_KEY, JSON.stringify(fresh));
       return fresh;
     }
@@ -2585,7 +2585,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     }
 
     function canAddOrderMessage(entry, order) {
-      return Boolean(entry && entry.messageToken && Number(entry.messageExpiresAt) > Date.now() && !entry.messageSent && !(order && order.customerNote));
+      const effectiveExpiry = entry
+        ? Math.max(Number(entry.messageExpiresAt) || 0, (Number(entry.timestamp) || 0) + ORDER_MESSAGE_TTL_MS)
+        : 0;
+      return Boolean(entry && entry.messageToken && effectiveExpiry > Date.now() && !entry.messageSent && !(order && order.customerNote));
     }
 
     function openOrderMessageShell(title, body) {
@@ -2860,7 +2863,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const category = (allItemsFlat.find(i => i.name === itemName) || {}).cat || '기타';
       sendOrderNotification(itemName, category)
         .then(result => {
-          orderMessageOffers[itemName] = { orderKey: result.orderKey, expiresAt: Number(result.messageExpiresAt) || (Date.now() + ORDER_MESSAGE_TTL_MS) };
+          orderMessageOffers[itemName] = { orderKey: result.orderKey, expiresAt: Math.max(Number(result.messageExpiresAt) || 0, Date.now() + ORDER_MESSAGE_TTL_MS) };
           saveMyOrderKey(result.orderKey, Date.now(), result.messageToken, result.messageExpiresAt, itemName);
           refreshOrderButtons();
         })
