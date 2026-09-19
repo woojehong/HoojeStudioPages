@@ -106,6 +106,33 @@
       line-height: 1;
     }
     #sound-toggle-btn { min-width: 42px; font-size: 0.92rem !important; }
+    .sound-settings-popover {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: max(14px, calc((100% - 60rem) / 2 + 14px));
+      z-index: 80;
+      width: min(430px, calc(100vw - 28px));
+      padding: 14px;
+      border: 1px solid var(--adm-line);
+      border-radius: 14px;
+      background: #15171d;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.48);
+    }
+    .sound-settings-popover[hidden] { display: none; }
+    .sound-setting-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 7px 12px;
+      align-items: center;
+      padding: 11px 0;
+      border-top: 1px solid var(--adm-line-soft);
+    }
+    .sound-setting-row:first-of-type { border-top: 0; }
+    .sound-setting-name { color: #e5e7eb; font-size: 0.78rem; font-weight: 700; word-break: keep-all; }
+    .sound-setting-toggle { width: 18px; height: 18px; accent-color: var(--adm-accent); cursor: pointer; }
+    .sound-setting-volume-wrap { grid-column: 1 / -1; display: flex; align-items: center; gap: 9px; }
+    .sound-setting-volume { flex: 1; min-width: 0; accent-color: var(--adm-accent); cursor: pointer; }
+    .sound-setting-volume-value { width: 38px; color: #8f96a3; font-size: 0.68rem; font-weight: 700; text-align: right; }
     #unread-badge { order: 1; max-width: 60rem !important; margin-top: 0 !important; margin-bottom: 12px !important; }
     .admin-live-panel { order: 2; }
     .admin-orders-panel { order: 3; }
@@ -237,6 +264,7 @@
       #mainContent { padding-left: 10px; padding-right: 10px; }
       .admin-control-header { width: calc(100% + 20px); margin-left: -10px; margin-right: -10px; }
       .admin-header-inner { padding-left: 10px; padding-right: 10px; }
+      .sound-settings-popover { right: 10px; width: calc(100vw - 20px); }
       .admin-brand span { display: none; }
       .admin-live-panel { grid-template-columns: 1fr; gap: 12px !important; }
       .admin-live-panel > div:last-child { padding: 12px 0 0 !important; border-left: 0 !important; border-top: 1px solid var(--adm-line) !important; }
@@ -356,8 +384,44 @@
     <div class="admin-header-inner">
       <div class="admin-brand"><strong>후제공방 관제탑</strong><span>OPERATIONS</span></div>
       <div class="admin-header-actions">
-        <button id="sound-toggle-btn" onclick="toggleOrderSound()" title="새 주문 효과음" aria-label="새 주문 효과음 켜기 또는 끄기">🔔</button>
+        <button id="sound-toggle-btn" onclick="toggleOrderSound()" title="알림음 설정" aria-label="알림음 설정 열기" aria-haspopup="dialog" aria-expanded="false">🔔</button>
         <button onclick="doLogout()" class="tracking-widest">로그아웃</button>
+      </div>
+    </div>
+    <div id="sound-settings-panel" class="sound-settings-popover" role="dialog" aria-label="알림음 설정" hidden>
+      <div class="flex items-center justify-between gap-3 mb-1">
+        <div>
+          <h2 class="text-sm font-black text-white">알림음 설정</h2>
+          <p class="mt-1 text-[10px] font-bold text-gray-500">종류별 사용 여부와 볼륨을 이 기기에 저장합니다.</p>
+        </div>
+        <button type="button" onclick="closeSoundSettings()" class="shrink-0 w-9 h-9 rounded-lg border border-gray-700 text-gray-400" aria-label="알림음 설정 닫기">✕</button>
+      </div>
+      <div id="sound-settings-list">
+        <label class="sound-setting-row">
+          <span class="sound-setting-name">새 주문</span>
+          <input id="sound-enabled-newOrder" class="sound-setting-toggle" type="checkbox" onchange="setSoundEnabled('newOrder', this.checked)">
+          <span class="sound-setting-volume-wrap"><input id="sound-volume-newOrder" class="sound-setting-volume" type="range" min="0" max="100" step="1" oninput="setSoundVolume('newOrder', this.value)"><output id="sound-volume-value-newOrder" class="sound-setting-volume-value">100%</output></span>
+        </label>
+        <label class="sound-setting-row">
+          <span class="sound-setting-name">10분 미수락</span>
+          <input id="sound-enabled-pending" class="sound-setting-toggle" type="checkbox" onchange="setSoundEnabled('pending', this.checked)">
+          <span class="sound-setting-volume-wrap"><input id="sound-volume-pending" class="sound-setting-volume" type="range" min="0" max="100" step="1" oninput="setSoundVolume('pending', this.value)"><output id="sound-volume-value-pending" class="sound-setting-volume-value">100%</output></span>
+        </label>
+        <label class="sound-setting-row">
+          <span class="sound-setting-name">10분 미완료</span>
+          <input id="sound-enabled-unfinished" class="sound-setting-toggle" type="checkbox" onchange="setSoundEnabled('unfinished', this.checked)">
+          <span class="sound-setting-volume-wrap"><input id="sound-volume-unfinished" class="sound-setting-volume" type="range" min="0" max="100" step="1" oninput="setSoundVolume('unfinished', this.value)"><output id="sound-volume-value-unfinished" class="sound-setting-volume-value">100%</output></span>
+        </label>
+        <label class="sound-setting-row">
+          <span class="sound-setting-name">주문별 고객 한마디</span>
+          <input id="sound-enabled-orderMessage" class="sound-setting-toggle" type="checkbox" onchange="setSoundEnabled('orderMessage', this.checked)">
+          <span class="sound-setting-volume-wrap"><input id="sound-volume-orderMessage" class="sound-setting-volume" type="range" min="0" max="100" step="1" oninput="setSoundVolume('orderMessage', this.value)"><output id="sound-volume-value-orderMessage" class="sound-setting-volume-value">100%</output></span>
+        </label>
+        <label class="sound-setting-row">
+          <span class="sound-setting-name">후제공방에 바란다</span>
+          <input id="sound-enabled-wish" class="sound-setting-toggle" type="checkbox" onchange="setSoundEnabled('wish', this.checked)">
+          <span class="sound-setting-volume-wrap"><input id="sound-volume-wish" class="sound-setting-volume" type="range" min="0" max="100" step="1" oninput="setSoundVolume('wish', this.value)"><output id="sound-volume-value-wish" class="sound-setting-volume-value">100%</output></span>
+        </label>
       </div>
     </div>
   </header>
@@ -961,9 +1025,42 @@
     // 크롬 자동재생 정책: 첫 사용자 입력(클릭/키) 이후부터 재생 허용 → 입력 1회로 언락
     let _sndCtx = null;
     const _orderAlertAudio = new Audio('assets/order_alert.mp3?v=260917a');
+    const _orderMessageAlertAudio = new Audio('assets/order_message_alert.mp3');
+    const _wishAlertAudio = new Audio('assets/wish_alert.mp3');
     _orderAlertAudio.preload = 'auto';
+    _orderMessageAlertAudio.preload = 'none';
+    _wishAlertAudio.preload = 'none';
+    [_orderMessageAlertAudio, _wishAlertAudio].forEach(audio => audio.addEventListener('error', () => {}));
     window.__seenOrderIds = null;
-    function _sndEnabled() { return localStorage.getItem('hj_order_sound') !== 'off'; }
+    window.__seenOrderNoteSignatures = null;
+
+    const SOUND_SETTINGS_KEY = 'hj_admin_sound_settings_v1';
+    const SOUND_TYPES = ['newOrder', 'pending', 'unfinished', 'orderMessage', 'wish'];
+    function _defaultSoundSettings() {
+      const legacyEnabled = localStorage.getItem('hj_order_sound') !== 'off';
+      return Object.fromEntries(SOUND_TYPES.map(type => [type, { enabled: legacyEnabled, volume: 100 }]));
+    }
+    function _loadSoundSettings() {
+      const defaults = _defaultSoundSettings();
+      try {
+        const saved = JSON.parse(localStorage.getItem(SOUND_SETTINGS_KEY) || '{}');
+        SOUND_TYPES.forEach(type => {
+          const candidate = saved && saved[type];
+          if (!candidate || typeof candidate !== 'object') return;
+          if (typeof candidate.enabled === 'boolean') defaults[type].enabled = candidate.enabled;
+          const volume = Number(candidate.volume);
+          if (Number.isFinite(volume)) defaults[type].volume = Math.max(0, Math.min(100, Math.round(volume)));
+        });
+      } catch (e) {}
+      return defaults;
+    }
+    let _soundSettings = _loadSoundSettings();
+    function _saveSoundSettings() {
+      try { localStorage.setItem(SOUND_SETTINGS_KEY, JSON.stringify(_soundSettings)); } catch (e) {}
+    }
+    function _sndEnabled(type) { return Boolean(_soundSettings[type] && _soundSettings[type].enabled); }
+    function _sndVolume(type) { return ((_soundSettings[type] && _soundSettings[type].volume) || 0) / 100; }
+    function _anySoundEnabled() { return SOUND_TYPES.some(type => _sndEnabled(type)); }
     function _sndUnlock() {
       try {
         if (!_sndCtx) _sndCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -973,8 +1070,8 @@
     document.addEventListener('pointerdown', _sndUnlock);
     document.addEventListener('keydown', _sndUnlock);
     // notes: [주파수Hz, 시작지연s, 감쇠길이s, 음량, 파형]
-    function _playSeq(notes) {
-      if (!_sndEnabled()) return;
+    function _playSeq(type, notes) {
+      if (!_sndEnabled(type) || _sndVolume(type) <= 0) return;
       try {
         _sndUnlock();
         if (!_sndCtx || _sndCtx.state !== 'running') return;
@@ -985,7 +1082,7 @@
           o.type = wave;
           o.frequency.value = freq;
           g.gain.setValueAtTime(0, t0 + dt);
-          g.gain.linearRampToValueAtTime(vol, t0 + dt + 0.02);
+          g.gain.linearRampToValueAtTime(vol * _sndVolume(type), t0 + dt + 0.02);
           g.gain.exponentialRampToValueAtTime(0.0001, t0 + dt + dur);
           o.connect(g);
           g.connect(_sndCtx.destination);
@@ -995,8 +1092,8 @@
       } catch (e) {}
     }
     // 금속성 차임 한 타격: 외부 음원 없이 기본음과 배음을 겹쳐 직접 합성한다.
-    function _playBellStrike(freq, dt, dur = 0.72, vol = 0.34) {
-      if (!_sndEnabled()) return;
+    function _playBellStrike(type, freq, dt, dur = 0.72, vol = 0.34) {
+      if (!_sndEnabled(type) || _sndVolume(type) <= 0) return;
       try {
         _sndUnlock();
         if (!_sndCtx || _sndCtx.state !== 'running') return;
@@ -1006,7 +1103,7 @@
           o.type = 'sine';
           o.frequency.setValueAtTime(freq * ratio, t0);
           g.gain.setValueAtTime(0.0001, t0);
-          g.gain.exponentialRampToValueAtTime(vol * level, t0 + 0.012);
+          g.gain.exponentialRampToValueAtTime(vol * level * _sndVolume(type), t0 + 0.012);
           g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
           o.connect(g);
           g.connect(_sndCtx.destination);
@@ -1016,17 +1113,21 @@
       } catch (e) {}
     }
     // ① 신규 주문: 후제공방 주문 알림 음원
-    function playOrderChime() {
-      if (!_sndEnabled()) return;
+    function _playAudioFile(sourceAudio, type) {
+      if (!_sndEnabled(type) || _sndVolume(type) <= 0) return;
       try {
-        _orderAlertAudio.currentTime = 0;
-        const playback = _orderAlertAudio.play();
+        const audio = sourceAudio.cloneNode(true);
+        audio.volume = _sndVolume(type);
+        const playback = audio.play();
         if (playback && typeof playback.catch === 'function') playback.catch(() => {});
       } catch (e) {}
     }
+    function playOrderChime() { _playAudioFile(_orderAlertAudio, 'newOrder'); }
+    function playOrderMessageChime() { _playAudioFile(_orderMessageAlertAudio, 'orderMessage'); }
+    function playWishChime() { _playAudioFile(_wishAlertAudio, 'wish'); }
     // ② 10분 미수락: 긴급 삼연타 + 상향 마무리 (두드러지게)
     function playStaleChime() {
-      _playSeq([
+      _playSeq('pending', [
         [1046.5, 0,    0.16, 0.4, 'triangle'],
         [1046.5, 0.20, 0.16, 0.4, 'triangle'],
         [1046.5, 0.40, 0.16, 0.4, 'triangle'],
@@ -1034,7 +1135,7 @@
       ]);
     }
     // ③ 수락 후 10분 미완료: 낮고 부드러운 하향 2음 (리마인더)
-    function playUnfinishedChime() { _playSeq([[659.25, 0], [523.25, 0.16, 0.7, 0.35]]); }
+    function playUnfinishedChime() { _playSeq('unfinished', [[659.25, 0], [523.25, 0.16, 0.7, 0.35]]); }
 
     // ── 지연 경보 (주문·단계당 1회만) ──
     const PENDING_ALERT_MS  = 10 * 60 * 1000; // 미수락 10분
@@ -1076,16 +1177,57 @@
     function _updateSoundBtn() {
       const b = document.getElementById('sound-toggle-btn');
       if (!b) return;
-      b.textContent = _sndEnabled() ? '🔔' : '🔕';
-      b.title = _sndEnabled() ? '새 주문 효과음: 켜짐' : '새 주문 효과음: 꺼짐';
+      b.textContent = _anySoundEnabled() ? '🔔' : '🔕';
+      b.title = _anySoundEnabled() ? '알림음 설정 (사용 중)' : '알림음 설정 (모두 꺼짐)';
+    }
+    function _syncSoundSettingsUI() {
+      SOUND_TYPES.forEach(type => {
+        const enabled = document.getElementById(`sound-enabled-${type}`);
+        const volume = document.getElementById(`sound-volume-${type}`);
+        const output = document.getElementById(`sound-volume-value-${type}`);
+        if (enabled) enabled.checked = _sndEnabled(type);
+        if (volume) { volume.value = String(_soundSettings[type].volume); volume.disabled = !_sndEnabled(type); }
+        if (output) output.textContent = `${_soundSettings[type].volume}%`;
+      });
+      _updateSoundBtn();
     }
     window.toggleOrderSound = () => {
-      const wasOn = _sndEnabled();
-      localStorage.setItem('hj_order_sound', wasOn ? 'off' : 'on');
-      _updateSoundBtn();
-      if (!wasOn) { _sndUnlock(); setTimeout(playOrderChime, 60); } // 켤 때 미리듣기
+      const panel = document.getElementById('sound-settings-panel');
+      const button = document.getElementById('sound-toggle-btn');
+      const willOpen = panel.hidden;
+      panel.hidden = !willOpen;
+      button.setAttribute('aria-expanded', String(willOpen));
+      if (willOpen) { _sndUnlock(); _syncSoundSettingsUI(); }
     };
-    _updateSoundBtn();
+    window.closeSoundSettings = () => {
+      const panel = document.getElementById('sound-settings-panel');
+      const button = document.getElementById('sound-toggle-btn');
+      panel.hidden = true;
+      button.setAttribute('aria-expanded', 'false');
+    };
+    window.setSoundEnabled = (type, enabled) => {
+      if (!SOUND_TYPES.includes(type)) return;
+      _soundSettings[type].enabled = Boolean(enabled);
+      _saveSoundSettings();
+      _syncSoundSettingsUI();
+    };
+    window.setSoundVolume = (type, rawVolume) => {
+      if (!SOUND_TYPES.includes(type)) return;
+      const volume = Math.max(0, Math.min(100, Math.round(Number(rawVolume) || 0)));
+      _soundSettings[type].volume = volume;
+      _saveSoundSettings();
+      const output = document.getElementById(`sound-volume-value-${type}`);
+      if (output) output.textContent = `${volume}%`;
+    };
+    document.addEventListener('pointerdown', event => {
+      const panel = document.getElementById('sound-settings-panel');
+      const button = document.getElementById('sound-toggle-btn');
+      if (!panel.hidden && !panel.contains(event.target) && !button.contains(event.target)) window.closeSoundSettings();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') window.closeSoundSettings();
+    });
+    _syncSoundSettingsUI();
 
     let isFirstLoad = true;
     let currentPendingOrders = {};
@@ -1266,6 +1408,28 @@
     window.addEventListener('resize', () => requestAnimationFrame(fitOrderListToEightRows));
 
     let latestOrdersRaw = null;
+    function orderNoteSignature(order) {
+      const note = order && order.customerNote;
+      if (!note || typeof note !== 'object' || typeof note.message !== 'string' || !note.message.trim()) return '';
+      return [note.createdAt || '', note.name || '', note.message.trim()].join('\u0000');
+    }
+    function rememberAndAlertOrderNotes(orders) {
+      const nextSignatures = new Map();
+      orders.forEach(order => {
+        const signature = orderNoteSignature(order);
+        if (signature) nextSignatures.set(order.id, signature);
+      });
+      const previous = window.__seenOrderNoteSignatures;
+      if (previous instanceof Map) {
+        let alertIndex = 0;
+        nextSignatures.forEach((signature, id) => {
+          if (previous.get(id) === signature) return;
+          setTimeout(playOrderMessageChime, alertIndex * 180);
+          alertIndex += 1;
+        });
+      }
+      window.__seenOrderNoteSignatures = nextSignatures;
+    }
     function pruneOldOrders(data) {
       if (!auth.currentUser || window.__ordersPruned || !data) return;
       window.__ordersPruned = true;
@@ -1288,6 +1452,9 @@
       currentPendingOrders = {};
       if(!data) {
         allOrdersCache = [];
+        window.__seenOrderIds = new Set();
+        rememberAndAlertOrderNotes([]);
+        isFirstLoad = false;
         renderOrderList([]);
         renderPendingSummary([]);
         return;
@@ -1313,6 +1480,7 @@
       }
       window.__seenOrderIds = _ids;
       isFirstLoad = false;
+      rememberAndAlertOrderNotes(orders);
       trackOrderStages(orders);
 
       orders.forEach(o => { if(o.status === 'pending') currentPendingOrders[o.id] = true; });
@@ -1374,10 +1542,24 @@
     // ── Firebase Auth ────────────────────────────────────────────────────
     const ADMIN_EMAIL = "admin@hooje.pro";
     let reportsUnsub = null;
+    let seenWishReportIds = null;
     function startReportSubscription() {
       if (reportsUnsub) return;
       reportsUnsub = onValue(ref(db, 'reports'), (snap) => {
-        allReportsData = snap.val() || {};
+        const nextReports = snap.val() || {};
+        const nextWishIds = new Set(Object.entries(nextReports)
+          .filter(([, report]) => report && report.type === 'wish')
+          .map(([id]) => id));
+        if (seenWishReportIds instanceof Set) {
+          let alertIndex = 0;
+          nextWishIds.forEach(id => {
+            if (seenWishReportIds.has(id)) return;
+            setTimeout(playWishChime, alertIndex * 180);
+            alertIndex += 1;
+          });
+        }
+        seenWishReportIds = nextWishIds;
+        allReportsData = nextReports;
         updateUnreadBadge();
         if (!document.getElementById('report-manager-body').classList.contains('hidden')) renderReports();
       });
@@ -1395,6 +1577,7 @@
         initItemManager();
       } else {
         if (reportsUnsub) { reportsUnsub(); reportsUnsub = null; }
+        seenWishReportIds = null;
         allReportsData = {};
         document.getElementById('loginOverlay').style.display = 'flex';
         document.getElementById('mainContent').classList.add('hidden');
