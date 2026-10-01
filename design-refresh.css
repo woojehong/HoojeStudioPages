@@ -2485,6 +2485,15 @@ body {
   letter-spacing: .11em;
 }
 
+.home-main-status[data-sign-state="back-soon"] .home-main-status-heading {
+  font-size: clamp(21px, 2.55vw, 30px);
+}
+
+.home-main-status[data-sign-state="away"] .home-main-status-heading {
+  font-size: clamp(19px, 2.3vw, 27px);
+  letter-spacing: .09em;
+}
+
 .home-main-status-heading strong {
   -webkit-text-stroke: .45px rgba(58, 31, 10, .9);
   text-shadow:
@@ -2514,15 +2523,6 @@ body {
 #order-message-modal input:focus,
 #order-message-modal textarea:focus {
   border-color: #8788ee;
-}
-
-.home-main-status[data-sign-state="back-soon"] .home-main-status-heading {
-  font-size: clamp(21px, 2.55vw, 30px);
-}
-
-.home-main-status[data-sign-state="away"] .home-main-status-heading {
-  font-size: clamp(19px, 2.3vw, 27px);
-  letter-spacing: .09em;
 }
 
 @media (min-width: 768px) {

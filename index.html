@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="google-adsense-account" content="ca-pub-1273173370504127">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1273173370504127" crossorigin="anonymous"></script>
   <script src="preview-safety.js"></script>
-  <title>후제공방 | 아즈샤라 제작 서비스</title>
-  <meta name="description" content="월드 오브 워크래프트 한국 아즈샤라 주문 제작 서비스. 품목별 제작자, 금성 재료, 서신과 장식을 확인하고 주문 상태를 실시간으로 확인하세요.">
+  <script src="content-access.js"></script>
+  <script defer src="ad-policy.js"></script>
+  <meta name="google-adsense-account" content="ca-pub-1273173370504127">
+  <meta name="description" content="월드 오브 워크래프트 한국 아즈샤라 주문 제작 서비스. 품목별 제작자와 필수 재료, 서신과 장식을 확인하고 주문 상태를 확인하세요.">
   <link rel="canonical" href="https://hooje.pro/">
+  <link rel="stylesheet" href="content-access.css">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://hooje.pro/#website","url":"https://hooje.pro/","name":"후제공방","inLanguage":"ko-KR","description":"월드 오브 워크래프트 한국 아즈샤라 주문 제작 보조 서비스"},{"@type":"Organization","@id":"https://hooje.pro/#organization","name":"후제공방","url":"https://hooje.pro/","description":"한 명의 플레이어가 운영하는 비공식 월드 오브 워크래프트 제작 보조 서비스","logo":{"@type":"ImageObject","url":"https://hooje.pro/assets/icon-192.png"}}]}
+  {"@context":"https://schema.org","@type":"WebSite","url":"https://hooje.pro/","name":"후제공방","inLanguage":"ko-KR","description":"비공식 월드 오브 워크래프트 제작 보조 서비스"}
   </script>
+  <title>후제공방 | 아즈샤라 제작 서비스</title>
   
   <meta property="og:type" content="website">
   <meta property="og:title" content="후제공방">
@@ -378,7 +380,6 @@
     }
   </style>
   <link rel="stylesheet" href="design-refresh.css?v=260917d">
-  <link rel="stylesheet" href="adsense-preview.css">
 </head>
 <body>
 <div id="app-container" class="text-gray-200 relative">
@@ -492,6 +493,7 @@
   <main class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden">
 
     <aside id="sidebar" class="w-full md:h-full md:w-1/4 md:min-w-[262px] md:max-w-[300px] md:border-b-0 md:border-r border-gray-800 bg-gray-900/40 overflow-y-auto px-4 pb-32 relative z-10 transition-all duration-300">
+      <div data-hooje-ad-preview="left" hidden>광고 위치 A · 좌측 검색 위</div>
       <div class="mb-2 sticky top-0 z-20 bg-[#030712] pt-3 pb-2 -mx-4 px-4">
         <!-- 모바일 전용 메뉴 토글 버튼 -->
         <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden w-full mb-2 py-3.5 px-4 bg-[#8788EE] hover:bg-[#7a7be0] active:scale-[0.99] text-white font-black text-base rounded-xl flex items-center justify-center gap-2 tracking-wide shadow-lg transition-all">
@@ -527,6 +529,7 @@
 
   <div class="home-editorial-layout">
   <aside class="home-media-rail" aria-label="후제공방 소식과 영상">
+  <div data-hooje-ad-preview="right" hidden>광고 위치 C · 우측 배너 위</div>
   <div id="home-banner-dock" class="home-banner-dock relative pt-6 mb-3 md:mb-4 w-full">
 
     <div class="home-banner-grid grid grid-cols-2 md:grid-cols-4 gap-x-2 gap-y-7 md:gap-3 w-full">
@@ -595,6 +598,7 @@
 
   <div class="home-guide-shell home-guide-column p-5 md:p-7 relative">
           <div class="home-status-stage">
+            <div data-hooje-ad-preview="center" hidden>광고 위치 B · 중앙 상태 팻말 위</div>
             <div id="home-live-status" class="home-main-status" aria-live="polite">
               <div class="home-main-status-heading">
                 <strong id="home-status-label">CONNECTING</strong>
@@ -652,7 +656,7 @@
                   <strong>모든 재료를 금성으로</strong>
                 </div>
                 <div class="home-step-copy">
-                  <h3>재료는 모두 금성으로 준비</h3>
+                  <h3>품질 재료는 금성으로 준비</h3>
                   <p>은성 재료가 섞이거나 재료가 비어 있으면 반송될 수 있습니다.</p>
                 </div>
               </article>
@@ -688,10 +692,11 @@
               <div><strong>반송을 막는 가장 중요한 확인</strong><span>필수 재료 누락·은성 재료 혼입 여부를 주문 전에 다시 확인해주세요.</span></div>
             </div>
 
+            <p id="item-link-status" role="status" hidden>이 품목은 현재 목록에서 찾을 수 없거나 제작 준비 중입니다. 왼쪽 목록에서 현재 제작 가능한 품목을 확인해주세요.</p>
             <a class="home-knowledge-entry" href="knowledge.html">
-              <div><span>HOOJE KNOWLEDGE</span><strong>주문 제작을 더 자세히 알고 싶다면</strong><p>금성 재료·서신·장식·재제작·애드온 안내를 주제별로 정리했습니다. 처음 주문하는 흐름은 지금 화면 그대로 이용하면 됩니다.</p></div><b>제작 안내 보기 →</b>
+              <div><span>HOOJE KNOWLEDGE</span><strong>주문 제작을 더 자세히 알고 싶다면</strong><p>금성 재료·서신·장식·재제작·애드온 안내를 주제별로 정리했습니다.</p></div><b>제작 안내 보기 →</b>
             </a>
-
+            <p class="text-xs text-gray-400"><a href="craft-examples.html" class="underline">실제 품목으로 재료 확인 연습하기</a></p>
             <section class="home-guide-chapter" aria-labelledby="home-tools-title">
               <div class="home-chapter-heading">
                 <span>SMART WORKFLOW</span>
@@ -908,6 +913,13 @@
         </div>
         
         <div id="fee-crafter-section" class="flex flex-col gap-2 border-t border-gray-800 pt-2 md:pt-3"></div>
+        <details class="item-reading-help">
+          <summary>이 품목을 주문하기 전 확인할 점</summary>
+          <p>위의 필수 재료는 현재 선택한 품목 기준입니다. 재료 이름과 수량을 복사한 뒤 게임의 주문 창과 대조하세요. 새 제작과 재제작은 필요한 재료가 다를 수 있으므로 재제작에서는 게임에 표시되는 재료를 먼저 확인하세요.</p>
+          <p>서신은 원하는 보조 능력치를 선택할 때, 장식은 추가 효과를 지정할 때 사용하는 선택 재료입니다. 모든 품목에서 같은 선택지를 쓸 수 있는 것은 아니므로 이 품목의 선택 재료 표시와 게임의 허용 슬롯을 함께 확인하세요.</p>
+          <p>제작자 이름은 위에 표시된 이름으로 확인하고, 게임에서 주문을 등록한 다음 사이트 알림을 보내세요. 사이트의 알림 버튼만으로 게임 내 주문이 만들어지지는 않습니다.</p>
+          <a href="knowledge.html">제작 안내에서 재료·서신·장식·재제작 자세히 보기</a>
+        </details>
         <div id="bottom-order-section" class="w-full mt-0 flex flex-col items-center"></div>
       </div>
     </section>
@@ -1700,6 +1712,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     // ── Firebase에서 아이템 데이터 로드 ──────────────────────────────────
     let DB = {};
     const allItemsFlat = [];
+    const itemRouter = window.HoojeContentAccess.createRouter({
+      location: window.location, history: window.history,
+      getItems: () => allItemsFlat,
+      showItem: item => window.renderDetail(item),
+      showHome: () => window.showNotice(),
+      onMissing: missing => { document.getElementById('item-link-status').hidden = !missing; }
+    });
+    window.addEventListener('popstate', () => itemRouter.restore());
 
     const ENGINEERING_ICON_FALLBACKS = {
       '판금 머리': 'inv_plate_questbloodelf_b_01_helm',
@@ -1798,8 +1818,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
         const catName = CAT_KEY_TO_NAME[catKey];
         const catItems = itemsData[catKey];
         if (!catItems) return;
-        const raw = Object.values(catItems).map(item => withEngineeringIconFallback({
+        const raw = Object.entries(catItems).map(([itemKey, item]) => withEngineeringIconFallback({
           ...item,
+          routeKey: window.HoojeContentAccess.itemKey(catKey, itemKey),
           reqMats: item.reqMats ? Object.values(item.reqMats) : []
         }, catKey));
         DB[catName] = sortItems(raw, catKey);
@@ -1811,6 +1832,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     onValue(ref(db, 'items'), (snap) => {
       buildDB(snap.val());
       renderSidebar();
+      itemRouter.restore();
     }, { onlyOnce: true });
 
     // 애드온 다운로드 버튼 문구 동기화
@@ -1982,6 +2004,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     };
 
     window.showNotice = function() {
+      itemRouter.navigate(null);
       document.getElementById('notice-state').classList.remove('hidden');
       document.getElementById('content-state').classList.add('hidden');
       updateCartUI();
@@ -2164,6 +2187,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     }
 
     window.renderDetail = function(item) {
+      itemRouter.navigate(item.routeKey);
       currentDetailItem = item;
       document.getElementById('notice-state').classList.add('hidden');
       document.getElementById('content-state').classList.remove('hidden');

@@ -16,7 +16,8 @@
     if (!locationLike) return false;
     const hostname = String(locationLike.hostname || '').toLowerCase();
     const pathname = String(locationLike.pathname || '/');
-    return hostname === PREVIEW_HOST && PREVIEW_PATH.test(pathname);
+    return ['localhost', '127.0.0.1', '[::1]', '::1'].includes(hostname)
+      || (hostname === PREVIEW_HOST && PREVIEW_PATH.test(pathname));
   }
 
   function requestUrl(input) {
@@ -41,6 +42,9 @@
     const pathname = url.pathname.replace(/^\/HoojeStudioPages(?=\/|$)/i, '') || '/';
     if (BLOCKED_FUNCTION_PATHS.has(pathname)) return true;
     if (BLOCKED_FUNCTION_HOSTS.has(url.hostname.toLowerCase())) return true;
+    if (/(?:^|\.)cloudfunctions\.net$/i.test(url.hostname)) return true;
+    if (/(?:^|\.)google-analytics\.com$/i.test(url.hostname)) return true;
+    if (/(?:^|\.)googlesyndication\.com$/i.test(url.hostname)) return true;
     if (url.hostname === 'api.telegram.org' && /^\/bot/i.test(url.pathname)) return true;
 
     const method = String((init && init.method) || (input && input.method) || 'GET').toUpperCase();
