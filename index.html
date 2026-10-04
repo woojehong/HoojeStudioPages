@@ -1157,7 +1157,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
     import { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken as getAppCheckToken } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app-check.js";
-    import { getDatabase, ref, onValue, push as firebasePush, serverTimestamp, runTransaction as firebaseRunTransaction } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+    import { getDatabase, ref, onValue, get, update as firebaseUpdate, increment, push as firebasePush, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
     import { sanitizeUrgentHTML } from "./assets/js/urgent-notice-rich.js";
 
     const firebaseConfig = { apiKey: "AIzaSyDXH0-y0vUQ9K29XbtRXDEuIokTqDLmo_I", authDomain: "rougetsblendingroom.firebaseapp.com", databaseURL: "https://rougetsblendingroom-default-rtdb.firebaseio.com/", projectId: "rougetsblendingroom", appId: "1:1073459942609:web:ea6fb2595766ea7af021f0" };
@@ -1210,15 +1210,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     }
     const previewGuard = window.HoojePreviewGuard;
     const push = (...args) => previewGuard.runWrite('Firebase push', () => firebasePush(...args));
-    const runTransaction = (...args) => previewGuard.runWrite('Firebase transaction', () => firebaseRunTransaction(...args));
+    const update = (...args) => previewGuard.runWrite('Firebase update', () => firebaseUpdate(...args));
     // ── 방문 카운트(세션당 1회) + 표시 ──
-    (function(){
+    (async function(){
       const vref = ref(db, 'stats/visits');
       const kstDay = new Date(Date.now() + 9*3600*1000).toISOString().slice(0,10);
       const tref = ref(db, 'stats/daily/' + kstDay);
-      onValue(vref, s => { const el=document.getElementById('footer-visit-count'); if(el) el.textContent=(s.val()||0).toLocaleString(); });
-      onValue(tref, s => { const el=document.getElementById('footer-today-count'); if(el) el.textContent=(s.val()||0).toLocaleString(); });
-      onValue(ref(db, 'stats/cf_downloads'), s => { const v=s.val(); const el=document.getElementById('footer-cf-count'); if(el && v!=null) el.textContent=Number(v).toLocaleString() + '+'; });
       // 유입 경로 판별: utm_source 우선 → 리퍼러 도메인 → 직접
       function refSource(){
         try{
@@ -1245,15 +1242,32 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       try {
         if(!sessionStorage.getItem('hj_visited')){
           sessionStorage.setItem('hj_visited','1');
-          runTransaction(vref, c => (c||0)+1, { applyLocally: false }).catch(()=>{});
-          runTransaction(tref, c => (c||0)+1, { applyLocally: false }).catch(()=>{});
+          const visitUpdates = {
+            'stats/visits': increment(1),
+            ['stats/daily/' + kstDay]: increment(1)
+          };
           const src = refSource();
           if (src) {
             const sk = String(src).replace(/[.#$\[\]\/]/g, '_').slice(0, 40);
-            runTransaction(ref(db, 'stats/referrers/' + sk), c => (c||0)+1, { applyLocally: false }).catch(()=>{});
-            runTransaction(ref(db, 'stats/referrers_daily/' + kstDay + '/' + sk), c => (c||0)+1, { applyLocally: false }).catch(()=>{});
+            visitUpdates['stats/referrers/' + sk] = increment(1);
+            visitUpdates['stats/referrers_daily/' + kstDay + '/' + sk] = increment(1);
           }
+          await update(ref(db), visitUpdates).catch(()=>{});
         }
+      } catch(e){}
+      try {
+        const [visitsSnap, todaySnap, downloadsSnap] = await Promise.all([
+          get(vref),
+          get(tref),
+          get(ref(db, 'stats/cf_downloads'))
+        ]);
+        const visitEl = document.getElementById('footer-visit-count');
+        const todayEl = document.getElementById('footer-today-count');
+        const downloadEl = document.getElementById('footer-cf-count');
+        const v = downloadsSnap.val();
+        if (visitEl) visitEl.textContent = (visitsSnap.val() || 0).toLocaleString();
+        if (todayEl) todayEl.textContent = (todaySnap.val() || 0).toLocaleString();
+        if (downloadEl && v != null) downloadEl.textContent = Number(v).toLocaleString() + '+';
       } catch(e){}
     })();
 
@@ -2485,9 +2499,49 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       const API_KEY = "AIzaSyA0Z__SnQDgiECAdelINzLUhVu-BUb2S44";
       const CHANNEL_ID = "UCAkSV3gnM8K4a1f9lvvPl1Q";
       const UPLOADS_ID = CHANNEL_ID.replace(/^UC/, 'UU');
+      const CACHE_KEY = 'hj_youtube_videos_v1';
+      const CACHE_TTL_MS = 12 * 60 * 60 * 1000;
       const section = document.getElementById('youtube-section');
       const listContainer = document.getElementById('youtube-list');
-      
+      let cached = null;
+      try { cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch (_) {}
+
+      function renderVideos(finalVideos) {
+        const safeVideos = Array.isArray(finalVideos) ? finalVideos.filter(v =>
+          v && v.snippet && v.snippet.resourceId && v.snippet.resourceId.videoId
+          && v.snippet.title && v.snippet.thumbnails
+          && (v.snippet.thumbnails.medium || v.snippet.thumbnails.default)
+        ) : [];
+        if (!safeVideos.length) return false;
+        section.classList.remove('hidden');
+        listContainer.innerHTML = safeVideos.map((v, index) => {
+          const videoId = v.snippet.resourceId.videoId;
+          const title = v.snippet.title;
+          const thumb = v.snippet.thumbnails.medium ? v.snippet.thumbnails.medium.url : v.snippet.thumbnails.default.url;
+          const videoUrl = `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
+
+          const isFixed = (FIXED_VIDEO_ID && FIXED_VIDEO_ID.trim() !== '' && index === 0);
+          const fixedClass = isFixed ? "hj-fixed" : "";
+          const layoutClass = index === 0 ? 'home-video-featured' : 'home-video-latest';
+          const badgeHtml = isFixed ? `<div class="absolute top-2 right-2 bg-[#b79a55]/90 text-[#080b12] text-[9px] font-black px-2 py-1 rounded-md z-10 shadow-md whitespace-nowrap">고정 영상</div>` : '';
+
+          return `
+            <a href="${videoUrl}" target="_blank" rel="noopener" class="home-video-card ${layoutClass} group relative ${fixedClass} transition-all flex flex-col">
+              ${badgeHtml}
+              <div class="hj-thumb relative aspect-video overflow-hidden bg-[#030712]">
+                <img src="${escapeHTML(thumb)}" alt="${escapeHTML(title)} 영상 미리보기" loading="lazy" decoding="async" class="w-full h-full object-cover">
+              </div>
+              <div class="p-2 md:p-2.5">
+                <p class="font-bold line-clamp-3 group-hover:text-white transition-colors leading-snug">${escapeHTML(title)}</p>
+              </div>
+            </a>
+          `;
+        }).join('');
+        return true;
+      }
+
+      if (cached && Number(cached.savedAt) > Date.now() - CACHE_TTL_MS && renderVideos(cached.videos)) return;
+
       try {
         let finalVideos = [];
         
@@ -2515,32 +2569,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
           finalVideos.push(latestVideos.shift());
         }
 
-        if (finalVideos.length > 0) {
-          section.classList.remove('hidden');
-          listContainer.innerHTML = finalVideos.map((v, index) => {
-            const videoId = v.snippet.resourceId.videoId;
-            const title = v.snippet.title;
-            const thumb = v.snippet.thumbnails.medium ? v.snippet.thumbnails.medium.url : v.snippet.thumbnails.default.url;
-            
-            const isFixed = (FIXED_VIDEO_ID && FIXED_VIDEO_ID.trim() !== '' && index === 0);
-            const fixedClass = isFixed ? "hj-fixed" : "";
-            const layoutClass = index === 0 ? 'home-video-featured' : 'home-video-latest';
-            const badgeHtml = isFixed ? `<div class="absolute top-2 right-2 bg-[#b79a55]/90 text-[#080b12] text-[9px] font-black px-2 py-1 rounded-md z-10 shadow-md whitespace-nowrap">고정 영상</div>` : '';
-            
-            return `
-              <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" rel="noopener" class="home-video-card ${layoutClass} group relative ${fixedClass} transition-all flex flex-col">
-                ${badgeHtml}
-                <div class="hj-thumb relative aspect-video overflow-hidden bg-[#030712]">
-                  <img src="${thumb}" alt="${escapeHTML(title)} 영상 미리보기" loading="lazy" decoding="async" class="w-full h-full object-cover">
-                </div>
-                <div class="p-2 md:p-2.5">
-                  <p class="font-bold line-clamp-3 group-hover:text-white transition-colors leading-snug">${escapeHTML(title)}</p>
-                </div>
-              </a>
-            `;
-          }).join('');
+        if (renderVideos(finalVideos)) {
+          try { localStorage.setItem(CACHE_KEY, JSON.stringify({ savedAt: Date.now(), videos: finalVideos })); } catch (_) {}
         }
-      } catch (e) { console.error("유튜브 로딩 에러:", e); }
+      } catch (e) {
+        if (!renderVideos(cached && cached.videos)) console.error("유튜브 로딩 에러:", e);
+      }
     }
 
     async function loadChzzkLive() {

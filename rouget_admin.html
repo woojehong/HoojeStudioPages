@@ -1408,6 +1408,7 @@
     window.addEventListener('resize', () => requestAnimationFrame(fitOrderListToEightRows));
 
     let latestOrdersRaw = null;
+    let ordersUnsub = null;
     function orderNoteSignature(order) {
       const note = order && order.customerNote;
       if (!note || typeof note !== 'object' || typeof note.message !== 'string' || !note.message.trim()) return '';
@@ -1446,7 +1447,10 @@
       if (Object.keys(prune).length) update(ref(db), prune).catch(() => {});
     }
 
-    onValue(ref(db, 'orders'), (snap) => {
+    function startOrderSubscription() {
+      if (ordersUnsub || !auth.currentUser) return;
+      isFirstLoad = true;
+      ordersUnsub = onValue(ref(db, 'orders'), (snap) => {
       const data = snap.val();
       latestOrdersRaw = data;
       currentPendingOrders = {};
@@ -1487,7 +1491,8 @@
 
       renderOrderList(orders);
       renderPendingSummary(orders);
-    });
+      });
+    }
 
     // 1분마다 경과시간 갱신
     setInterval(() => { if (allOrdersCache.length) renderOrderList(allOrdersCache); }, 60000);
@@ -1572,11 +1577,15 @@
         document.getElementById('mainContent').style.flexDirection = 'column';
         document.getElementById('mainContent').style.alignItems = 'center';
         window.__ordersPruned = false;
+        startOrderSubscription();
         pruneOldOrders(latestOrdersRaw);
         startReportSubscription();
         initItemManager();
       } else {
+        if (ordersUnsub) { ordersUnsub(); ordersUnsub = null; }
         if (reportsUnsub) { reportsUnsub(); reportsUnsub = null; }
+        stopDataCenterSubscriptions();
+        stopReferrerSubscriptions();
         seenWishReportIds = null;
         allReportsData = {};
         document.getElementById('loginOverlay').style.display = 'flex';
@@ -2094,6 +2103,7 @@
     // ════════ 데이터센터 ════════
     let _dailyVisits = {}, _ordersDaily = {}, _visitsChart = null, _ordersChart = null, _crafterChart = null;
     let _seasons = {}, _dcSeasonUnsub = null, _dcSeasonTimer = null;
+    let _dcUnsubs = [];
     function _dcOpen(){ const b=document.getElementById('datacenter-body'); return b && !b.classList.contains('hidden'); }
     function _last30(obj){ return Object.keys(obj).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort().slice(-30); }
     function _datesFor(obj){
@@ -2172,12 +2182,24 @@
       const body=document.getElementById('datacenter-body'), chev=document.getElementById('datacenter-chevron');
       body.classList.toggle('hidden');
       chev.style.transform = body.classList.contains('hidden') ? '' : 'rotate(180deg)';
-      if(_dcOpen()){ renderVisitsChart(); renderOrdersChart(); renderCrafterChart(); }
+      if(_dcOpen()) startDataCenterSubscriptions();
+      else stopDataCenterSubscriptions();
     };
-    onValue(ref(db,'stats/daily'), s=>{ _dailyVisits=s.val()||{}; renderVisitsChart(); });
-    onValue(ref(db,'stats/orders_daily'), s=>{ _ordersDaily=s.val()||{}; _rebuildOrderFilter(); renderOrdersChart(); renderCrafterChart(); });
-    onValue(ref(db,'stats/visits'), s=>{ const el=document.getElementById('dc-total-visits'); if(el) el.textContent=(s.val()||0).toLocaleString(); });
-    onValue(ref(db,'stats/orders_total'), s=>{ const el=document.getElementById('dc-total-orders'); if(el) el.textContent=(s.val()||0).toLocaleString(); });
+    function startDataCenterSubscriptions(){
+      if(!_dcOpen() || !auth.currentUser || _dcUnsubs.length) return;
+      _dcUnsubs = [
+        onValue(ref(db,'stats/daily'), s=>{ _dailyVisits=s.val()||{}; renderVisitsChart(); }),
+        onValue(ref(db,'stats/orders_daily'), s=>{ _ordersDaily=s.val()||{}; _rebuildOrderFilter(); renderOrdersChart(); renderCrafterChart(); }),
+        onValue(ref(db,'stats/visits'), s=>{ const el=document.getElementById('dc-total-visits'); if(el) el.textContent=(s.val()||0).toLocaleString(); }),
+        onValue(ref(db,'stats/orders_total'), s=>{ const el=document.getElementById('dc-total-orders'); if(el) el.textContent=(s.val()||0).toLocaleString(); })
+      ];
+      bindDcCurrentSeason();
+    }
+    function stopDataCenterSubscriptions(){
+      _dcUnsubs.forEach(unsub=>unsub()); _dcUnsubs=[];
+      if(_dcSeasonUnsub){ _dcSeasonUnsub(); _dcSeasonUnsub=null; }
+      if(_dcSeasonTimer){ clearTimeout(_dcSeasonTimer); _dcSeasonTimer=null; }
+    }
     // ════════ 시즌(분기점) 시스템 ════════
     function seasonStartEpoch(d){ return Date.parse(d+'T08:00:00+09:00'); }   // 해당 날짜 KST 오전 8시
     function seasonsSorted(o){ return Object.entries(o).map(([id,v])=>({id, name:(v&&v.name)||'', start:(v&&v.start)||''})).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x.start)).sort((a,b)=> a.start<b.start?-1:a.start>b.start?1:0); }
@@ -2220,11 +2242,11 @@
       const cur=currentSeasonOf(_seasons);
       const lbl=document.getElementById('dc-season-label'); if(lbl) lbl.textContent=(cur?cur.name:'시즌')+' 제작';
       if(_dcSeasonUnsub){ _dcSeasonUnsub(); _dcSeasonUnsub=null; }
-      if(cur){ _dcSeasonUnsub=onValue(ref(db,'stats/season/'+cur.id), s2=>{ const el=document.getElementById('dc-season-orders'); if(el) el.textContent=(s2.val()||0).toLocaleString(); }); }
+      if(cur && _dcOpen() && auth.currentUser){ _dcSeasonUnsub=onValue(ref(db,'stats/season/'+cur.id), s2=>{ const el=document.getElementById('dc-season-orders'); if(el) el.textContent=(s2.val()||0).toLocaleString(); }); }
       if(_dcSeasonTimer) clearTimeout(_dcSeasonTimer);
       const a=seasonsSorted(_seasons), now=Date.now();
       const nx=a.map(x=>seasonStartEpoch(x.start)).filter(t=>t>now).sort((p,q)=>p-q)[0];
-      if(nx) _dcSeasonTimer=setTimeout(bindDcCurrentSeason, Math.min(nx-now+1000, 2147483000));
+      if(nx && _dcOpen()) _dcSeasonTimer=setTimeout(bindDcCurrentSeason, Math.min(nx-now+1000, 2147483000));
     }
     function rebuildSeasonFilter(){ const sel=document.getElementById('dc-season-filter'); if(!sel) return; const cur=sel.value; let html='<option value="all">전체 기간</option>'; seasonsSorted(_seasons).forEach(s=>html+=`<option value="${s.id}">${escapeHTML(s.name)}</option>`); sel.innerHTML=html; if(cur && html.indexOf('value="'+cur+'"')>=0) sel.value=cur; }
     window.onSeasonFilterChange = function(){ renderVisitsChart(); renderOrdersChart(); updateSeasonSum(); };
@@ -2241,12 +2263,14 @@
 
     // ════════ 유입 경로 ════════
     let _refTotal = {}, _refDaily = {}, _refChart = null;
+    let _refUnsubs = [];
     function _refOpen(){ const b=document.getElementById('refpanel-body'); return b && !b.classList.contains('hidden'); }
     window.toggleRefPanel = function(){
       const b=document.getElementById('refpanel-body'), c=document.getElementById('refpanel-chevron');
       b.classList.toggle('hidden');
       c.style.transform = b.classList.contains('hidden') ? '' : 'rotate(180deg)';
-      if(_refOpen()) renderRefChart();
+      if(_refOpen()) startReferrerSubscriptions();
+      else stopReferrerSubscriptions();
     };
     function _rebuildRefPeriod(){
       const sel=document.getElementById('ref-period'); if(!sel) return; const cur=sel.value;
@@ -2281,8 +2305,14 @@
                    y:{ ticks:{color:'#cbd5e1',font:{size:10,weight:'bold'}}, grid:{display:false} } } }
       });
     };
-    onValue(ref(db,'stats/referrers'),       s=>{ _refTotal=s.val()||{}; renderRefChart(); });
-    onValue(ref(db,'stats/referrers_daily'), s=>{ _refDaily=s.val()||{}; renderRefChart(); });
+    function startReferrerSubscriptions(){
+      if(!_refOpen() || !auth.currentUser || _refUnsubs.length) return;
+      _refUnsubs = [
+        onValue(ref(db,'stats/referrers'), s=>{ _refTotal=s.val()||{}; renderRefChart(); }),
+        onValue(ref(db,'stats/referrers_daily'), s=>{ _refDaily=s.val()||{}; renderRefChart(); })
+      ];
+    }
+    function stopReferrerSubscriptions(){ _refUnsubs.forEach(unsub=>unsub()); _refUnsubs=[]; }
 
 
   </script>
