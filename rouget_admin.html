@@ -877,7 +877,7 @@
     if (appCheckHosts.has(location.hostname.toLowerCase())) {
       initializeAppCheck(app, {
         provider: new ReCaptchaEnterpriseProvider("6Le7onQtAAAAAGnrEqkqXuMU-w1ircjFYyqbhpCm"),
-        isTokenAutoRefreshEnabled: true
+        isTokenAutoRefreshEnabled: false
       });
     }
     const db = getDatabase(app);

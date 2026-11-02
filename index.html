@@ -1164,11 +1164,19 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
     const app = initializeApp(firebaseConfig);
     const appCheckHosts = new Set(["hooje.pro", "www.hooje.pro"]);
     let appCheck = null;
-    if (appCheckHosts.has(location.hostname.toLowerCase())) {
-      appCheck = initializeAppCheck(app, {
-        provider: new ReCaptchaEnterpriseProvider("6Le7onQtAAAAAGnrEqkqXuMU-w1ircjFYyqbhpCm"),
-        isTokenAutoRefreshEnabled: true
-      });
+    // Browsing alone must not start billable assessments or background refresh.
+    // Call only immediately before an order/message submission.
+    function ensureAppCheck() {
+      if (!appCheckHosts.has(location.hostname.toLowerCase())) {
+        throw new Error('app_check_required');
+      }
+      if (!appCheck) {
+        appCheck = initializeAppCheck(app, {
+          provider: new ReCaptchaEnterpriseProvider("6Le7onQtAAAAAGnrEqkqXuMU-w1ircjFYyqbhpCm"),
+          isTokenAutoRefreshEnabled: false
+        });
+      }
+      return appCheck;
     }
     const db = getDatabase(app);
     // Firebase staging 배포 후에만 실제 URL을 입력한다. 빈 값이면 기존 Netlify 알림 경로를 유지한다.
@@ -1181,8 +1189,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       if (!FIREBASE_NOTIFY_ENDPOINT) {
         return fetch(`/notify?item=${encodeURIComponent(itemName)}&src=web`);
       }
-      if (!appCheck) throw new Error('App Check가 초기화되지 않은 환경입니다.');
-      const tokenResult = await getAppCheckToken(appCheck, false);
+      const tokenResult = await getAppCheckToken(ensureAppCheck(), false);
       const response = await fetch(FIREBASE_NOTIFY_ENDPOINT, {
         method: 'POST',
         headers: {
@@ -2721,8 +2728,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/fireba
       submit.disabled = true;
       submit.textContent = '전송 중…';
       try {
-        if (!appCheck) throw new Error('app_check_required');
-        const tokenResult = await getAppCheckToken(appCheck, false);
+        const tokenResult = await getAppCheckToken(ensureAppCheck(), false);
         const response = await fetch(ORDER_MESSAGE_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-Firebase-AppCheck': tokenResult.token },

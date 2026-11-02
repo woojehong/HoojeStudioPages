@@ -62,7 +62,7 @@
         });
         const appCheck = initializeAppCheck(app, {
           provider: new ReCaptchaEnterpriseProvider('6Le7onQtAAAAAGnrEqkqXuMU-w1ircjFYyqbhpCm'),
-          isTokenAutoRefreshEnabled: true
+          isTokenAutoRefreshEnabled: false
         });
         const token = await getToken(appCheck, false);
         const response = await fetch(endpoint, {
